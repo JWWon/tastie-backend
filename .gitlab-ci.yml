@@ -1,0 +1,24 @@
+image: node:12.14.1-alpine
+
+stages:
+  - build
+  - test
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+build:
+  stage: build
+  before_script:
+    - npm install
+  script:
+    - npm run build
+
+test:
+  stage: test
+  before_script:
+    - npm install
+  script:
+    - npm run build
