@@ -1,6 +1,7 @@
 image: node:12.14.1-alpine
 
 stages:
+  - before-deploy
   - build
   - test
 
@@ -22,3 +23,11 @@ test:
     - npm install
   script:
     - npm run build
+
+build-docker-image:
+  stage: before-deploy
+  script:
+    - docker login registry.gitlab.com
+    - docker build -t registry.gitlab.com/pickat/pickat-backend .
+  # only:
+  #   - master
