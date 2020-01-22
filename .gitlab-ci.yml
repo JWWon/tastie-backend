@@ -30,7 +30,7 @@ build-docker-image:
   services:
     - docker:19.03.5-dind
   before_script:
-    - docker login registry.gitlab.com
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
   script:
     - docker build -t registry.gitlab.com/pickat/pickat-backend .
   # only:
