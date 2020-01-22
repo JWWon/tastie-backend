@@ -1,0 +1,16 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Authentication": {
+    "Bucket": "pickat-deploy",
+    "Key": ".dockercfg"
+  },
+  "Image": {
+    "Name": "registry.gitlab.com/pickat/pickat-backend:${APP_VERSION}",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "3000"
+    }
+  ]
+}
