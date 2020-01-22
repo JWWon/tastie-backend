@@ -1,6 +1,7 @@
 image: node:12.14.1-alpine
 
 stages:
+  - before-deploy
   - build
   - test
 
@@ -22,3 +23,17 @@ test:
     - npm install
   script:
     - npm run build
+
+build-docker-image:
+  stage: before-deploy
+  image: docker:19.03.5-git
+  services:
+    - docker:19.03.5-dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - DOCKER_TAG=$([ "$CI_COMMIT_REF_NAME" == "master" ] && echo "staging-b$CI_PIPELINE_ID" || echo "production")
+  script:
+    - docker build -t registry.gitlab.com/pickat/pickat-backend:$DOCKER_TAG .
+    - docker images
+  # only:
+  #   - master
