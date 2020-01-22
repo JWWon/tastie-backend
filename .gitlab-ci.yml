@@ -26,8 +26,12 @@ test:
 
 build-docker-image:
   stage: before-deploy
-  script:
+  image: docker:19.03.5-git
+  services:
+    - docker:19.03.5-dind
+  before_script:
     - docker login registry.gitlab.com
+  script:
     - docker build -t registry.gitlab.com/pickat/pickat-backend .
   # only:
   #   - master
