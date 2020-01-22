@@ -1,9 +1,9 @@
 image: node:12.14.1-alpine
 
 stages:
-  - before-deploy
   - build
   - test
+  - before-deploy
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -34,6 +34,6 @@ build-docker-image:
     - DOCKER_TAG=$([ "$CI_COMMIT_REF_NAME" == "master" ] && echo "staging-b$CI_PIPELINE_ID" || echo "production")
   script:
     - docker build -t registry.gitlab.com/pickat/pickat-backend:$DOCKER_TAG .
-    - docker images
-  # only:
-  #   - master
+    - docker push registry.gitlab.com/pickat/pickat-backend:$DOCKER_TAG
+  only:
+    - master
