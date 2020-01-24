@@ -19,6 +19,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/extensions': 'off',
     'class-methods-use-this': 'off',
+    'max-classes-per-file': 'off',
     'no-useless-constructor': 'off',
     'no-unused-vars': 'off',
     'no-empty-function': 'warn',
