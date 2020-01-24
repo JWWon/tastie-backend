@@ -1,5 +1,5 @@
 branch-defaults:
-  3-setup-api-environment-for-develop:
+  master:
     environment: staging
 global:
   application_name: pickat-backend
