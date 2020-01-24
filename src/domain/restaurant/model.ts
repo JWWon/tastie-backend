@@ -1,11 +1,11 @@
-type Category = {
+export type Category = {
   id: string;
   name: string;
 };
 
-type Situation = {
+export type Situation = {
   id: string;
   name: string;
 };
 
-type Restaurant = {};
+export type Restaurant = {};

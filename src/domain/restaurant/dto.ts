@@ -1,7 +1,7 @@
-type QueryCategoryRequest = {
+export type QueryCategoryRequest = {
   now: Date;
 };
 
-type QuerySituationRequest = {};
+export type QuerySituationRequest = {};
 
-type QueryRecommendRestaurantRequest = {};
+export type QueryRecommendRestaurantRequest = {};
