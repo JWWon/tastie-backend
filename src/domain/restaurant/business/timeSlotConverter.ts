@@ -1,6 +1,6 @@
 import { TimeSlot } from '../model/timeSlot';
 
-const convertKoreanDateFromUTC = (utcDate: Date): Date => {
+export const convertKoreanDateFromUTC = (utcDate: Date): Date => {
   return new Date(
     utcDate.toLocaleString('ko-kr', {
       timeZone: 'Asia/Seoul',
@@ -8,9 +8,8 @@ const convertKoreanDateFromUTC = (utcDate: Date): Date => {
   );
 };
 
-export const convertTimeSlotFromDate = (utcDate: Date): TimeSlot => {
-  const koreanDate = convertKoreanDateFromUTC(utcDate);
-  const hour = koreanDate.getHours();
+export const convertTimeSlotFromDate = (date: Date): TimeSlot => {
+  const hour = date.getHours();
 
   if (hour >= 0 && hour <= 6) {
     return TimeSlot.Dawn;
