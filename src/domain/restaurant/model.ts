@@ -1,11 +1,14 @@
+import { TimeSlot } from './model/timeSlot';
+
 export type Category = {
-  id: string;
-  name: string;
+  readonly id: string;
+  readonly name: string;
+  readonly priorities: TimeSlot[];
 };
 
 export type Situation = {
-  id: string;
-  name: string;
+  readonly id: string;
+  readonly name: string;
 };
 
 export type Restaurant = {};

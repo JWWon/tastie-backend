@@ -25,7 +25,7 @@ export class RestaurantController {
     @Query() req: QueryCategoryRequestDTO,
   ): Promise<CategoryResponseDTO[]> {
     const categories = await this.restaurantService.getCategories({
-      now: req.now || new Date(),
+      utcNow: new Date(req.now || Date.now()),
     });
 
     return categories.map(category => ({
