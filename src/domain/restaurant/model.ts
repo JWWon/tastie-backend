@@ -1,11 +1,11 @@
 export type Category = {
-  id: string;
-  name: string;
+  readonly id: string;
+  readonly name: string;
 };
 
 export type Situation = {
-  id: string;
-  name: string;
+  readonly id: string;
+  readonly name: string;
 };
 
 export type Restaurant = {};
