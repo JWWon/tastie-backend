@@ -23,7 +23,7 @@ test:
   before_script:
     - npm install
   script:
-    - npm run build
+    - npm run test
 
 build-docker-image:
   stage: before-deploy
