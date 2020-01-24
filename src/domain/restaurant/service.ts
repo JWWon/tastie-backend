@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { RestaurantUsecase } from './usecase';
 import { Category, Situation, Restaurant } from './model';
 import { convertTimeSlotFromDate } from './business/timeSlotConverter';
-import { TimeSlot } from './model/timeSlot';
 import {
   QueryCategoryRequest,
   QuerySituationRequest,
@@ -12,8 +11,7 @@ import {
 @Injectable()
 export class RestaurantService implements RestaurantUsecase {
   async getCategories(req: QueryCategoryRequest): Promise<Category[]> {
-    const timeSlot = convertTimeSlotFromDate(req.now);
-    console.log(timeSlot.toString());
+    const timeSlot = convertTimeSlotFromDate(req.utcNow);
     const categories: Category[] = [
       { id: Symbol.toString(), name: '아침' },
       { id: Symbol.toString(), name: '아점' },

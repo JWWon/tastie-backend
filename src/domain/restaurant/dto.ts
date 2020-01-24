@@ -1,5 +1,5 @@
 export type QueryCategoryRequest = {
-  now: Date;
+  utcNow: Date;
 };
 
 export type QuerySituationRequest = {};
