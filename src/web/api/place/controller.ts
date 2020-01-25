@@ -16,9 +16,15 @@ export class PlaceController {
   async getPlaces(
     @Query() req: QueryRegionRequestDTO,
   ): Promise<PlaceResponseDTO[]> {
+    // eslint-disable-next-line prefer-destructuring
+    const radius: any = req.radius;
     const places = await this.placeService.getPlaces({
-      latitude: req.latitude,
-      longitude: req.longitude,
+      location: {
+        latitude: req.latitude,
+        longitude: req.longitude,
+      },
+      radius: parseInt(radius, 10) || 3000,
+      count: req.count || 5,
     });
 
     const result: PlaceResponseDTO[] = places.map(place => ({

@@ -1,3 +1,9 @@
+export type QueryPlaceRequest = {
+  readonly location: Location;
+  readonly radius: number;
+  readonly count: number;
+};
+
 export type Location = {
   readonly longitude: number;
   readonly latitude: number;

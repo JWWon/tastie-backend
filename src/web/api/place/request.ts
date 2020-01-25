@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class QueryRegionRequestDTO {
   @ApiProperty()
@@ -6,4 +6,15 @@ export class QueryRegionRequestDTO {
 
   @ApiProperty()
   readonly latitude: number;
+
+  @ApiPropertyOptional({
+    type: Number,
+    default: 3000,
+  })
+  readonly radius: number;
+
+  @ApiPropertyOptional({
+    default: 5,
+  })
+  readonly count: number;
 }

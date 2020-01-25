@@ -1,7 +1,7 @@
-import { Location, Place } from './dto';
+import { Place, QueryPlaceRequest } from './dto';
 
 export interface PlaceUsecase {
-  getPlaces(req: Location): Promise<Place[]>;
+  getPlaces(req: QueryPlaceRequest): Promise<Place[]>;
 }
 
 export const PlaceUsecaseToken = Symbol();

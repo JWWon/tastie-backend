@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PlaceUsecase } from './usecase';
 import { PlacePlugin, PlacePluginToken } from './placePlugin';
-import { Location, Place } from '@/domain/place/dto';
+import { Place, QueryPlaceRequest } from '@/domain/place/dto';
 
 @Injectable()
 export class PlaceService implements PlaceUsecase {
@@ -10,14 +10,18 @@ export class PlaceService implements PlaceUsecase {
     private readonly placePlugin: PlacePlugin,
   ) {}
 
-  async getPlaces(location: Location): Promise<Place[]> {
-    const places = await this.placePlugin.getTouristAttractionPlaces(location);
-    const cmpFunc = (a, b) => {
+  async getPlaces(req: QueryPlaceRequest): Promise<Place[]> {
+    const places = await this.placePlugin.getTouristAttractionPlaces(
+      req.location,
+      req.radius,
+    );
+
+    const cmpFunc = (a: Place, b: Place) => {
       if (a.userRatingsTotal > b.userRatingsTotal) return -1;
       if (a.userRatingsTotal < b.userRatingsTotal) return 1;
       return 0;
     };
 
-    return places.sort(cmpFunc).splice(0, 5);
+    return places.sort(cmpFunc).splice(0, req.count);
   }
 }

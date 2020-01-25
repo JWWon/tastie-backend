@@ -8,17 +8,8 @@ import { Place, Location } from './dto';
 export class GooglePlacePlugin implements PlacePlugin {
   private readonly client: googleMap.GoogleMapsClientWithPromise;
 
-  private readonly optionSearchRadius: number;
-
-  private readonly optionOutputLanguage: string;
-
   constructor(configService: ConfigService) {
     const googleApiKey = configService.get<string>('google.apiKey');
-
-    this.optionSearchRadius = configService.get<number>('google.searchRadius');
-    this.optionOutputLanguage = configService.get<string>(
-      'google.outputLanguage',
-    );
 
     this.client = googleMap.createClient({
       key: googleApiKey,
@@ -26,11 +17,14 @@ export class GooglePlacePlugin implements PlacePlugin {
     });
   }
 
-  async getTouristAttractionPlaces(location: Location): Promise<Place[]> {
+  async getTouristAttractionPlaces(
+    location: Location,
+    radius: number,
+  ): Promise<Place[]> {
     return this.client
       .placesNearby({
         location: { lat: location.latitude, lng: location.longitude },
-        radius: this.optionSearchRadius,
+        radius,
         language: 'ko',
         type: 'tourist_attraction',
       })
