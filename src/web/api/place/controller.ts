@@ -1,7 +1,8 @@
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { Controller, Get, Query, Inject } from '@nestjs/common';
 import { QueryRegionRequestDTO } from './request';
 import { PlaceUsecase, PlaceUsecaseToken } from '@/domain/place/usecase';
+import { PlaceResponseDTO } from './response';
 
 @ApiTags('Place')
 @Controller('places')
@@ -11,9 +12,21 @@ export class PlaceController {
   ) {}
 
   @Get()
-  async getPlaces(@Query() req: QueryRegionRequestDTO): Promise<void> {
-    console.log(req);
+  @ApiResponse({ status: 200, type: PlaceResponseDTO, isArray: true })
+  async getPlaces(
+    @Query() req: QueryRegionRequestDTO,
+  ): Promise<PlaceResponseDTO[]> {
+    const places = await this.placeService.getPlaces({
+      latitude: req.latitude,
+      longitude: req.longitude,
+    });
 
-    await this.placeService.getPlaces();
+    const result: PlaceResponseDTO[] = places.map(place => ({
+      id: place.id,
+      name: place.name,
+      rating: place.rating,
+    }));
+
+    return result;
   }
 }
