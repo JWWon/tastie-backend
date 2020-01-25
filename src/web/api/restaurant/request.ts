@@ -5,9 +5,9 @@ export class QueryCategoryRequestDTO {
   @Optional()
   @ApiPropertyOptional({
     type: Date,
-    description: 'utc date',
+    description: 'UTC datetime based Iso8601Literal format',
     example: '2018-11-21T06:20:32.232Z',
-    default: true,
+    default: 'current datetime',
   })
   readonly now: Date;
 }
