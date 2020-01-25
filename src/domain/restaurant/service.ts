@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { RestaurantUsecase } from './usecase';
 import { Category, Situation, Restaurant } from './model';
 import { filterCategoriesByTimeSlot } from './business/categoryFilter';
@@ -13,7 +12,6 @@ import {
 } from './dto';
 import { TimeSlot } from './model/timeSlot';
 
-@Injectable()
 export class RestaurantService implements RestaurantUsecase {
   async getCategories(req: QueryCategoryRequest): Promise<Category[]> {
     const koreanDate = convertKoreanDateFromUTC(req.utcNow);
