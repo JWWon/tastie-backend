@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Inject, Body, Query } from '@nestjs/common';
-import { ApiTags, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { RestaurantUsecase, RestaurantUsecaseToken } from '@/domain/restaurant';
 import {
   CategoryResponseDTO,

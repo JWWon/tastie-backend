@@ -20,6 +20,7 @@ module.exports = {
     'import/extensions': 'off',
     'class-methods-use-this': 'off',
     'max-classes-per-file': 'off',
+    'symbol-description': 'off',
     'no-useless-constructor': 'off',
     'no-unused-vars': 'off',
     'no-empty-function': 'warn',

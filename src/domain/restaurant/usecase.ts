@@ -13,4 +13,4 @@ export interface RestaurantUsecase {
   ): Promise<Restaurant>;
 }
 
-export const RestaurantUsecaseToken = Symbol.toString();
+export const RestaurantUsecaseToken = Symbol();
