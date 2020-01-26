@@ -43,13 +43,25 @@ export class RestaurantController {
     }));
   }
 
-  @Post('')
+  @Get('')
   @ApiResponse({ status: 200, type: RestaurantResponseDTO })
   async getRecommendRestaurant(
-    @Body() req: RecommendRestaurantRequestDTO,
+    @Query() req: RecommendRestaurantRequestDTO,
   ): Promise<RestaurantResponseDTO> {
+    const restaurant = await this.restaurantService.getRecommendRestaurant({
+      location: {
+        latitude: req.latitude,
+        longitude: req.longitude,
+      },
+      category: req.category,
+      situation: req.situation,
+    });
+
     return {
-      name: '',
+      id: restaurant.id,
+      name: restaurant.name,
+      location: restaurant.location,
+      rating: restaurant.rating,
     };
   }
 }

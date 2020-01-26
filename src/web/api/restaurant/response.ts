@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { LocationResponseDTO } from '../common/response';
 
 export class CategoryResponseDTO {
   @ApiProperty()
@@ -12,5 +13,14 @@ export class SituationResponseDTO {
 
 export class RestaurantResponseDTO {
   @ApiProperty()
+  readonly id: string;
+
+  @ApiProperty()
   name: string;
+
+  @ApiProperty()
+  readonly rating: number;
+
+  @ApiProperty({ type: LocationResponseDTO })
+  readonly location: LocationResponseDTO;
 }

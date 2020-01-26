@@ -1,7 +1,7 @@
 import * as googleMap from '@google/maps';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-import { PlacePlugin } from './placePlugin';
+import { PlacePlugin, QueryRestaurantParam } from './placePlugin';
 import { Place, Location } from './dto';
 
 @Injectable()
@@ -17,17 +17,20 @@ export class GooglePlacePlugin implements PlacePlugin {
     });
   }
 
-  async getRestaurants(location: Location): Promise<Place[]> {
+  async getRestaurants(param: QueryRestaurantParam): Promise<Place[]> {
     return this.client
       .placesNearby({
-        location: { lat: location.latitude, lng: location.longitude },
+        location: {
+          lat: param.location.latitude,
+          lng: param.location.longitude,
+        },
         radius: 1000,
         language: 'ko',
-        type: 'restaurant',
+        type: param.category !== '디저트' ? 'restaurant' : 'cafe',
       })
       .asPromise()
       .then(res => {
-        console.log(res.json.results);
+        // console.log(res.json.results);
         const places: Place[] = res.json.results.map(result => ({
           id: result.place_id,
           name: result.name,

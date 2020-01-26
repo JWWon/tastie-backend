@@ -1,4 +1,4 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 import { Optional } from '@nestjs/common';
 
 export class QueryCategoryRequestDTO {
@@ -12,4 +12,16 @@ export class QueryCategoryRequestDTO {
   readonly now: Date;
 }
 
-export class RecommendRestaurantRequestDTO {}
+export class RecommendRestaurantRequestDTO {
+  @ApiProperty()
+  readonly longitude: number;
+
+  @ApiProperty()
+  readonly latitude: number;
+
+  @ApiProperty()
+  readonly category: string;
+
+  @ApiProperty()
+  readonly situation: string;
+}
