@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import { RestaurantUsecase } from './usecase';
 import { Category, Situation, Restaurant } from './model';
 import { filterCategoriesByTimeSlot } from './business/categoryFilter';
@@ -11,8 +12,14 @@ import {
   QueryRecommendRestaurantRequest,
 } from './dto';
 import { TimeSlot } from './model/timeSlot';
+import { PlacePluginToken, PlacePlugin } from '../place/placePlugin';
 
 export class RestaurantService implements RestaurantUsecase {
+  constructor(
+    @Inject(PlacePluginToken)
+    private readonly placePlugin: PlacePlugin,
+  ) {}
+
   async getCategories(req: QueryCategoryRequest): Promise<Category[]> {
     const koreanDate = convertKoreanDateFromUTC(req.utcNow);
     const timeSlot = convertTimeSlotFromDate(koreanDate);
@@ -75,6 +82,15 @@ export class RestaurantService implements RestaurantUsecase {
   async getRecommendRestaurant(
     req: QueryRecommendRestaurantRequest,
   ): Promise<Restaurant> {
-    return {};
+    const restaurants = await this.placePlugin.getRestaurants(req.location);
+    const recommendRestaurant = restaurants[0];
+    // console.log(restaurants);
+    return {
+      id: recommendRestaurant.id,
+      name: recommendRestaurant.name,
+      rating: recommendRestaurant.rating,
+      userRatingsTotal: recommendRestaurant.userRatingsTotal,
+      location: recommendRestaurant.location,
+    };
   }
 }
