@@ -8,4 +8,6 @@ export type QuerySituationRequest = {};
 
 export type QueryRecommendRestaurantRequest = {
   readonly location: Location;
+  readonly category: string;
+  readonly situation: string;
 };

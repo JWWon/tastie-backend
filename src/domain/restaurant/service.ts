@@ -13,11 +13,17 @@ import {
 } from './dto';
 import { TimeSlot } from './model/timeSlot';
 import { PlacePluginToken, PlacePlugin } from '../place/placePlugin';
+import {
+  RestaurantRecommender,
+  RestaurantRecommenderToken,
+} from './business/restaurantRecommender';
 
 export class RestaurantService implements RestaurantUsecase {
   constructor(
     @Inject(PlacePluginToken)
     private readonly placePlugin: PlacePlugin,
+    @Inject(RestaurantRecommenderToken)
+    private readonly restaurantRecommender: RestaurantRecommender,
   ) {}
 
   async getCategories(req: QueryCategoryRequest): Promise<Category[]> {
@@ -83,7 +89,9 @@ export class RestaurantService implements RestaurantUsecase {
     req: QueryRecommendRestaurantRequest,
   ): Promise<Restaurant> {
     const restaurants = await this.placePlugin.getRestaurants(req.location);
-    const recommendRestaurant = restaurants[0];
+    const recommendRestaurant = this.restaurantRecommender.recommend(
+      restaurants,
+    );
     // console.log(restaurants);
     return {
       id: recommendRestaurant.id,

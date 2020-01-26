@@ -6,6 +6,11 @@ import {
 import { RestaurantUsecase, RestaurantUsecaseToken } from './usecase';
 import { RestaurantService } from './service';
 import { Category, Restaurant, Situation } from './model';
+import {
+  RestaurantRecommender,
+  RestaurantRecommenderToken,
+} from './business/restaurantRecommender';
+import { RuleBasedRestaurantRecommender } from './business/ruleBasedRestaurantRecommender';
 
 export {
   QueryCategoryRequest,
@@ -17,4 +22,7 @@ export {
   RestaurantUsecase,
   RestaurantUsecaseToken,
   RestaurantService,
+  RestaurantRecommender,
+  RestaurantRecommenderToken,
+  RuleBasedRestaurantRecommender,
 };
