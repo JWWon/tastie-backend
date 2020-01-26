@@ -31,6 +31,7 @@ export class PlaceController {
       id: place.id,
       name: place.name,
       rating: place.rating,
+      location: place.location,
     }));
 
     return result;

@@ -14,4 +14,5 @@ export type Place = {
   readonly name: string;
   readonly rating: number;
   readonly userRatingsTotal: number;
+  readonly location: Location;
 };
