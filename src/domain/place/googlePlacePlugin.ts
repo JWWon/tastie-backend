@@ -17,6 +17,33 @@ export class GooglePlacePlugin implements PlacePlugin {
     });
   }
 
+  async getRestaurants(location: Location): Promise<Place[]> {
+    return this.client
+      .placesNearby({
+        location: { lat: location.latitude, lng: location.longitude },
+        radius: 1000,
+        language: 'ko',
+        type: 'restaurant',
+      })
+      .asPromise()
+      .then(res => {
+        console.log(res.json.results);
+        const places: Place[] = res.json.results.map(result => ({
+          id: result.place_id,
+          name: result.name,
+          rating: result.rating,
+          location: {
+            longitude: result.geometry.location.lng,
+            latitude: result.geometry.location.lat,
+          },
+          // eslint-disable-next-line dot-notation
+          userRatingsTotal: result['user_ratings_total'],
+        }));
+
+        return places;
+      });
+  }
+
   async getTouristAttractionPlaces(
     location: Location,
     radius: number,
