@@ -34,6 +34,10 @@ export class GooglePlacePlugin implements PlacePlugin {
           id: result.place_id,
           name: result.name,
           rating: result.rating,
+          location: {
+            longitude: result.geometry.location.lng,
+            latitude: result.geometry.location.lat,
+          },
           // eslint-disable-next-line dot-notation
           userRatingsTotal: result['user_ratings_total'],
         }));
