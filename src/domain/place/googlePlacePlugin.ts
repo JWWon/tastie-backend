@@ -40,20 +40,7 @@ export class GooglePlacePlugin implements PlacePlugin {
       })
       .asPromise()
       .then(res => {
-        // console.log(res.json.results);
-        // res.json.results.forEach(a => {
-        //   console.log(a);
-        //   console.log(a.opening_hours);
-        //   // console.log(a.permanently_closed)
-        // });
         console.log('simple', res.json.results[0]);
-        // this.client
-        //   .placesPhoto({
-        //     photoreference: res.json.results[0].photos[0].photo_reference,
-        //     maxwidth: 400,
-        //   })
-        //   .asPromise()
-        //   .then(res3 => console.log('photo', res3));
         this.client
           .place({ placeid: res.json.results[0].place_id, language: 'ko' })
           .asPromise()

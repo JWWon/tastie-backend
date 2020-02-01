@@ -3,12 +3,12 @@ import { LocationResponseDTO } from '../common/response';
 
 export class CategoryResponseDTO {
   @ApiProperty()
-  name: string;
+  readonly name: string;
 }
 
 export class SituationResponseDTO {
   @ApiProperty()
-  name: string;
+  readonly name: string;
 }
 
 export class RestaurantResponseDTO {
@@ -16,7 +16,7 @@ export class RestaurantResponseDTO {
   readonly id: string;
 
   @ApiProperty()
-  name: string;
+  readonly name: string;
 
   @ApiProperty()
   readonly rating: number;

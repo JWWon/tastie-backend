@@ -87,14 +87,15 @@ export class RestaurantService implements RestaurantUsecase {
 
   async getRecommendRestaurant(
     req: QueryRecommendRestaurantRequest,
-  ): Promise<Restaurant> {
+  ): Promise<Restaurant | undefined> {
     const restaurants = await this.placePlugin.getRestaurants({
       location: req.location,
       category: req.category,
       situation: req.situation,
     });
-
+    console.log('abcd', restaurants);
     const recommendRestaurant = this.restaurantRecommender.recommend(
+      req,
       restaurants,
     );
 
