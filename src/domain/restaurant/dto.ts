@@ -1,7 +1,13 @@
+import { Location } from '@/domain/place/dto';
+
 export type QueryCategoryRequest = {
-  utcNow: Date;
+  readonly utcNow: Date;
 };
 
 export type QuerySituationRequest = {};
 
-export type QueryRecommendRestaurantRequest = {};
+export type QueryRecommendRestaurantRequest = {
+  readonly location: Location;
+  readonly category: string;
+  readonly situation: string;
+};

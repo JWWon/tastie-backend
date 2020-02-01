@@ -1,12 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-
-class LocationResponseDTO {
-  @ApiProperty()
-  readonly longitude: number;
-
-  @ApiProperty()
-  readonly latitude: number;
-}
+import { LocationResponseDTO } from '../common/response';
 
 export class PlaceResponseDTO {
   @ApiProperty()
