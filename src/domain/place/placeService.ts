@@ -1,10 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PlaceUsecase } from './usecase';
 import { PlacePlugin, PlacePluginToken } from './placePlugin';
 import { Place, QueryPlaceRequest } from '@/domain/place/dto';
 
 @Injectable()
-export class PlaceService implements PlaceUsecase {
+export class PlaceService {
   constructor(
     @Inject(PlacePluginToken)
     private readonly placePlugin: PlacePlugin,
