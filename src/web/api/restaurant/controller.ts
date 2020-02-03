@@ -9,6 +9,7 @@ import {
 import {
   QueryCategoryRequestDTO,
   RecommendRestaurantRequestDTO,
+  QuerySituationRequestDTO,
 } from './request';
 
 @ApiTags('Restaurant')
@@ -35,8 +36,12 @@ export class RestaurantController {
 
   @Get('situations')
   @ApiResponse({ status: 200, type: SituationResponseDTO, isArray: true })
-  async getSituations(): Promise<SituationResponseDTO[]> {
-    const situations = await this.restaurantService.getSituations({});
+  async getSituations(
+    @Query() req: QuerySituationRequestDTO,
+  ): Promise<SituationResponseDTO[]> {
+    const situations = await this.restaurantService.getSituations({
+      utcNow: new Date(req.now || Date.now()),
+    });
 
     return situations.map(situation => ({
       name: situation.name,

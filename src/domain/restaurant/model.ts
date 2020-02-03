@@ -10,6 +10,7 @@ export type Category = {
 export type Situation = {
   readonly id: string;
   readonly name: string;
+  readonly priorities: TimeSlot[];
 };
 
 export type Restaurant = {

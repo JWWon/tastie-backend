@@ -2,6 +2,7 @@ import { Inject } from '@nestjs/common';
 import { RestaurantUsecase } from './usecase';
 import { Category, Situation, Restaurant } from './model';
 import { filterCategoriesByTimeSlot } from './business/categoryFilter';
+import { filterSituationsByTimeSlot } from './business/situationFilter';
 import {
   convertTimeSlotFromDate,
   convertKoreanDateFromUTC,
@@ -88,12 +89,101 @@ export class RestaurantService implements RestaurantUsecase {
   }
 
   async getSituations(req: QuerySituationRequest): Promise<Situation[]> {
+    const koreanDate = convertKoreanDateFromUTC(req.utcNow);
+    const timeSlot = convertTimeSlotFromDate(koreanDate);
     const situations: Situation[] = [
-      { id: Symbol.toString(), name: '친구들이랑 한끼' },
-      { id: Symbol.toString(), name: '혼밥' },
+      {
+        id: Symbol().toString(),
+        name: '간단한 끼니',
+        priorities: [TimeSlot.Morning, TimeSlot.MorningAndNoon],
+      },
+      {
+        id: Symbol().toString(),
+        name: '설레는 여행',
+        priorities: [
+          TimeSlot.Dawn,
+          TimeSlot.Evening,
+          TimeSlot.Morning,
+          TimeSlot.MorningAndNoon,
+          TimeSlot.Night,
+          TimeSlot.Noon,
+          TimeSlot.NoonAndEvening,
+        ],
+      },
+      {
+        id: Symbol().toString(),
+        name: '해장',
+        priorities: [TimeSlot.Morning, TimeSlot.MorningAndNoon],
+      },
+      {
+        id: Symbol().toString(),
+        name: '데이트',
+        priorities: [
+          TimeSlot.MorningAndNoon,
+          TimeSlot.Noon,
+          TimeSlot.NoonAndEvening,
+          TimeSlot.Evening,
+          TimeSlot.Night,
+        ],
+      },
+      {
+        id: Symbol().toString(),
+        name: '새로운 맛집 도전',
+        priorities: [
+          TimeSlot.MorningAndNoon,
+          TimeSlot.Noon,
+          TimeSlot.NoonAndEvening,
+          TimeSlot.Evening,
+          TimeSlot.Night,
+        ],
+      },
+      {
+        id: Symbol().toString(),
+        name: '실패 없는 맛집 가기',
+        priorities: [
+          TimeSlot.MorningAndNoon,
+          TimeSlot.Noon,
+          TimeSlot.NoonAndEvening,
+          TimeSlot.Evening,
+          TimeSlot.Night,
+        ],
+      },
+      {
+        id: Symbol().toString(),
+        name: '소개팅',
+        priorities: [
+          TimeSlot.MorningAndNoon,
+          TimeSlot.Noon,
+          TimeSlot.NoonAndEvening,
+          TimeSlot.Evening,
+          TimeSlot.Night,
+        ],
+      },
+      {
+        id: Symbol().toString(),
+        name: '혼자만의 시간',
+        priorities: [
+          TimeSlot.MorningAndNoon,
+          TimeSlot.Noon,
+          TimeSlot.NoonAndEvening,
+          TimeSlot.Evening,
+          TimeSlot.Night,
+          TimeSlot.Dawn,
+        ],
+      },
+      {
+        id: Symbol().toString(),
+        name: '친구들과 신나는 파티',
+        priorities: [TimeSlot.Evening, TimeSlot.Night, TimeSlot.Dawn],
+      },
+      {
+        id: Symbol().toString(),
+        name: '진지한 자리',
+        priorities: [TimeSlot.Night, TimeSlot.Dawn],
+      },
     ];
 
-    return situations;
+    return filterSituationsByTimeSlot(timeSlot, situations);
   }
 
   async getRecommendRestaurant(

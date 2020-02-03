@@ -4,7 +4,9 @@ export type QueryCategoryRequest = {
   readonly utcNow: Date;
 };
 
-export type QuerySituationRequest = {};
+export type QuerySituationRequest = {
+  readonly utcNow: Date;
+};
 
 export type QueryRecommendRestaurantRequest = {
   readonly location: Location;

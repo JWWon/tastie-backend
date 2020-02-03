@@ -12,6 +12,17 @@ export class QueryCategoryRequestDTO {
   readonly now: Date;
 }
 
+export class QuerySituationRequestDTO {
+  @Optional()
+  @ApiPropertyOptional({
+    type: Date,
+    description: 'UTC datetime based Iso8601Literal format',
+    example: '2018-11-21T06:20:32.232Z',
+    default: 'current datetime',
+  })
+  readonly now: Date;
+}
+
 export class RecommendRestaurantRequestDTO {
   @ApiProperty()
   readonly longitude: number;
