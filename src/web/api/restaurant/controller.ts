@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Inject, Body, Query } from '@nestjs/common';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
-import { RestaurantUsecase, RestaurantUsecaseToken } from '@/domain/restaurant';
 import {
   CategoryResponseDTO,
   SituationResponseDTO,
@@ -11,14 +10,12 @@ import {
   RecommendRestaurantRequestDTO,
   QuerySituationRequestDTO,
 } from './request';
+import { RestaurantService } from '@/domain/restaurant';
 
 @ApiTags('Restaurant')
 @Controller('restaurant')
 export class RestaurantController {
-  constructor(
-    @Inject(RestaurantUsecaseToken)
-    private readonly restaurantService: RestaurantUsecase,
-  ) {}
+  constructor(private readonly restaurantService: RestaurantService) {}
 
   @Get('categories')
   @ApiResponse({ status: 200, type: CategoryResponseDTO, isArray: true })

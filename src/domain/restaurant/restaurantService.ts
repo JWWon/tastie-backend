@@ -1,5 +1,4 @@
 import { Inject } from '@nestjs/common';
-import { RestaurantUsecase } from './usecase';
 import { Category, Situation, Restaurant } from './model';
 import { filterCategoriesByTimeSlot } from './business/categoryFilter';
 import { filterSituationsByTimeSlot } from './business/situationFilter';
@@ -19,7 +18,7 @@ import {
   RestaurantRecommenderToken,
 } from './business/restaurantRecommender';
 
-export class RestaurantService implements RestaurantUsecase {
+export class RestaurantService {
   constructor(
     @Inject(PlacePluginToken)
     private readonly placePlugin: PlacePlugin,

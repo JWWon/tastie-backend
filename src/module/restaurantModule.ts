@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { RestaurantController } from '@/web/api/restaurant/controller';
 import {
   RestaurantService,
-  RestaurantUsecaseToken,
   RestaurantRecommenderToken,
   RuleBasedRestaurantRecommender,
 } from '@/domain/restaurant';
@@ -12,7 +11,7 @@ import { PlacePluginToken } from '@/domain/place/placePlugin';
 @Module({
   controllers: [RestaurantController],
   providers: [
-    { provide: RestaurantUsecaseToken, useClass: RestaurantService },
+    RestaurantService,
     {
       provide: RestaurantRecommenderToken,
       useClass: RuleBasedRestaurantRecommender,
