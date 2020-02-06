@@ -5,7 +5,7 @@ import {
   RestaurantRecommenderToken,
   RuleBasedRestaurantRecommender,
 } from '@/domain/restaurant';
-import { GooglePlacePlugin } from '@/domain/place/googlePlacePlugin';
+import { GooglePlacePlugin } from '@/infrastructure/place/goolgePlacePlugin';
 import { PlacePluginToken } from '@/domain/place/placePlugin';
 
 @Module({

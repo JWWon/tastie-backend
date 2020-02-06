@@ -1,5 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PlacePlugin, PlacePluginToken } from './placePlugin';
+import {
+  PlacePlugin,
+  PlacePluginToken,
+  PlaceQueryResponse,
+} from './placePlugin';
 import { Place, QueryPlaceRequest } from '@/domain/place/dto';
 
 @Injectable()
@@ -10,11 +14,23 @@ export class PlaceService {
   ) {}
 
   async getPlaces(req: QueryPlaceRequest): Promise<Place[]> {
-    const places = await this.placePlugin.getTouristAttractionPlaces(
-      req.location,
-      req.radius,
-    );
+    const placeResponse = await this.placePlugin.getPlaces({
+      location: req.location,
+      radius: req.radius,
+      placeType: 'tourist_attraction',
+    });
 
+    const convert = (res: PlaceQueryResponse): Place => {
+      return {
+        id: res.placeID,
+        name: res.name,
+        location: res.location,
+        rating: res.rating,
+        userRatingsTotal: res.userRatingsTotal,
+      };
+    };
+
+    const places = placeResponse.map(convert);
     const cmpFunc = (a: Place, b: Place) => {
       if (a.userRatingsTotal > b.userRatingsTotal) return -1;
       if (a.userRatingsTotal < b.userRatingsTotal) return 1;

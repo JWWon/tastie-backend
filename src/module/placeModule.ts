@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PlaceController } from '@/web/api/place/controller';
 import { PlaceService, PlacePluginToken } from '@/domain/place';
-import { GooglePlacePlugin } from '@/domain/place/googlePlacePlugin';
+import { GooglePlacePlugin } from '@/infrastructure/place/goolgePlacePlugin';
 
 @Module({
   controllers: [PlaceController],
