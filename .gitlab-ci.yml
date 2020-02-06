@@ -49,7 +49,7 @@ deploy-staging:
     - cat Dockerrun.aws.json.template | envsubst > Dockerrun.aws.json
     - git add Dockerrun.aws.json
     - eb deploy --staged
-    - EXIT_STATUS=$? scripts/to_slack.sh
+    - cd ../ && EXIT_STATUS=$? scripts/to_slack.sh
   variables:
     ENVIRONMENT: staging
     APP_VERSION: "staging-b$CI_PIPELINE_ID"
