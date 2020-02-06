@@ -1,15 +1,13 @@
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
-import { Controller, Get, Query, Inject } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { QueryRegionRequestDTO } from './request';
-import { PlaceUsecase, PlaceUsecaseToken } from '@/domain/place/usecase';
 import { PlaceResponseDTO } from './response';
+import { PlaceService } from '@/domain/place';
 
 @ApiTags('Place')
 @Controller('places')
 export class PlaceController {
-  constructor(
-    @Inject(PlaceUsecaseToken) private readonly placeService: PlaceUsecase,
-  ) {}
+  constructor(private readonly placeService: PlaceService) {}
 
   @Get()
   @ApiResponse({ status: 200, type: PlaceResponseDTO, isArray: true })

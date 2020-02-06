@@ -3,8 +3,7 @@ import {
   QueryRecommendRestaurantRequest,
   QuerySituationRequest,
 } from './dto';
-import { RestaurantUsecase, RestaurantUsecaseToken } from './usecase';
-import { RestaurantService } from './service';
+import { RestaurantService } from './restaurantService';
 import { Category, Restaurant, Situation } from './model';
 import {
   RestaurantRecommender,
@@ -19,8 +18,6 @@ export {
   Category,
   Restaurant,
   Situation,
-  RestaurantUsecase,
-  RestaurantUsecaseToken,
   RestaurantService,
   RestaurantRecommender,
   RestaurantRecommenderToken,

@@ -5,7 +5,7 @@ import {
   QueryCategoryRequest,
   QuerySituationRequest,
   QueryRecommendRestaurantRequest,
-  RestaurantUsecaseToken,
+  RestaurantService,
 } from '@/domain/restaurant';
 
 @Injectable()
@@ -23,7 +23,7 @@ describe('RestaurantController', () => {
       controllers: [RestaurantController],
       providers: [
         {
-          provide: RestaurantUsecaseToken,
+          provide: RestaurantService,
           useClass: FakeRestaurantService,
         },
       ],
