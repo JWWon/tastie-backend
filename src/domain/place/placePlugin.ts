@@ -24,9 +24,19 @@ export type PlaceQueryResponse = {
   readonly location: Location;
 };
 
+export type PlaceDetailResponse = {
+  readonly placeID: string;
+  readonly name: string;
+  readonly rating: number;
+  readonly userRatingsTotal: number;
+  readonly priceLevel: number;
+  readonly types: string[];
+  readonly location: Location;
+};
+
 export interface PlacePlugin {
   getPlaces(param: QueryPlacesParam): Promise<PlaceQueryResponse[]>;
-  // getPlaceDetailByPlaceID(placeID: string): Promise<Place>;
+  getPlaceDetailByPlaceID(placeID: string): Promise<PlaceDetailResponse>;
 }
 
 export const PlacePluginToken = Symbol();

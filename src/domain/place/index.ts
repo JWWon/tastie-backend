@@ -4,6 +4,7 @@ import {
   PlacePluginToken,
   QueryPlacesParam,
   PlaceQueryResponse,
+  PlaceDetailResponse,
 } from './placePlugin';
 import { QueryPlaceRequest, Location, Place } from './dto';
 
@@ -12,6 +13,7 @@ export {
   PlacePlugin,
   PlacePluginToken,
   PlaceQueryResponse,
+  PlaceDetailResponse,
   QueryPlaceRequest,
   QueryPlacesParam,
   Location,

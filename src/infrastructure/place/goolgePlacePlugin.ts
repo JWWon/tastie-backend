@@ -9,6 +9,7 @@ import {
   PlacePlugin,
   QueryPlacesParam,
   PlaceQueryResponse,
+  PlaceDetailResponse,
 } from '../../domain/place';
 
 @Injectable()
@@ -22,6 +23,32 @@ export class GooglePlacePlugin implements PlacePlugin {
       key: googleApiKey,
       Promise,
     });
+  }
+
+  async getPlaceDetailByPlaceID(placeID: string): Promise<PlaceDetailResponse> {
+    return this.client
+      .place({
+        placeid: placeID,
+      })
+      .asPromise()
+      .then(res => {
+        const place = res.json.result;
+        const result: PlaceDetailResponse = {
+          placeID: place.place_id,
+          name: place.name,
+          rating: place.rating,
+          // eslint-disable-next-line dot-notation
+          userRatingsTotal: place['user_ratings_total'],
+          priceLevel: place.price_level,
+          types: place.types,
+          location: {
+            longitude: place.geometry.location.lng,
+            latitude: place.geometry.location.lat,
+          },
+        };
+
+        return result;
+      });
   }
 
   async getPlaces(param: QueryPlacesParam): Promise<PlaceQueryResponse[]> {
