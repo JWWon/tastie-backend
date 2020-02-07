@@ -13,7 +13,7 @@ export class SituationResponseDTO {
 
 export class PlaceOpeningHoursDTO {
   @ApiProperty()
-  readonly openNow: boolean;
+  readonly openNow?: boolean;
 
   @ApiProperty()
   readonly weekdayText: string[];
@@ -51,7 +51,7 @@ export class RestaurantResponseDTO {
   readonly website?: string;
 
   @ApiProperty()
-  readonly photoReference: string[];
+  readonly photoUrls: string[];
 
   @ApiProperty()
   readonly openingHours: PlaceOpeningHoursDTO;

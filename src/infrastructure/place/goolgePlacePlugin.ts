@@ -10,7 +10,9 @@ import {
   QueryPlacesParam,
   PlaceQueryResponse,
   PlaceDetailResponse,
+  PlacePhoto,
 } from '../../domain/place';
+import { PlaceOpeningHours } from '@/domain/place/placePlugin';
 
 @Injectable()
 export class GooglePlacePlugin implements PlacePlugin {
@@ -34,6 +36,16 @@ export class GooglePlacePlugin implements PlacePlugin {
       .asPromise()
       .then(res => {
         const place = res.json.result;
+        const openingHours: PlaceOpeningHours =
+          place.opening_hours === undefined
+            ? {
+                weekdayText: [],
+              }
+            : {
+                openNow: place.opening_hours.open_now,
+                weekdayText: place.opening_hours.weekday_text,
+              };
+
         const result: PlaceDetailResponse = {
           placeID: place.place_id,
           name: place.name,
@@ -48,11 +60,15 @@ export class GooglePlacePlugin implements PlacePlugin {
           },
           formattedAddress: place.formatted_address,
           formattedPhoneNumber: place.formatted_phone_number,
-          openingHours: {
-            openNow: place.opening_hours.open_now,
-            weekdayText: place.opening_hours.weekday_text,
-          },
-          photoReference: place.photos.map(item => item.photo_reference),
+          openingHours,
+          photos: place.photos.map(photo => {
+            return {
+              reference: photo.photo_reference,
+              width: photo.width,
+              height: photo.height,
+              url: '',
+            };
+          }),
         };
 
         return result;
@@ -68,6 +84,7 @@ export class GooglePlacePlugin implements PlacePlugin {
         },
         radius: param.radius,
         type: param.placeType,
+        keyword: param.keyword,
         language: 'ko',
       })
       .asPromise()
@@ -91,5 +108,30 @@ export class GooglePlacePlugin implements PlacePlugin {
         const result: PlaceQueryResponse[] = res.json.results.map(convertFunc);
         return result;
       });
+  }
+
+  async getPhotoUrls(photos: PlacePhoto[]): Promise<string[]> {
+    const tasks = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for (const photo of photos) {
+      tasks.push(
+        this.client
+          .placesPhoto({
+            photoreference: photo.reference,
+            maxwidth: photo.width,
+          })
+          .asPromise(),
+      );
+    }
+
+    const responses = await Promise.all(tasks);
+
+    const urls = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for (const res of responses) {
+      urls.push(`https://lh3.googleusercontent.com${res.req.path}`);
+    }
+
+    return urls;
   }
 }

@@ -27,5 +27,5 @@ export type RestaurantDetailResponse = {
   readonly formattedPhoneNumber?: string;
   readonly website?: string;
   readonly openingHours: PlaceOpeningHours;
-  readonly photoReference: string[];
+  readonly photoUrls: string[];
 };

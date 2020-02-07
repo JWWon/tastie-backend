@@ -208,6 +208,10 @@ export class RestaurantService {
       radius: 1000,
     });
 
+    if (places.length <= 0) {
+      return undefined;
+    }
+
     const convert = (res: PlaceQueryResponse): Restaurant => {
       return {
         id: res.placeID,
@@ -228,6 +232,11 @@ export class RestaurantService {
       recommendRestaurant.id,
     );
 
-    return restaurantDetailInfo;
+    return {
+      ...restaurantDetailInfo,
+      photoUrls: await this.placePlugin.getPhotoUrls(
+        restaurantDetailInfo.photos,
+      ),
+    };
   }
 }

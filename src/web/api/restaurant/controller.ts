@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Inject, Body, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import {
   CategoryResponseDTO,
@@ -59,6 +59,10 @@ export class RestaurantController {
       situation: req.situation,
     });
 
+    if (restaurant === undefined) {
+      throw new Error('Restaurant not found');
+    }
+
     return {
       id: restaurant.placeID,
       name: restaurant.name,
@@ -71,7 +75,7 @@ export class RestaurantController {
       formattedPhoneNumber: restaurant.formattedPhoneNumber,
       website: restaurant.website,
       openingHours: restaurant.openingHours,
-      photoReference: restaurant.photoReference,
+      photoUrls: restaurant.photoUrls,
     };
   }
 }

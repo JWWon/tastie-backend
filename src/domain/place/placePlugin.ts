@@ -25,8 +25,15 @@ export type PlaceQueryResponse = {
 };
 
 export type PlaceOpeningHours = {
-  readonly openNow: boolean;
+  readonly openNow?: boolean;
   readonly weekdayText: string[];
+};
+
+export type PlacePhoto = {
+  readonly reference: string;
+  readonly width: number;
+  readonly height: number;
+  url: string;
 };
 
 export type PlaceDetailResponse = {
@@ -41,12 +48,13 @@ export type PlaceDetailResponse = {
   readonly formattedPhoneNumber?: string;
   readonly website?: string;
   readonly openingHours: PlaceOpeningHours;
-  readonly photoReference: string[];
+  readonly photos: PlacePhoto[];
 };
 
 export interface PlacePlugin {
   getPlaces(param: QueryPlacesParam): Promise<PlaceQueryResponse[]>;
   getPlaceDetailByPlaceID(placeID: string): Promise<PlaceDetailResponse>;
+  getPhotoUrls(photos: PlacePhoto[]): Promise<string[]>;
 }
 
 export const PlacePluginToken = Symbol();
