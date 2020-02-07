@@ -10,6 +10,7 @@ import {
   QueryCategoryRequest,
   QuerySituationRequest,
   QueryRecommendRestaurantRequest,
+  RestaurantDetailResponse,
 } from './dto';
 import { TimeSlot } from './model/timeSlot';
 import {
@@ -191,7 +192,7 @@ export class RestaurantService {
 
   async getRecommendRestaurant(
     req: QueryRecommendRestaurantRequest,
-  ): Promise<Restaurant | undefined> {
+  ): Promise<RestaurantDetailResponse | undefined> {
     const categoryMap = {
       디저트: 'cafe',
       술자리: 'bar',
@@ -206,6 +207,10 @@ export class RestaurantService {
       placeType,
       radius: 1000,
     });
+
+    if (places.length <= 0) {
+      return undefined;
+    }
 
     const convert = (res: PlaceQueryResponse): Restaurant => {
       return {
@@ -223,12 +228,15 @@ export class RestaurantService {
       restaurants,
     );
 
+    const restaurantDetailInfo = await this.placePlugin.getPlaceDetailByPlaceID(
+      recommendRestaurant.id,
+    );
+
     return {
-      id: recommendRestaurant.id,
-      name: recommendRestaurant.name,
-      rating: recommendRestaurant.rating,
-      userRatingsTotal: recommendRestaurant.userRatingsTotal,
-      location: recommendRestaurant.location,
+      ...restaurantDetailInfo,
+      photoUrls: await this.placePlugin.getPhotoUrls(
+        restaurantDetailInfo.photos,
+      ),
     };
   }
 }

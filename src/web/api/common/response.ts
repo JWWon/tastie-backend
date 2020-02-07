@@ -7,3 +7,11 @@ export class LocationResponseDTO {
   @ApiProperty()
   readonly latitude: number;
 }
+
+export class HttpExceptionResponseDTO {
+  @ApiProperty()
+  readonly statusCode: number;
+
+  @ApiProperty()
+  readonly message: string;
+}

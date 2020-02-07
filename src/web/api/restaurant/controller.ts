@@ -1,5 +1,11 @@
-import { Controller, Get, Post, Inject, Body, Query } from '@nestjs/common';
-import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Query,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { ApiTags, ApiResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import {
   CategoryResponseDTO,
   SituationResponseDTO,
@@ -11,6 +17,7 @@ import {
   QuerySituationRequestDTO,
 } from './request';
 import { RestaurantService } from '@/domain/restaurant';
+import { HttpExceptionResponseDTO } from '../common/response';
 
 @ApiTags('Restaurant')
 @Controller('restaurant')
@@ -47,6 +54,10 @@ export class RestaurantController {
 
   @Get('')
   @ApiResponse({ status: 200, type: RestaurantResponseDTO })
+  @ApiNotFoundResponse({
+    type: HttpExceptionResponseDTO,
+    description: '적절한 레스토랑을 찾지 못했을 경우',
+  })
   async getRecommendRestaurant(
     @Query() req: RecommendRestaurantRequestDTO,
   ): Promise<RestaurantResponseDTO> {
@@ -59,11 +70,23 @@ export class RestaurantController {
       situation: req.situation,
     });
 
+    if (restaurant === undefined) {
+      throw new HttpException('Restaurant not found', HttpStatus.NOT_FOUND);
+    }
+
     return {
-      id: restaurant.id,
+      id: restaurant.placeID,
       name: restaurant.name,
-      location: restaurant.location,
       rating: restaurant.rating,
+      userRatingsTotal: restaurant.userRatingsTotal,
+      priceLevel: restaurant.priceLevel,
+      types: restaurant.types,
+      location: restaurant.location,
+      formattedAddress: restaurant.formattedAddress,
+      formattedPhoneNumber: restaurant.formattedPhoneNumber,
+      website: restaurant.website,
+      openingHours: restaurant.openingHours,
+      photoUrls: restaurant.photoUrls,
     };
   }
 }
