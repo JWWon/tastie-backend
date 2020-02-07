@@ -24,6 +24,11 @@ export type PlaceQueryResponse = {
   readonly location: Location;
 };
 
+export type PlaceOpeningHours = {
+  readonly openNow: boolean;
+  readonly weekdayText: string[];
+};
+
 export type PlaceDetailResponse = {
   readonly placeID: string;
   readonly name: string;
@@ -32,6 +37,11 @@ export type PlaceDetailResponse = {
   readonly priceLevel: number;
   readonly types: string[];
   readonly location: Location;
+  readonly formattedAddress: string;
+  readonly formattedPhoneNumber?: string;
+  readonly website?: string;
+  readonly openingHours: PlaceOpeningHours;
+  readonly photoReference: string[];
 };
 
 export interface PlacePlugin {

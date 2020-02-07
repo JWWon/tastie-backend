@@ -11,6 +11,14 @@ export class SituationResponseDTO {
   readonly name: string;
 }
 
+export class PlaceOpeningHoursDTO {
+  @ApiProperty()
+  readonly openNow: boolean;
+
+  @ApiProperty()
+  readonly weekdayText: string[];
+}
+
 export class RestaurantResponseDTO {
   @ApiProperty()
   readonly id: string;
@@ -21,6 +29,30 @@ export class RestaurantResponseDTO {
   @ApiProperty()
   readonly rating: number;
 
+  @ApiProperty()
+  readonly userRatingsTotal: number;
+
+  @ApiProperty()
+  readonly priceLevel: number;
+
+  @ApiProperty()
+  readonly types: string[];
+
   @ApiProperty({ type: LocationResponseDTO })
   readonly location: LocationResponseDTO;
+
+  @ApiProperty()
+  readonly formattedAddress: string;
+
+  @ApiProperty()
+  readonly formattedPhoneNumber?: string;
+
+  @ApiProperty()
+  readonly website?: string;
+
+  @ApiProperty()
+  readonly photoReference: string[];
+
+  @ApiProperty()
+  readonly openingHours: PlaceOpeningHoursDTO;
 }

@@ -60,10 +60,18 @@ export class RestaurantController {
     });
 
     return {
-      id: restaurant.id,
+      id: restaurant.placeID,
       name: restaurant.name,
-      location: restaurant.location,
       rating: restaurant.rating,
+      userRatingsTotal: restaurant.userRatingsTotal,
+      priceLevel: restaurant.priceLevel,
+      types: restaurant.types,
+      location: restaurant.location,
+      formattedAddress: restaurant.formattedAddress,
+      formattedPhoneNumber: restaurant.formattedPhoneNumber,
+      website: restaurant.website,
+      openingHours: restaurant.openingHours,
+      photoReference: restaurant.photoReference,
     };
   }
 }

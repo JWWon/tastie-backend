@@ -29,6 +29,7 @@ export class GooglePlacePlugin implements PlacePlugin {
     return this.client
       .place({
         placeid: placeID,
+        language: 'ko',
       })
       .asPromise()
       .then(res => {
@@ -45,6 +46,13 @@ export class GooglePlacePlugin implements PlacePlugin {
             longitude: place.geometry.location.lng,
             latitude: place.geometry.location.lat,
           },
+          formattedAddress: place.formatted_address,
+          formattedPhoneNumber: place.formatted_phone_number,
+          openingHours: {
+            openNow: place.opening_hours.open_now,
+            weekdayText: place.opening_hours.weekday_text,
+          },
+          photoReference: place.photos.map(item => item.photo_reference),
         };
 
         return result;
