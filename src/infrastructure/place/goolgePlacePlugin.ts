@@ -11,6 +11,7 @@ import {
   PlaceQueryResponse,
   PlaceDetailResponse,
   PlacePhoto,
+  Location,
 } from '../../domain/place';
 import { PlaceOpeningHours } from '@/domain/place/placePlugin';
 
@@ -25,6 +26,27 @@ export class GooglePlacePlugin implements PlacePlugin {
       key: googleApiKey,
       Promise,
     });
+  }
+
+  async getAddress(param: Location): Promise<string> {
+    return this.client
+      .reverseGeocode({
+        latlng: {
+          lat: param.latitude,
+          lng: param.longitude,
+        },
+        language: 'ko',
+      })
+      .asPromise()
+      .then(res => {
+        // eslint-disable-next-line prefer-destructuring
+        const results = res.json.results;
+        if (results.length < 1) {
+          return '';
+        }
+        
+        return results[0].formatted_address;
+      });
   }
 
   async getPlaceDetailByPlaceID(placeID: string): Promise<PlaceDetailResponse> {
