@@ -1,6 +1,6 @@
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { Controller, Get, Query } from '@nestjs/common';
-import { QueryRegionRequestDTO } from './request';
+import { QueryRegionRequestDTO, QueryAddressRequestDTO } from './request';
 import { PlaceResponseDTO } from './response';
 import { PlaceService } from '@/domain/place';
 
@@ -33,5 +33,11 @@ export class PlaceController {
     }));
 
     return result;
+  }
+
+  @Get('address')
+  @ApiResponse({ status: 200, type: String })
+  async getPlaceAddress(@Query() req: QueryAddressRequestDTO): Promise<string> {
+    return 'abcd';
   }
 }

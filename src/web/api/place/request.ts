@@ -18,3 +18,11 @@ export class QueryRegionRequestDTO {
   })
   readonly count: number;
 }
+
+export class QueryAddressRequestDTO {
+  @ApiProperty()
+  readonly longitude: number;
+
+  @ApiProperty()
+  readonly latitude: number;
+}
