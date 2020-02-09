@@ -38,6 +38,7 @@ export class PlaceController {
   @Get('address')
   @ApiResponse({ status: 200, type: String })
   async getPlaceAddress(@Query() req: QueryAddressRequestDTO): Promise<string> {
-    return 'abcd';
+    const address = await this.placeService.getAddress(req);
+    return address;
   }
 }

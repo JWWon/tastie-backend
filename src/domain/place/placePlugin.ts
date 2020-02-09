@@ -52,6 +52,7 @@ export type PlaceDetailResponse = {
 };
 
 export interface PlacePlugin {
+  getAddress(param: Location): Promise<string>;
   getPlaces(param: QueryPlacesParam): Promise<PlaceQueryResponse[]>;
   getPlaceDetailByPlaceID(placeID: string): Promise<PlaceDetailResponse>;
   getPhotoUrls(photos: PlacePhoto[]): Promise<string[]>;

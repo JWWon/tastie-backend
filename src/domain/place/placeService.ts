@@ -4,7 +4,11 @@ import {
   PlacePluginToken,
   PlaceQueryResponse,
 } from './placePlugin';
-import { Place, QueryPlaceRequest } from '@/domain/place/dto';
+import {
+  Place,
+  QueryPlaceRequest,
+  QueryAddressRequest,
+} from '@/domain/place/dto';
 
 @Injectable()
 export class PlaceService {
@@ -12,6 +16,11 @@ export class PlaceService {
     @Inject(PlacePluginToken)
     private readonly placePlugin: PlacePlugin,
   ) {}
+
+  async getAddress(req: QueryAddressRequest): Promise<string> {
+    const address = await this.placePlugin.getAddress(req);
+    return address;
+  }
 
   async getPlaces(req: QueryPlaceRequest): Promise<Place[]> {
     const placeResponse = await this.placePlugin.getPlaces({
