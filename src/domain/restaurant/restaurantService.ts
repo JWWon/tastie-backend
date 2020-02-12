@@ -201,12 +201,21 @@ export class RestaurantService {
     const placeType =
       req.category in categoryMap ? categoryMap[req.category] : 'restaurant';
 
-    const places = await this.placePlugin.getPlaces({
+    const placesCache = await this.placePlugin.getPlaces({
       location: req.location,
       keyword: req.situation,
       placeType,
       radius: 1000,
     });
+
+    const places =
+      placesCache.length > 0
+        ? placesCache
+        : await this.placePlugin.getPlaces({
+            location: req.location,
+            placeType,
+            radius: 1000,
+          });
 
     if (places.length <= 0) {
       return undefined;
