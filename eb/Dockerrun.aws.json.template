@@ -5,7 +5,7 @@
     "Key": ".dockercfg"
   },
   "Image": {
-    "Name": "registry.gitlab.com/pickat/pickat-backend:${APP_VERSION}",
+    "Name": "${$CI_REGISTRY_IMAGE}:${APP_VERSION}",
     "Update": "true"
   },
   "Ports": [
