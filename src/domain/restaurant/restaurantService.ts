@@ -1,11 +1,6 @@
+/* eslint-disable no-restricted-syntax */
 import { Inject } from '@nestjs/common';
-import { Category, Situation, Restaurant } from './model';
-import { filterCategoriesByTimeSlot } from './business/categoryFilter';
-import { filterSituationsByTimeSlot } from './business/situationFilter';
-import {
-  convertTimeSlotFromDate,
-  convertKoreanDateFromUTC,
-} from './business/timeSlotConverter';
+import { Restaurant } from './model';
 import {
   QueryCategoryRequest,
   QuerySituationRequest,
@@ -14,16 +9,35 @@ import {
   QueryPreferencesRequest,
   PreferencesResponse,
 } from './dto';
-import { TimeSlot } from './model/timeSlot';
 import {
   PlacePluginToken,
   PlacePlugin,
   PlaceQueryResponse,
+  PlaceType,
+  PlaceDetailResponse,
 } from '../place/placePlugin';
 import {
   RestaurantRecommender,
   RestaurantRecommenderToken,
 } from './business/restaurantRecommender';
+import {
+  CategoryRepositoryToken,
+  CategoryRepository,
+  SituationRepositoryToken,
+  SituationRepository,
+} from '@/interfaces/repositories';
+import { Situation, Category, CategoryType, FoodKeywordType } from '@/entities';
+
+const categoryPlaceTypeMapper = new Map<CategoryType, PlaceType>([
+  ['디저트', 'cafe'],
+  ['술자리', 'bar'],
+]);
+
+const getPlaceTypeByCategory = (category: CategoryType): PlaceType => {
+  return categoryPlaceTypeMapper.has(category)
+    ? categoryPlaceTypeMapper.get(category)
+    : 'restaurant';
+};
 
 export class RestaurantService {
   constructor(
@@ -31,188 +45,84 @@ export class RestaurantService {
     private readonly placePlugin: PlacePlugin,
     @Inject(RestaurantRecommenderToken)
     private readonly restaurantRecommender: RestaurantRecommender,
+    @Inject(CategoryRepositoryToken)
+    private readonly categoryRepository: CategoryRepository,
+    @Inject(SituationRepositoryToken)
+    private readonly situationRepository: SituationRepository,
   ) {}
 
   async getCategories(req: QueryCategoryRequest): Promise<Category[]> {
-    const koreanDate = convertKoreanDateFromUTC(req.utcNow);
-    const timeSlot = convertTimeSlotFromDate(koreanDate);
-    const categories: Category[] = [
-      {
-        id: Symbol().toString(),
-        name: '아침',
-        priorities: [TimeSlot.Morning, TimeSlot.MorningAndNoon, TimeSlot.Dawn],
-      },
-      {
-        id: Symbol().toString(),
-        name: '브런치',
-        priorities: [TimeSlot.MorningAndNoon, TimeSlot.Morning],
-      },
-      {
-        id: Symbol().toString(),
-        name: '간식',
-        priorities: [TimeSlot.Morning, TimeSlot.MorningAndNoon],
-      },
-      {
-        id: Symbol().toString(),
-        name: '점심',
-        priorities: [TimeSlot.Noon, TimeSlot.NoonAndEvening],
-      },
-      {
-        id: Symbol().toString(),
-        name: '저녁',
-        priorities: [
-          TimeSlot.Evening,
-          TimeSlot.NoonAndEvening,
-          TimeSlot.Night,
-          TimeSlot.Noon,
-        ],
-      },
-      {
-        id: Symbol().toString(),
-        name: '디저트',
-        priorities: [
-          TimeSlot.Morning,
-          TimeSlot.MorningAndNoon,
-          TimeSlot.Noon,
-          TimeSlot.NoonAndEvening,
-          TimeSlot.Evening,
-          TimeSlot.Night,
-        ],
-      },
-      {
-        id: Symbol().toString(),
-        name: '술자리',
-        priorities: [TimeSlot.Evening, TimeSlot.Night, TimeSlot.Evening],
-      },
-      {
-        id: Symbol().toString(),
-        name: '야식',
-        priorities: [TimeSlot.Night, TimeSlot.Dawn],
-      },
-    ];
-
-    return filterCategoriesByTimeSlot(timeSlot, categories);
+    const categories = await this.categoryRepository.getAll(req.utcNow);
+    return categories;
   }
 
   async getSituations(req: QuerySituationRequest): Promise<Situation[]> {
-    const koreanDate = convertKoreanDateFromUTC(req.utcNow);
-    const timeSlot = convertTimeSlotFromDate(koreanDate);
-    const situations: Situation[] = [
-      {
-        id: Symbol().toString(),
-        name: '간단한 끼니',
-        priorities: [TimeSlot.Morning, TimeSlot.MorningAndNoon],
-      },
-      {
-        id: Symbol().toString(),
-        name: '설레는 여행',
-        priorities: [
-          TimeSlot.Dawn,
-          TimeSlot.Evening,
-          TimeSlot.Morning,
-          TimeSlot.MorningAndNoon,
-          TimeSlot.Night,
-          TimeSlot.Noon,
-          TimeSlot.NoonAndEvening,
-        ],
-      },
-      {
-        id: Symbol().toString(),
-        name: '해장',
-        priorities: [TimeSlot.Morning, TimeSlot.MorningAndNoon],
-      },
-      {
-        id: Symbol().toString(),
-        name: '데이트',
-        priorities: [
-          TimeSlot.MorningAndNoon,
-          TimeSlot.Noon,
-          TimeSlot.NoonAndEvening,
-          TimeSlot.Evening,
-          TimeSlot.Night,
-        ],
-      },
-      {
-        id: Symbol().toString(),
-        name: '새로운 맛집 도전',
-        priorities: [
-          TimeSlot.MorningAndNoon,
-          TimeSlot.Noon,
-          TimeSlot.NoonAndEvening,
-          TimeSlot.Evening,
-          TimeSlot.Night,
-        ],
-      },
-      {
-        id: Symbol().toString(),
-        name: '실패 없는 맛집 가기',
-        priorities: [
-          TimeSlot.MorningAndNoon,
-          TimeSlot.Noon,
-          TimeSlot.NoonAndEvening,
-          TimeSlot.Evening,
-          TimeSlot.Night,
-        ],
-      },
-      {
-        id: Symbol().toString(),
-        name: '소개팅',
-        priorities: [
-          TimeSlot.MorningAndNoon,
-          TimeSlot.Noon,
-          TimeSlot.NoonAndEvening,
-          TimeSlot.Evening,
-          TimeSlot.Night,
-        ],
-      },
-      {
-        id: Symbol().toString(),
-        name: '혼자만의 시간',
-        priorities: [
-          TimeSlot.MorningAndNoon,
-          TimeSlot.Noon,
-          TimeSlot.NoonAndEvening,
-          TimeSlot.Evening,
-          TimeSlot.Night,
-          TimeSlot.Dawn,
-        ],
-      },
-      {
-        id: Symbol().toString(),
-        name: '친구들과 신나는 파티',
-        priorities: [TimeSlot.Evening, TimeSlot.Night, TimeSlot.Dawn],
-      },
-      {
-        id: Symbol().toString(),
-        name: '진지한 자리',
-        priorities: [TimeSlot.Night, TimeSlot.Dawn],
-      },
-    ];
+    const situations = this.situationRepository.getSituationsByCategory(
+      req.category,
+    );
 
-    return filterSituationsByTimeSlot(timeSlot, situations);
+    return situations.map(situation => ({
+      name: situation,
+    }));
+  }
+
+  async getAllPlaces(
+    req: QueryRecommendRestaurantRequest,
+    placeType: PlaceType,
+    keywords: FoodKeywordType[],
+  ): Promise<PlaceQueryResponse[]> {
+    const tasks = [];
+    for (const keyword of keywords) {
+      tasks.push(
+        this.placePlugin.getPlaces({
+          location: req.location,
+          keyword,
+          placeType,
+          radius: 1000,
+        }),
+      );
+    }
+
+    const places: PlaceQueryResponse[][] = await Promise.all(tasks);
+    const placeByPlaceID = new Map<string, PlaceQueryResponse>();
+    for (const outerPlaces of places) {
+      for (const place of outerPlaces) {
+        placeByPlaceID.set(place.placeID, place);
+      }
+    }
+
+    return Array.from(placeByPlaceID.values());
+  }
+
+  async convertPlacesToDetail(
+    places: PlaceQueryResponse[],
+  ): Promise<PlaceDetailResponse[]> {
+    const tasks = [];
+    for (const place of places) {
+      tasks.push(this.placePlugin.getPlaceDetailByPlaceID(place.placeID));
+    }
+
+    const detailPlaces = await Promise.all(tasks);
+    return detailPlaces;
   }
 
   async getRecommendRestaurant(
     req: QueryRecommendRestaurantRequest,
   ): Promise<RestaurantDetailResponse | undefined> {
-    const categoryMap = {
-      디저트: 'cafe',
-      술자리: 'bar',
-    };
+    const placeType = getPlaceTypeByCategory(req.category);
+    const foodKeywords = this.situationRepository.getFoodKeywordsBySituation(
+      req.situation,
+    );
 
-    const placeType =
-      req.category in categoryMap ? categoryMap[req.category] : 'restaurant';
-
-    const placesCache = await this.placePlugin.getPlaces({
-      location: req.location,
-      keyword: req.situation,
+    const allPlaces: PlaceQueryResponse[] = await this.getAllPlaces(
+      req,
       placeType,
-      radius: 1000,
-    });
+      foodKeywords,
+    );
 
     const places =
-      placesCache.length > 0
-        ? placesCache
+      allPlaces.length > 0
+        ? allPlaces
         : await this.placePlugin.getPlaces({
             location: req.location,
             placeType,
@@ -223,24 +133,18 @@ export class RestaurantService {
       return undefined;
     }
 
-    const convert = (res: PlaceQueryResponse): Restaurant => {
-      return {
-        id: res.placeID,
-        name: res.name,
-        location: res.location,
-        rating: res.rating,
-        userRatingsTotal: res.userRatingsTotal,
-      };
-    };
-
-    const restaurants = places.map(convert);
+    const openFilter = (detailPlace: PlaceDetailResponse): boolean =>
+      detailPlace.openingHours?.openNow === true;
+    const restaurants = (await this.convertPlacesToDetail(places)).filter(
+      openFilter,
+    );
     const recommendRestaurant = this.restaurantRecommender.recommend(
       req,
       restaurants,
     );
 
     const restaurantDetailInfo = await this.placePlugin.getPlaceDetailByPlaceID(
-      recommendRestaurant.id,
+      recommendRestaurant.placeID,
     );
 
     return {

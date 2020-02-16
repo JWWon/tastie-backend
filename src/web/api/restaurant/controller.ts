@@ -5,7 +5,12 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiTags, ApiResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiResponse,
+  ApiNotFoundResponse,
+  ApiBadRequestResponse,
+} from '@nestjs/swagger';
 import {
   CategoryResponseDTO,
   SituationResponseDTO,
@@ -20,6 +25,8 @@ import {
 } from './request';
 import { RestaurantService } from '@/domain/restaurant';
 import { HttpExceptionResponseDTO } from '../common/response';
+import { CategoryType, SituationType } from '@/entities';
+import { validCategoryType } from '@/entities/category';
 
 @ApiTags('Restaurant')
 @Controller('restaurant')
@@ -42,13 +49,22 @@ export class RestaurantController {
 
   @Get('situations')
   @ApiResponse({ status: 200, type: SituationResponseDTO, isArray: true })
+  @ApiBadRequestResponse({
+    type: HttpExceptionResponseDTO,
+    description: '유효하지 않은 카테고리를 넘겼을 경우',
+  })
   async getSituations(
     @Query() req: QuerySituationRequestDTO,
   ): Promise<SituationResponseDTO[]> {
-    const situations = await this.restaurantService.getSituations({
-      utcNow: new Date(req.now || Date.now()),
-    });
+    const category = req.category as CategoryType;
+    if (category === undefined || !validCategoryType(category)) {
+      throw new HttpException(
+        'Category is not allowed',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
+    const situations = await this.restaurantService.getSituations({ category });
     return situations.map(situation => ({
       name: situation.name,
     }));
@@ -77,8 +93,8 @@ export class RestaurantController {
         latitude: req.latitude,
         longitude: req.longitude,
       },
-      category: req.category,
-      situation: req.situation,
+      category: req.category as CategoryType,
+      situation: req.situation as SituationType,
     });
 
     if (restaurant === undefined) {

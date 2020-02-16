@@ -1,5 +1,7 @@
 import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 import { Optional } from '@nestjs/common';
+import { CategoryTypeList } from '@/entities/category';
+import { SituationTypeList } from '@/entities';
 
 export class QueryCategoryRequestDTO {
   @Optional()
@@ -13,14 +15,8 @@ export class QueryCategoryRequestDTO {
 }
 
 export class QuerySituationRequestDTO {
-  @Optional()
-  @ApiPropertyOptional({
-    type: Date,
-    description: 'UTC datetime based Iso8601Literal format',
-    example: '2018-11-21T06:20:32.232Z',
-    default: 'current datetime',
-  })
-  readonly now: Date;
+  @ApiProperty({ enum: CategoryTypeList })
+  readonly category: string;
 }
 
 export class QueryPreferencesRequestDTO {
@@ -35,9 +31,9 @@ export class RecommendRestaurantRequestDTO {
   @ApiProperty()
   readonly latitude: number;
 
-  @ApiProperty()
+  @ApiProperty({ enum: CategoryTypeList })
   readonly category: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: SituationTypeList })
   readonly situation: string;
 }
