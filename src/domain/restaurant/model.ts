@@ -1,16 +1,13 @@
-import { TimeSlot } from './model/timeSlot';
 import { Location } from '@/domain/place/dto';
 
 export type Category = {
   readonly id: string;
   readonly name: string;
-  readonly priorities: TimeSlot[];
 };
 
 export type Situation = {
   readonly id: string;
   readonly name: string;
-  readonly priorities: TimeSlot[];
 };
 
 export type Restaurant = {
