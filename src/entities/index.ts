@@ -1,2 +1,3 @@
 export * from './category';
-export * from './timeSlot';
+export * from './situation';
+export * from './foodKeyword';

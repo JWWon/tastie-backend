@@ -1,5 +1,3 @@
-import { TimeSlot } from '@/entities';
-
 export const CategoryTypeList = [
   '아침',
   '브런치',
@@ -13,7 +11,6 @@ export const CategoryTypeList = [
 export type CategoryType = typeof CategoryTypeList[number];
 export type Category = {
   readonly name: CategoryType;
-  // readonly priorities: TimeSlot[];
 };
 
 export const validCategoryType = (category: string): boolean => {
