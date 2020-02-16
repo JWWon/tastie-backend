@@ -20,7 +20,7 @@ async function bootstrap() {
 
   registerSwaggerDoc(app);
 
-  await app.listen(8081);
+  await app.listen(3000);
 }
 
 bootstrap();
