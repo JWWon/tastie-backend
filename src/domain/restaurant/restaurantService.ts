@@ -49,40 +49,28 @@ export class RestaurantService {
       },
       {
         id: Symbol().toString(),
-        name: '간식',
-        priorities: [TimeSlot.Morning, TimeSlot.MorningAndNoon],
-      },
-      {
-        id: Symbol().toString(),
         name: '점심',
         priorities: [TimeSlot.Noon, TimeSlot.NoonAndEvening],
       },
       {
         id: Symbol().toString(),
-        name: '저녁',
+        name: '디저트',
         priorities: [
-          TimeSlot.Evening,
-          TimeSlot.NoonAndEvening,
-          TimeSlot.Night,
           TimeSlot.Noon,
+          TimeSlot.NoonAndEvening,
+          TimeSlot.Evening,
+          TimeSlot.Night,
         ],
       },
       {
         id: Symbol().toString(),
-        name: '디저트',
-        priorities: [
-          TimeSlot.Morning,
-          TimeSlot.MorningAndNoon,
-          TimeSlot.Noon,
-          TimeSlot.NoonAndEvening,
-          TimeSlot.Evening,
-          TimeSlot.Night,
-        ],
+        name: '저녁',
+        priorities: [TimeSlot.Evening, TimeSlot.NoonAndEvening, TimeSlot.Night],
       },
       {
         id: Symbol().toString(),
         name: '술자리',
-        priorities: [TimeSlot.Evening, TimeSlot.Night, TimeSlot.Evening],
+        priorities: [TimeSlot.Evening, TimeSlot.Night],
       },
       {
         id: Symbol().toString(),
