@@ -44,7 +44,7 @@ export class GooglePlacePlugin implements PlacePlugin {
         if (results.length < 1) {
           return '';
         }
-        
+
         return results[0].formatted_address;
       });
   }
@@ -83,7 +83,7 @@ export class GooglePlacePlugin implements PlacePlugin {
           formattedAddress: place.formatted_address,
           formattedPhoneNumber: place.formatted_phone_number,
           openingHours,
-          photos: place.photos.map(photo => {
+          photos: place.photos?.map(photo => {
             return {
               reference: photo.photo_reference,
               width: photo.width,

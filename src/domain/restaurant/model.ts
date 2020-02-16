@@ -11,7 +11,7 @@ export type Situation = {
 };
 
 export type Restaurant = {
-  readonly id: string;
+  readonly placeID: string;
   readonly name: string;
   readonly rating: number;
   readonly userRatingsTotal: number;

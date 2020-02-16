@@ -14,6 +14,7 @@ import {
   PlacePlugin,
   PlaceQueryResponse,
   PlaceType,
+  PlaceDetailResponse,
 } from '../place/placePlugin';
 import {
   RestaurantRecommender,
@@ -93,6 +94,18 @@ export class RestaurantService {
     return Array.from(placeByPlaceID.values());
   }
 
+  async convertPlacesToDetail(
+    places: PlaceQueryResponse[],
+  ): Promise<PlaceDetailResponse[]> {
+    const tasks = [];
+    for (const place of places) {
+      tasks.push(this.placePlugin.getPlaceDetailByPlaceID(place.placeID));
+    }
+
+    const detailPlaces = await Promise.all(tasks);
+    return detailPlaces;
+  }
+
   async getRecommendRestaurant(
     req: QueryRecommendRestaurantRequest,
   ): Promise<RestaurantDetailResponse | undefined> {
@@ -120,24 +133,18 @@ export class RestaurantService {
       return undefined;
     }
 
-    const convert = (res: PlaceQueryResponse): Restaurant => {
-      return {
-        id: res.placeID,
-        name: res.name,
-        location: res.location,
-        rating: res.rating,
-        userRatingsTotal: res.userRatingsTotal,
-      };
-    };
-
-    const restaurants = places.map(convert);
+    const openFilter = (detailPlace: PlaceDetailResponse): boolean =>
+      detailPlace.openingHours?.openNow === true;
+    const restaurants = (await this.convertPlacesToDetail(places)).filter(
+      openFilter,
+    );
     const recommendRestaurant = this.restaurantRecommender.recommend(
       req,
       restaurants,
     );
 
     const restaurantDetailInfo = await this.placePlugin.getPlaceDetailByPlaceID(
-      recommendRestaurant.id,
+      recommendRestaurant.placeID,
     );
 
     return {
