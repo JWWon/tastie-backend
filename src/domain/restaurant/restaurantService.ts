@@ -24,6 +24,10 @@ import {
   RestaurantRecommender,
   RestaurantRecommenderToken,
 } from './business/restaurantRecommender';
+import {
+  CategoryRepositoryToken,
+  CategoryRepository,
+} from '@/interfaces/repositories';
 
 export class RestaurantService {
   constructor(
@@ -31,6 +35,8 @@ export class RestaurantService {
     private readonly placePlugin: PlacePlugin,
     @Inject(RestaurantRecommenderToken)
     private readonly restaurantRecommender: RestaurantRecommender,
+    @Inject(CategoryRepositoryToken)
+    private readonly categoryRepository: CategoryRepository,
   ) {}
 
   async getCategories(req: QueryCategoryRequest): Promise<Category[]> {
@@ -83,8 +89,6 @@ export class RestaurantService {
   }
 
   async getSituations(req: QuerySituationRequest): Promise<Situation[]> {
-    const koreanDate = convertKoreanDateFromUTC(req.utcNow);
-    const timeSlot = convertTimeSlotFromDate(koreanDate);
     const situations: Situation[] = [
       {
         id: Symbol().toString(),
@@ -177,7 +181,8 @@ export class RestaurantService {
       },
     ];
 
-    return filterSituationsByTimeSlot(timeSlot, situations);
+    return situations;
+    // return filterSituationsByTimeSlot(timeSlot, situations);
   }
 
   async getRecommendRestaurant(

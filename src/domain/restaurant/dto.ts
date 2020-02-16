@@ -1,12 +1,13 @@
 import { Location } from '@/domain/place/dto';
 import { PlaceOpeningHours } from '../place/placePlugin';
+import { CategoryType } from '@/entities';
 
 export type QueryCategoryRequest = {
   readonly utcNow: Date;
 };
 
 export type QuerySituationRequest = {
-  readonly utcNow: Date;
+  readonly category: CategoryType;
 };
 
 export type QueryRecommendRestaurantRequest = {
