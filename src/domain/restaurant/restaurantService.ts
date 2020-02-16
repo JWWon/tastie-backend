@@ -11,6 +11,8 @@ import {
   QuerySituationRequest,
   QueryRecommendRestaurantRequest,
   RestaurantDetailResponse,
+  QueryPreferencesRequest,
+  PreferencesResponse,
 } from './dto';
 import { TimeSlot } from './model/timeSlot';
 import {
@@ -247,5 +249,17 @@ export class RestaurantService {
         restaurantDetailInfo.photos,
       ),
     };
+  }
+
+  async getPreferences(
+    req: QueryPreferencesRequest,
+  ): Promise<PreferencesResponse[]> {
+    return [
+      { name: '매콤한' },
+      { name: '느끼한' },
+      { name: '담백한' },
+      { name: '분위기가 좋은' },
+      { name: '저렴한' },
+    ];
   }
 }

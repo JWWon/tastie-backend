@@ -23,6 +23,11 @@ export class QuerySituationRequestDTO {
   readonly now: Date;
 }
 
+export class QueryPreferencesRequestDTO {
+  @ApiProperty()
+  readonly situation: string;
+}
+
 export class RecommendRestaurantRequestDTO {
   @ApiProperty()
   readonly longitude: number;
