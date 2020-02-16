@@ -15,6 +15,14 @@ export type QueryRecommendRestaurantRequest = {
   readonly situation: string;
 };
 
+export type QueryPreferencesRequest = {
+  readonly situation: string;
+};
+
+export type PreferencesResponse = {
+  readonly name: string;
+};
+
 export type RestaurantDetailResponse = {
   readonly placeID: string;
   readonly name: string;

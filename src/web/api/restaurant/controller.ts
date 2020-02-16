@@ -10,11 +10,13 @@ import {
   CategoryResponseDTO,
   SituationResponseDTO,
   RestaurantResponseDTO,
+  PreferencesResponseDTO,
 } from './response';
 import {
   QueryCategoryRequestDTO,
   RecommendRestaurantRequestDTO,
   QuerySituationRequestDTO,
+  QueryPreferencesRequestDTO,
 } from './request';
 import { RestaurantService } from '@/domain/restaurant';
 import { HttpExceptionResponseDTO } from '../common/response';
@@ -50,6 +52,15 @@ export class RestaurantController {
     return situations.map(situation => ({
       name: situation.name,
     }));
+  }
+
+  @Get('preferences')
+  @ApiResponse({ status: 200, type: QueryPreferencesRequestDTO, isArray: true })
+  async getPreferences(
+    @Query() req: QueryPreferencesRequestDTO,
+  ): Promise<PreferencesResponseDTO[]> {
+    const preferences = await this.restaurantService.getPreferences(req);
+    return preferences;
   }
 
   @Get('')

@@ -11,6 +11,11 @@ export class SituationResponseDTO {
   readonly name: string;
 }
 
+export class PreferencesResponseDTO {
+  @ApiProperty()
+  readonly name: string;
+}
+
 export class PlaceOpeningHoursDTO {
   @ApiProperty()
   readonly openNow?: boolean;
