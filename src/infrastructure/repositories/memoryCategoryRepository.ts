@@ -3,6 +3,6 @@ import { Category } from '@/entities';
 
 export class MemoryCategoryRepository implements CategoryRepository {
   async getAll(): Promise<Category[]> {
-    return [];
+    return [{ name: '아침' }, { name: '브런치' }];
   }
 }

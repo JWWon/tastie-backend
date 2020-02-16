@@ -20,7 +20,7 @@ import {
 } from './request';
 import { RestaurantService } from '@/domain/restaurant';
 import { HttpExceptionResponseDTO } from '../common/response';
-import { CategoryType } from '@/entities';
+import { CategoryType, validCategoryType } from '@/entities';
 
 @ApiTags('Restaurant')
 @Controller('restaurant')
@@ -46,18 +46,15 @@ export class RestaurantController {
   async getSituations(
     @Query() req: QuerySituationRequestDTO,
   ): Promise<SituationResponseDTO[]> {
-    const category: CategoryType | undefined = CategoryType[req.category];
-    if (category === undefined) {
+    const category = req.category as CategoryType;
+    if (category === undefined || !validCategoryType(category)) {
       throw new HttpException(
         'Category is not allowed',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const situations = await this.restaurantService.getSituations({
-      category,
-    });
-
+    const situations = await this.restaurantService.getSituations({ category });
     return situations.map(situation => ({
       name: situation.name,
     }));
