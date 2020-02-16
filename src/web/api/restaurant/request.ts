@@ -1,6 +1,7 @@
 import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 import { Optional } from '@nestjs/common';
 import { CategoryTypeList } from '@/entities/category';
+import { SituationTypeList } from '@/entities';
 
 export class QueryCategoryRequestDTO {
   @Optional()
@@ -30,9 +31,9 @@ export class RecommendRestaurantRequestDTO {
   @ApiProperty()
   readonly latitude: number;
 
-  @ApiProperty()
+  @ApiProperty({ enum: CategoryTypeList })
   readonly category: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: SituationTypeList })
   readonly situation: string;
 }

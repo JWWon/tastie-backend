@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import { Inject } from '@nestjs/common';
 import { Restaurant } from './model';
 import {
@@ -12,6 +13,7 @@ import {
   PlacePluginToken,
   PlacePlugin,
   PlaceQueryResponse,
+  PlaceType,
 } from '../place/placePlugin';
 import {
   RestaurantRecommender,
@@ -23,7 +25,18 @@ import {
   SituationRepositoryToken,
   SituationRepository,
 } from '@/interfaces/repositories';
-import { Situation, Category } from '@/entities';
+import { Situation, Category, CategoryType, FoodKeywordType } from '@/entities';
+
+const categoryPlaceTypeMapper = new Map<CategoryType, PlaceType>([
+  ['디저트', 'cafe'],
+  ['술자리', 'bar'],
+]);
+
+const getPlaceTypeByCategory = (category: CategoryType): PlaceType => {
+  return categoryPlaceTypeMapper.has(category)
+    ? categoryPlaceTypeMapper.get(category)
+    : 'restaurant';
+};
 
 export class RestaurantService {
   constructor(
@@ -52,27 +65,51 @@ export class RestaurantService {
     }));
   }
 
+  async getAllPlaces(
+    req: QueryRecommendRestaurantRequest,
+    placeType: PlaceType,
+    keywords: FoodKeywordType[],
+  ): Promise<PlaceQueryResponse[]> {
+    const tasks = [];
+    for (const keyword of keywords) {
+      tasks.push(
+        this.placePlugin.getPlaces({
+          location: req.location,
+          keyword,
+          placeType,
+          radius: 1000,
+        }),
+      );
+    }
+
+    const places: PlaceQueryResponse[][] = await Promise.all(tasks);
+    const placeByPlaceID = new Map<string, PlaceQueryResponse>();
+    for (const outerPlaces of places) {
+      for (const place of outerPlaces) {
+        placeByPlaceID.set(place.placeID, place);
+      }
+    }
+
+    return Array.from(placeByPlaceID.values());
+  }
+
   async getRecommendRestaurant(
     req: QueryRecommendRestaurantRequest,
   ): Promise<RestaurantDetailResponse | undefined> {
-    const categoryMap = {
-      디저트: 'cafe',
-      술자리: 'bar',
-    };
+    const placeType = getPlaceTypeByCategory(req.category);
+    const foodKeywords = this.situationRepository.getFoodKeywordsBySituation(
+      req.situation,
+    );
 
-    const placeType =
-      req.category in categoryMap ? categoryMap[req.category] : 'restaurant';
-
-    const placesCache = await this.placePlugin.getPlaces({
-      location: req.location,
-      keyword: req.situation,
+    const allPlaces: PlaceQueryResponse[] = await this.getAllPlaces(
+      req,
       placeType,
-      radius: 1000,
-    });
+      foodKeywords,
+    );
 
     const places =
-      placesCache.length > 0
-        ? placesCache
+      allPlaces.length > 0
+        ? allPlaces
         : await this.placePlugin.getPlaces({
             location: req.location,
             placeType,

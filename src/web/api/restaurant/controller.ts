@@ -25,7 +25,7 @@ import {
 } from './request';
 import { RestaurantService } from '@/domain/restaurant';
 import { HttpExceptionResponseDTO } from '../common/response';
-import { CategoryType } from '@/entities';
+import { CategoryType, SituationType } from '@/entities';
 import { validCategoryType } from '@/entities/category';
 
 @ApiTags('Restaurant')
@@ -93,8 +93,8 @@ export class RestaurantController {
         latitude: req.latitude,
         longitude: req.longitude,
       },
-      category: req.category,
-      situation: req.situation,
+      category: req.category as CategoryType,
+      situation: req.situation as SituationType,
     });
 
     if (restaurant === undefined) {

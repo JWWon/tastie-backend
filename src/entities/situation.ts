@@ -1,4 +1,4 @@
-const SituationTypeList = [
+export const SituationTypeList = [
   '데이트',
   '소개팅',
   '새로운 맛집 도전',
