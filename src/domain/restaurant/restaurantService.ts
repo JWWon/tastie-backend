@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Situation, Restaurant } from './model';
+import { Restaurant } from './model';
 import {
   QueryCategoryRequest,
   QuerySituationRequest,
@@ -20,8 +20,10 @@ import {
 import {
   CategoryRepositoryToken,
   CategoryRepository,
+  SituationRepositoryToken,
+  SituationRepository,
 } from '@/interfaces/repositories';
-import { Category } from '@/entities';
+import { Situation, Category } from '@/entities';
 
 export class RestaurantService {
   constructor(
@@ -31,6 +33,8 @@ export class RestaurantService {
     private readonly restaurantRecommender: RestaurantRecommender,
     @Inject(CategoryRepositoryToken)
     private readonly categoryRepository: CategoryRepository,
+    @Inject(SituationRepositoryToken)
+    private readonly situationRepository: SituationRepository,
   ) {}
 
   async getCategories(req: QueryCategoryRequest): Promise<Category[]> {
@@ -39,50 +43,13 @@ export class RestaurantService {
   }
 
   async getSituations(req: QuerySituationRequest): Promise<Situation[]> {
-    const situations: Situation[] = [
-      {
-        id: Symbol().toString(),
-        name: '간단한 끼니',
-      },
-      {
-        id: Symbol().toString(),
-        name: '설레는 여행',
-      },
-      {
-        id: Symbol().toString(),
-        name: '해장',
-      },
-      {
-        id: Symbol().toString(),
-        name: '데이트',
-      },
-      {
-        id: Symbol().toString(),
-        name: '새로운 맛집 도전',
-      },
-      {
-        id: Symbol().toString(),
-        name: '실패 없는 맛집 가기',
-      },
-      {
-        id: Symbol().toString(),
-        name: '소개팅',
-      },
-      {
-        id: Symbol().toString(),
-        name: '혼자만의 시간',
-      },
-      {
-        id: Symbol().toString(),
-        name: '친구들과 신나는 파티',
-      },
-      {
-        id: Symbol().toString(),
-        name: '진지한 자리',
-      },
-    ];
+    const situations = this.situationRepository.getSituationsByCategory(
+      req.category,
+    );
 
-    return situations;
+    return situations.map(situation => ({
+      name: situation,
+    }));
   }
 
   async getRecommendRestaurant(
