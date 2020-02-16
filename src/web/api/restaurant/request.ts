@@ -1,5 +1,6 @@
 import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 import { Optional } from '@nestjs/common';
+import { CategoryType } from '@/entities/category';
 
 export class QueryCategoryRequestDTO {
   @Optional()
@@ -13,14 +14,8 @@ export class QueryCategoryRequestDTO {
 }
 
 export class QuerySituationRequestDTO {
-  @Optional()
-  @ApiPropertyOptional({
-    type: Date,
-    description: 'UTC datetime based Iso8601Literal format',
-    example: '2018-11-21T06:20:32.232Z',
-    default: 'current datetime',
-  })
-  readonly now: Date;
+  @ApiProperty({ enum: CategoryType })
+  readonly category: string;
 }
 
 export class QueryPreferencesRequestDTO {
