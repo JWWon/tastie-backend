@@ -20,7 +20,7 @@ export class QuerySituationRequestDTO {
 }
 
 export class QueryPreferencesRequestDTO {
-  @ApiProperty()
+  @ApiProperty({ enum: SituationTypeList })
   readonly situation: string;
 }
 

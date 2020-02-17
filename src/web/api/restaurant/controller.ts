@@ -71,7 +71,7 @@ export class RestaurantController {
   }
 
   @Get('preferences')
-  @ApiResponse({ status: 200, type: QueryPreferencesRequestDTO, isArray: true })
+  @ApiResponse({ status: 200, type: PreferencesResponseDTO, isArray: true })
   async getPreferences(
     @Query() req: QueryPreferencesRequestDTO,
   ): Promise<PreferencesResponseDTO[]> {
