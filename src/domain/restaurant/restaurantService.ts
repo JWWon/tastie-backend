@@ -55,7 +55,10 @@ export class RestaurantService {
   ) {}
 
   async getCategories(req: QueryCategoryRequest): Promise<Category[]> {
-    const categories = await this.categoryRepository.getAll(req.utcNow);
+    const categories = await this.categoryRepository.getCategoriesByUTCDate(
+      req.utcNow,
+    );
+
     return categories;
   }
 

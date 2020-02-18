@@ -65,7 +65,7 @@ export class MemoryCategoryRepository implements CategoryRepository {
     },
   ];
 
-  async getAll(utcNow: Date): Promise<Category[]> {
+  async getCategoriesByUTCDate(utcNow: Date): Promise<Category[]> {
     const koreanDate = convertKoreanDateFromUTC(utcNow);
     const categories: Category[] = [];
 
