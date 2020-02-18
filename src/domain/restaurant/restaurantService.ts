@@ -64,9 +64,7 @@ export class RestaurantService {
       req.category,
     );
 
-    return situations.map(situation => ({
-      name: situation,
-    }));
+    return situations;
   }
 
   async getAllPlaces(

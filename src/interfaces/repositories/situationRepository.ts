@@ -1,7 +1,12 @@
-import { SituationType, CategoryType, FoodKeywordType } from '@/entities';
+import {
+  SituationType,
+  CategoryType,
+  FoodKeywordType,
+  Situation,
+} from '@/entities';
 
 export interface SituationRepository {
-  getSituationsByCategory(category: CategoryType): SituationType[];
+  getSituationsByCategory(category: CategoryType): Situation[];
   getFoodKeywordsBySituation(situation: SituationType): FoodKeywordType[];
 }
 
