@@ -1,6 +1,5 @@
 /* eslint-disable no-restricted-syntax */
 import { Inject } from '@nestjs/common';
-import { Restaurant } from './model';
 import {
   QueryCategoryRequest,
   QuerySituationRequest,
@@ -25,6 +24,8 @@ import {
   CategoryRepository,
   SituationRepositoryToken,
   SituationRepository,
+  PreferenceRepositoryToken,
+  PreferenceRepository,
 } from '@/interfaces/repositories';
 import { Situation, Category, CategoryType, FoodKeywordType } from '@/entities';
 
@@ -49,6 +50,8 @@ export class RestaurantService {
     private readonly categoryRepository: CategoryRepository,
     @Inject(SituationRepositoryToken)
     private readonly situationRepository: SituationRepository,
+    @Inject(PreferenceRepositoryToken)
+    private readonly preferenceRepository: PreferenceRepository,
   ) {}
 
   async getCategories(req: QueryCategoryRequest): Promise<Category[]> {
@@ -158,12 +161,7 @@ export class RestaurantService {
   async getPreferences(
     req: QueryPreferencesRequest,
   ): Promise<PreferencesResponse[]> {
-    return [
-      { name: '매콤한' },
-      { name: '느끼한' },
-      { name: '담백한' },
-      { name: '분위기가 좋은' },
-      { name: '저렴한' },
-    ];
+    const preferences = this.preferenceRepository.getPreferences();
+    return preferences;
   }
 }

@@ -10,10 +10,12 @@ import { PlacePluginToken } from '@/domain/place/placePlugin';
 import {
   CategoryRepositoryToken,
   SituationRepositoryToken,
+  PreferenceRepositoryToken,
 } from '@/interfaces/repositories';
 import {
   MemoryCategoryRepository,
   MemorySituationRepository,
+  MemoryPreferenceRepository,
 } from '@/infrastructure/repositories';
 
 @Module({
@@ -31,6 +33,10 @@ import {
     {
       provide: SituationRepositoryToken,
       useClass: MemorySituationRepository,
+    },
+    {
+      provide: PreferenceRepositoryToken,
+      useClass: MemoryPreferenceRepository,
     },
     { provide: PlacePluginToken, useClass: GooglePlacePlugin },
   ],
