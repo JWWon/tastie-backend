@@ -83,14 +83,15 @@ export class GooglePlacePlugin implements PlacePlugin {
           formattedAddress: place.formatted_address,
           formattedPhoneNumber: place.formatted_phone_number,
           openingHours,
-          photos: place.photos?.map(photo => {
-            return {
-              reference: photo.photo_reference,
-              width: photo.width,
-              height: photo.height,
-              url: '',
-            };
-          }),
+          photos:
+            place.photos?.map(photo => {
+              return {
+                reference: photo.photo_reference,
+                width: photo.width,
+                height: photo.height,
+                url: '',
+              };
+            }) ?? [],
         };
 
         return result;
