@@ -32,12 +32,13 @@ build-docker-image:
     - docker:19.03.5-dind
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - DOCKER_TAG=$([ "$CI_COMMIT_REF_NAME" == "master" ] && echo "staging-b$CI_PIPELINE_ID" || echo "production")
+    - DOCKER_TAG=$([ "$CI_COMMIT_REF_NAME" == "master" ] && echo "staging-b$CI_PIPELINE_ID" || echo "production-b$CI_PIPELINE_ID")
   script:
     - docker build -t $CI_REGISTRY_IMAGE:$DOCKER_TAG .
     - docker push $CI_REGISTRY_IMAGE:$DOCKER_TAG
   only:
     - master
+    - production
 
 deploy-staging:
   stage: deploy
@@ -56,3 +57,21 @@ deploy-staging:
     GIT_STRATEGY: clone
   only:
     - master
+
+deploy-production:
+  stage: deploy
+  image: coxauto/aws-ebcli
+  script:
+    - apk --no-cache add gettext
+    - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
+    - cd eb
+    - cat Dockerrun.aws.json.template | envsubst > Dockerrun.aws.json
+    - git add Dockerrun.aws.json
+    - eb deploy --staged
+    - cd ../ && EXIT_STATUS=$? scripts/to_slack.sh
+  variables:
+    ENVIRONMENT: production
+    APP_VERSION: "production-b$CI_PIPELINE_ID"
+    GIT_STRATEGY: clone
+  only:
+    - production
