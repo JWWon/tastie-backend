@@ -1,6 +1,5 @@
 /* eslint-disable no-restricted-syntax */
 import { Inject } from '@nestjs/common';
-import { Restaurant } from './model';
 import {
   QueryCategoryRequest,
   QuerySituationRequest,
@@ -13,7 +12,6 @@ import {
   PlacePluginToken,
   PlacePlugin,
   PlaceQueryResponse,
-  PlaceType,
   PlaceDetailResponse,
 } from '../place/placePlugin';
 import {
@@ -25,19 +23,11 @@ import {
   CategoryRepository,
   SituationRepositoryToken,
   SituationRepository,
+  PreferenceRepositoryToken,
+  PreferenceRepository,
 } from '@/interfaces/repositories';
-import { Situation, Category, CategoryType, FoodKeywordType } from '@/entities';
-
-const categoryPlaceTypeMapper = new Map<CategoryType, PlaceType>([
-  ['디저트', 'cafe'],
-  ['술자리', 'bar'],
-]);
-
-const getPlaceTypeByCategory = (category: CategoryType): PlaceType => {
-  return categoryPlaceTypeMapper.has(category)
-    ? categoryPlaceTypeMapper.get(category)
-    : 'restaurant';
-};
+import { Situation, Category } from '@/entities';
+import { RestaurantFinder } from './business/restaurantFinder';
 
 export class RestaurantService {
   constructor(
@@ -49,10 +39,15 @@ export class RestaurantService {
     private readonly categoryRepository: CategoryRepository,
     @Inject(SituationRepositoryToken)
     private readonly situationRepository: SituationRepository,
+    @Inject(PreferenceRepositoryToken)
+    private readonly preferenceRepository: PreferenceRepository,
   ) {}
 
   async getCategories(req: QueryCategoryRequest): Promise<Category[]> {
-    const categories = await this.categoryRepository.getAll(req.utcNow);
+    const categories = await this.categoryRepository.getCategoriesByUTCDate(
+      req.utcNow,
+    );
+
     return categories;
   }
 
@@ -61,37 +56,7 @@ export class RestaurantService {
       req.category,
     );
 
-    return situations.map(situation => ({
-      name: situation,
-    }));
-  }
-
-  async getAllPlaces(
-    req: QueryRecommendRestaurantRequest,
-    placeType: PlaceType,
-    keywords: FoodKeywordType[],
-  ): Promise<PlaceQueryResponse[]> {
-    const tasks = [];
-    for (const keyword of keywords) {
-      tasks.push(
-        this.placePlugin.getPlaces({
-          location: req.location,
-          keyword,
-          placeType,
-          radius: 1000,
-        }),
-      );
-    }
-
-    const places: PlaceQueryResponse[][] = await Promise.all(tasks);
-    const placeByPlaceID = new Map<string, PlaceQueryResponse>();
-    for (const outerPlaces of places) {
-      for (const place of outerPlaces) {
-        placeByPlaceID.set(place.placeID, place);
-      }
-    }
-
-    return Array.from(placeByPlaceID.values());
+    return situations;
   }
 
   async convertPlacesToDetail(
@@ -109,25 +74,16 @@ export class RestaurantService {
   async getRecommendRestaurant(
     req: QueryRecommendRestaurantRequest,
   ): Promise<RestaurantDetailResponse | undefined> {
-    const placeType = getPlaceTypeByCategory(req.category);
     const foodKeywords = this.situationRepository.getFoodKeywordsBySituation(
       req.situation,
     );
 
-    const allPlaces: PlaceQueryResponse[] = await this.getAllPlaces(
-      req,
-      placeType,
+    const restaurantFinder = new RestaurantFinder(this.placePlugin);
+    const places = await restaurantFinder.find({
+      category: req.category,
+      location: req.location,
       foodKeywords,
-    );
-
-    const places =
-      allPlaces.length > 0
-        ? allPlaces
-        : await this.placePlugin.getPlaces({
-            location: req.location,
-            placeType,
-            radius: 1000,
-          });
+    });
 
     if (places.length <= 0) {
       return undefined;
@@ -158,12 +114,7 @@ export class RestaurantService {
   async getPreferences(
     req: QueryPreferencesRequest,
   ): Promise<PreferencesResponse[]> {
-    return [
-      { name: '매콤한' },
-      { name: '느끼한' },
-      { name: '담백한' },
-      { name: '분위기가 좋은' },
-      { name: '저렴한' },
-    ];
+    const preferences = this.preferenceRepository.getPreferences();
+    return preferences;
   }
 }

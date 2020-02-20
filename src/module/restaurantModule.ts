@@ -10,11 +10,14 @@ import { PlacePluginToken } from '@/domain/place/placePlugin';
 import {
   CategoryRepositoryToken,
   SituationRepositoryToken,
+  PreferenceRepositoryToken,
 } from '@/interfaces/repositories';
 import {
   MemoryCategoryRepository,
   MemorySituationRepository,
+  MemoryPreferenceRepository,
 } from '@/infrastructure/repositories';
+import { RestaurantFinder } from '@/domain/restaurant/business/restaurantFinder';
 
 @Module({
   controllers: [RestaurantController],
@@ -31,6 +34,10 @@ import {
     {
       provide: SituationRepositoryToken,
       useClass: MemorySituationRepository,
+    },
+    {
+      provide: PreferenceRepositoryToken,
+      useClass: MemoryPreferenceRepository,
     },
     { provide: PlacePluginToken, useClass: GooglePlacePlugin },
   ],

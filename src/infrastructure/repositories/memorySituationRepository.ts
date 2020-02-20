@@ -1,5 +1,10 @@
 import { SituationRepository } from '@/interfaces/repositories';
-import { CategoryType, SituationType, FoodKeywordType } from '@/entities';
+import {
+  CategoryType,
+  SituationType,
+  FoodKeywordType,
+  Situation,
+} from '@/entities';
 
 const categorySituations = new Map<CategoryType, SituationType[]>([
   ['아침', ['간단하게 먹고 싶은 날', '설레는 여행', '해장이 필요한 날']],
@@ -51,9 +56,10 @@ const situationFoodKeywords = new Map<SituationType, FoodKeywordType[]>([
 ]);
 
 export class MemorySituationRepository implements SituationRepository {
-  getSituationsByCategory(category: CategoryType): SituationType[] {
-    const situations = categorySituations.get(category);
-    return situations;
+  getSituationsByCategory(category: CategoryType): Situation[] {
+    return categorySituations.get(category).map(situationType => ({
+      name: situationType,
+    }));
   }
 
   getFoodKeywordsBySituation(situation: SituationType): FoodKeywordType[] {
