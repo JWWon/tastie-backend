@@ -73,5 +73,6 @@ deploy-production:
     ENVIRONMENT: production
     APP_VERSION: "production-b$CI_PIPELINE_ID"
     GIT_STRATEGY: clone
+  when: manual
   only:
     - production
