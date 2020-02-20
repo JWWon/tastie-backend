@@ -17,6 +17,7 @@ import {
   MemorySituationRepository,
   MemoryPreferenceRepository,
 } from '@/infrastructure/repositories';
+import { RestaurantFinder } from '@/domain/restaurant/business/restaurantFinder';
 
 @Module({
   controllers: [RestaurantController],

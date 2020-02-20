@@ -12,7 +12,6 @@ import {
   PlacePluginToken,
   PlacePlugin,
   PlaceQueryResponse,
-  PlaceType,
   PlaceDetailResponse,
 } from '../place/placePlugin';
 import {
@@ -27,18 +26,8 @@ import {
   PreferenceRepositoryToken,
   PreferenceRepository,
 } from '@/interfaces/repositories';
-import { Situation, Category, CategoryType, FoodKeywordType } from '@/entities';
-
-const categoryPlaceTypeMapper = new Map<CategoryType, PlaceType>([
-  ['디저트', 'cafe'],
-  ['술자리', 'bar'],
-]);
-
-const getPlaceTypeByCategory = (category: CategoryType): PlaceType => {
-  return categoryPlaceTypeMapper.has(category)
-    ? categoryPlaceTypeMapper.get(category)
-    : 'restaurant';
-};
+import { Situation, Category } from '@/entities';
+import { RestaurantFinder } from './business/restaurantFinder';
 
 export class RestaurantService {
   constructor(
@@ -70,34 +59,6 @@ export class RestaurantService {
     return situations;
   }
 
-  async getAllPlaces(
-    req: QueryRecommendRestaurantRequest,
-    placeType: PlaceType,
-    keywords: FoodKeywordType[],
-  ): Promise<PlaceQueryResponse[]> {
-    const tasks = [];
-    for (const keyword of keywords) {
-      tasks.push(
-        this.placePlugin.getPlaces({
-          location: req.location,
-          keyword,
-          placeType,
-          radius: 1000,
-        }),
-      );
-    }
-
-    const places: PlaceQueryResponse[][] = await Promise.all(tasks);
-    const placeByPlaceID = new Map<string, PlaceQueryResponse>();
-    for (const outerPlaces of places) {
-      for (const place of outerPlaces) {
-        placeByPlaceID.set(place.placeID, place);
-      }
-    }
-
-    return Array.from(placeByPlaceID.values());
-  }
-
   async convertPlacesToDetail(
     places: PlaceQueryResponse[],
   ): Promise<PlaceDetailResponse[]> {
@@ -113,25 +74,16 @@ export class RestaurantService {
   async getRecommendRestaurant(
     req: QueryRecommendRestaurantRequest,
   ): Promise<RestaurantDetailResponse | undefined> {
-    const placeType = getPlaceTypeByCategory(req.category);
     const foodKeywords = this.situationRepository.getFoodKeywordsBySituation(
       req.situation,
     );
 
-    const allPlaces: PlaceQueryResponse[] = await this.getAllPlaces(
-      req,
-      placeType,
+    const restaurantFinder = new RestaurantFinder(this.placePlugin);
+    const places = await restaurantFinder.find({
+      category: req.category,
+      location: req.location,
       foodKeywords,
-    );
-
-    const places =
-      allPlaces.length > 0
-        ? allPlaces
-        : await this.placePlugin.getPlaces({
-            location: req.location,
-            placeType,
-            radius: 1000,
-          });
+    });
 
     if (places.length <= 0) {
       return undefined;
