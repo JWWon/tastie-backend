@@ -2,7 +2,7 @@ branch-defaults:
   master:
     environment: staging
   production:
-    environment: production
+    environment: prod
 global:
   application_name: pickat-backend
   branch: null
