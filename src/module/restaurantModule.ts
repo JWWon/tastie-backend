@@ -6,7 +6,7 @@ import {
   RuleBasedRestaurantRecommender,
 } from '@/domain/restaurant';
 import { GooglePlacePlugin } from '@/infrastructure/place/goolgePlacePlugin';
-import { PlacePluginToken } from '@/domain/coordinate/placePlugin';
+import { PlacePluginToken } from '@/interfaces/place';
 import {
   CategoryRepositoryToken,
   SituationRepositoryToken,
@@ -17,7 +17,6 @@ import {
   MemorySituationRepository,
   MemoryPreferenceRepository,
 } from '@/infrastructure/repositories';
-import { RestaurantFinder } from '@/domain/restaurant/business/restaurantFinder';
 
 @Module({
   controllers: [RestaurantController],

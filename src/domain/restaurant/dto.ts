@@ -1,6 +1,6 @@
 import { Coordinate } from '@/domain/coordinate/dto';
-import { PlaceOpeningHours } from '../coordinate/placePlugin';
 import { CategoryType, SituationType } from '@/entities';
+import { PlaceOpeningHours } from '@/interfaces/place';
 
 export type QueryRecommendRestaurantRequest = {
   readonly location: Coordinate;
@@ -15,7 +15,7 @@ export type RestaurantDetailResponse = {
   readonly userRatingsTotal: number;
   readonly priceLevel: number;
   readonly types: string[];
-  readonly location: Coordinate;
+  readonly coordinate: Coordinate;
   readonly formattedAddress: string;
   readonly formattedPhoneNumber?: string;
   readonly website?: string;

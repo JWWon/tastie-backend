@@ -7,13 +7,13 @@ import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import {
   PlacePlugin,
-  QueryPlacesParam,
-  PlaceQueryResponse,
+  PlaceSearchParam,
+  PlaceSearchResponse,
   PlaceDetailResponse,
   PlacePhoto,
-  Coordinate,
-} from '../../domain/coordinate';
-import { PlaceOpeningHours } from '@/domain/coordinate/placePlugin';
+  PlaceOpeningHours,
+} from '@/interfaces/place';
+import { Coordinate } from '@/entities';
 
 @Injectable()
 export class GooglePlacePlugin implements PlacePlugin {
@@ -28,12 +28,12 @@ export class GooglePlacePlugin implements PlacePlugin {
     });
   }
 
-  async getAddress(param: Coordinate): Promise<string> {
+  async getAddress(coordinate: Coordinate): Promise<string> {
     return this.client
       .reverseGeocode({
         latlng: {
-          lat: param.latitude,
-          lng: param.longitude,
+          lat: coordinate.latitude,
+          lng: coordinate.longitude,
         },
         language: 'ko',
       })
@@ -76,7 +76,7 @@ export class GooglePlacePlugin implements PlacePlugin {
           userRatingsTotal: place['user_ratings_total'],
           priceLevel: place.price_level,
           types: place.types,
-          location: {
+          coordinate: {
             longitude: place.geometry.location.lng,
             latitude: place.geometry.location.lat,
           },
@@ -98,12 +98,12 @@ export class GooglePlacePlugin implements PlacePlugin {
       });
   }
 
-  async getPlaces(param: QueryPlacesParam): Promise<PlaceQueryResponse[]> {
+  async getPlaces(param: PlaceSearchParam): Promise<PlaceSearchResponse[]> {
     return this.client
       .placesNearby({
         location: {
-          lat: param.location.latitude,
-          lng: param.location.longitude,
+          lat: param.coordinate.latitude,
+          lng: param.coordinate.longitude,
         },
         radius: param.radius,
         type: param.placeType,
@@ -112,7 +112,7 @@ export class GooglePlacePlugin implements PlacePlugin {
       })
       .asPromise()
       .then(res => {
-        const convertFunc = (place: PlaceSearchResult): PlaceQueryResponse => {
+        const convertFunc = (place: PlaceSearchResult): PlaceSearchResponse => {
           return {
             placeID: place.place_id,
             name: place.name,
@@ -121,14 +121,14 @@ export class GooglePlacePlugin implements PlacePlugin {
             userRatingsTotal: place['user_ratings_total'],
             priceLevel: place.price_level,
             types: place.types,
-            location: {
+            coordinate: {
               longitude: place.geometry.location.lng,
               latitude: place.geometry.location.lat,
             },
           };
         };
 
-        const result: PlaceQueryResponse[] = res.json.results.map(convertFunc);
+        const result: PlaceSearchResponse[] = res.json.results.map(convertFunc);
         return result;
       });
   }

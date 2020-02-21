@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PlacePlugin, PlacePluginToken } from './placePlugin';
+import { PlacePlugin, PlacePluginToken } from '@/interfaces/place';
 import { QueryAddressRequest } from '@/domain/coordinate/dto';
 
 @Injectable()

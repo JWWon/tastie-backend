@@ -7,9 +7,9 @@ import {
 import {
   PlacePluginToken,
   PlacePlugin,
-  PlaceQueryResponse,
+  PlaceSearchResponse,
   PlaceDetailResponse,
-} from '../coordinate/placePlugin';
+} from '@/interfaces/place';
 import {
   RestaurantRecommender,
   RestaurantRecommenderToken,
@@ -31,7 +31,7 @@ export class RestaurantService {
   ) {}
 
   async convertPlacesToDetail(
-    places: PlaceQueryResponse[],
+    places: PlaceSearchResponse[],
   ): Promise<PlaceDetailResponse[]> {
     const tasks = [];
     for (const place of places) {

@@ -1,11 +1,11 @@
 /* eslint-disable no-restricted-syntax */
+import { Coordinate } from '@/domain/coordinate';
+import { FoodKeywordType, CategoryType } from '@/entities';
 import {
   PlacePlugin,
-  PlaceQueryResponse,
+  PlaceSearchResponse,
   PlaceType,
-  Coordinate,
-} from '@/domain/coordinate';
-import { FoodKeywordType, CategoryType } from '@/entities';
+} from '@/interfaces/place';
 
 interface Param {
   category: CategoryType;
@@ -27,7 +27,7 @@ const getPlaceTypeByCategory = (category: CategoryType): PlaceType => {
 export class RestaurantFinder {
   constructor(private readonly placePlugin: PlacePlugin) {}
 
-  async find(param: Param): Promise<PlaceQueryResponse[]> {
+  async find(param: Param): Promise<PlaceSearchResponse[]> {
     const placeType = getPlaceTypeByCategory(param.category);
     const places = await this.getAllPlaces(
       param.location,
@@ -40,7 +40,7 @@ export class RestaurantFinder {
     }
 
     const minorPlaces = await this.placePlugin.getPlaces({
-      location: param.location,
+      coordinate: param.location,
       radius: 1000,
       placeType,
     });
@@ -49,15 +49,15 @@ export class RestaurantFinder {
   }
 
   private async getAllPlaces(
-    location: Coordinate,
+    coordinate: Coordinate,
     placeType: PlaceType,
     keywords: FoodKeywordType[],
-  ): Promise<PlaceQueryResponse[]> {
+  ): Promise<PlaceSearchResponse[]> {
     const tasks = [];
     for (const keyword of keywords) {
       tasks.push(
         this.placePlugin.getPlaces({
-          location,
+          coordinate,
           keyword,
           placeType,
           radius: 1000,
@@ -65,8 +65,8 @@ export class RestaurantFinder {
       );
     }
 
-    const places: PlaceQueryResponse[][] = await Promise.all(tasks);
-    const placeByPlaceID = new Map<string, PlaceQueryResponse>();
+    const places: PlaceSearchResponse[][] = await Promise.all(tasks);
+    const placeByPlaceID = new Map<string, PlaceSearchResponse>();
     for (const outerPlaces of places) {
       for (const place of outerPlaces) {
         placeByPlaceID.set(place.placeID, place);

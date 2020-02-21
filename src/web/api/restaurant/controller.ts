@@ -46,7 +46,7 @@ export class RestaurantController {
       userRatingsTotal: restaurant.userRatingsTotal,
       priceLevel: restaurant.priceLevel,
       types: restaurant.types,
-      location: restaurant.location,
+      location: restaurant.coordinate,
       formattedAddress: restaurant.formattedAddress,
       formattedPhoneNumber: restaurant.formattedPhoneNumber,
       website: restaurant.website,

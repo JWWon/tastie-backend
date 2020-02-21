@@ -19,8 +19,8 @@ import { Category, Situation } from '@/entities';
 import {
   PlacePluginToken,
   PlacePlugin,
-  PlaceQueryResponse,
-} from '../coordinate';
+  PlaceSearchResponse,
+} from '@/interfaces/place';
 
 export class CaseService {
   constructor(
@@ -59,16 +59,16 @@ export class CaseService {
 
   async getPlaces(req: QueryPlaceRequest): Promise<PlaceResponse[]> {
     const placeResponse = await this.placePlugin.getPlaces({
-      location: req.location,
+      coordinate: req.location,
       radius: req.radius,
       placeType: 'tourist_attraction',
     });
 
-    const convert = (res: PlaceQueryResponse): PlaceResponse => {
+    const convert = (res: PlaceSearchResponse): PlaceResponse => {
       return {
         id: res.placeID,
         name: res.name,
-        location: res.location,
+        location: res.coordinate,
         rating: res.rating,
         userRatingsTotal: res.userRatingsTotal,
       };
