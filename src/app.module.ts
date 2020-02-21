@@ -3,11 +3,11 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
 import config from '@/config/configuration';
-import { RestaurantModule, CoordinateModule, CaseModule } from './module';
+import { RecommendationModule, CoordinateModule, CaseModule } from './module';
 
 @Module({
   imports: [
-    RestaurantModule,
+    RecommendationModule,
     CoordinateModule,
     CaseModule,
     ConfigModule.forRoot({

@@ -6,26 +6,26 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiNotFoundResponse } from '@nestjs/swagger';
-import { RestaurantResponseDTO } from './response';
-import { RecommendRestaurantRequestDTO } from './request';
-import { RestaurantService } from '@/domain/restaurant';
+import { RecommendationResponseDTO } from './response';
+import { RecommendationRequestDTO } from './request';
+import { RecommendationService } from '@/domain/recommendation';
 import { HttpExceptionResponseDTO } from '../common/response';
 import { CategoryType, SituationType } from '@/entities';
 
-@ApiTags('Restaurant')
-@Controller('restaurant')
+@ApiTags('Recommendation')
+@Controller('recommendation')
 export class RestaurantController {
-  constructor(private readonly restaurantService: RestaurantService) {}
+  constructor(private readonly restaurantService: RecommendationService) {}
 
   @Get('')
-  @ApiResponse({ status: 200, type: RestaurantResponseDTO })
+  @ApiResponse({ status: 200, type: RecommendationResponseDTO })
   @ApiNotFoundResponse({
     type: HttpExceptionResponseDTO,
-    description: '적절한 레스토랑을 찾지 못했을 경우',
+    description: '적절한 추천을 찾지 못했을 경우',
   })
   async getRecommendRestaurant(
-    @Query() req: RecommendRestaurantRequestDTO,
-  ): Promise<RestaurantResponseDTO> {
+    @Query() req: RecommendationRequestDTO,
+  ): Promise<RecommendationResponseDTO> {
     const restaurant = await this.restaurantService.getRecommendRestaurant({
       location: {
         latitude: req.latitude,

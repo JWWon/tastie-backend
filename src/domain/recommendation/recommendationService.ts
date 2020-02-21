@@ -20,7 +20,7 @@ import {
 } from '@/interfaces/repositories';
 import { RestaurantFinder } from './business/restaurantFinder';
 
-export class RestaurantService {
+export class RecommendationService {
   constructor(
     @Inject(PlacePluginToken)
     private readonly placePlugin: PlacePlugin,

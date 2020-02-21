@@ -1,6 +1,6 @@
 import { RestaurantService } from '.';
 import { TestingModule, Test } from '@nestjs/testing';
-import { RestaurantModule } from '@/module/restaurantModule';
+import { RecommendationModule } from '@/module/recommendationModule';
 import { ConfigModule } from '@nestjs/config';
 import { Category } from '@/entities';
 
@@ -10,7 +10,7 @@ describe('UnitTest of RestaurantService', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [
-        RestaurantModule,
+        RecommendationModule,
         ConfigModule.forRoot({
           isGlobal: true,
         }),
