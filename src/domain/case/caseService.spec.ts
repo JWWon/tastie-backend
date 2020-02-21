@@ -1,23 +1,23 @@
-import { RestaurantService } from '.';
+import { CaseService } from '.';
 import { TestingModule, Test } from '@nestjs/testing';
-import { RecommendationModule } from '@/module/recommendationModule';
 import { ConfigModule } from '@nestjs/config';
 import { Category } from '@/entities';
+import { CaseModule } from '@/module';
 
-describe('UnitTest of RestaurantService', () => {
-  let restaurantService: RestaurantService;
+describe('UnitTest of CaseService', () => {
+  let caseService: CaseService;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [
-        RecommendationModule,
+        CaseModule,
         ConfigModule.forRoot({
           isGlobal: true,
         }),
       ],
     }).compile();
 
-    restaurantService = app.get<RestaurantService>(RestaurantService);
+    caseService = app.get<CaseService>(CaseService);
   });
 
   describe('getCategories', () => {
@@ -77,7 +77,7 @@ describe('UnitTest of RestaurantService', () => {
 
     for (const tc of testCases) {
       it(tc.description, async () => {
-        const actual = await restaurantService.getCategories({
+        const actual = await caseService.getCategories({
           utcNow: new Date(tc.argUTCNow),
         });
 
