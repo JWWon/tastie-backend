@@ -1,19 +1,9 @@
-import { Location } from '@/domain/place/dto';
-
-export type Category = {
-  readonly id: string;
-  readonly name: string;
-};
-
-export type Situation = {
-  readonly id: string;
-  readonly name: string;
-};
+import { Coordinate } from '@/domain/coordinate/dto';
 
 export type Restaurant = {
   readonly placeID: string;
   readonly name: string;
   readonly rating: number;
   readonly userRatingsTotal: number;
-  readonly location: Location;
+  readonly location: Coordinate;
 };

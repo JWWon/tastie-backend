@@ -16,7 +16,11 @@ import {
   PlaceResponse,
 } from './dto';
 import { Category, Situation } from '@/entities';
-import { PlacePluginToken, PlacePlugin, PlaceQueryResponse } from '../place';
+import {
+  PlacePluginToken,
+  PlacePlugin,
+  PlaceQueryResponse,
+} from '../coordinate';
 
 export class CaseService {
   constructor(

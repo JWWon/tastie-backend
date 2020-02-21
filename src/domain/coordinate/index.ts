@@ -1,3 +1,3 @@
 export * from './dto';
-export * from './placeService';
+export * from './coordinateService';
 export * from './placePlugin';

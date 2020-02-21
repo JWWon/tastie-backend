@@ -11,9 +11,9 @@ import {
   PlaceQueryResponse,
   PlaceDetailResponse,
   PlacePhoto,
-  Location,
-} from '../../domain/place';
-import { PlaceOpeningHours } from '@/domain/place/placePlugin';
+  Coordinate,
+} from '../../domain/coordinate';
+import { PlaceOpeningHours } from '@/domain/coordinate/placePlugin';
 
 @Injectable()
 export class GooglePlacePlugin implements PlacePlugin {
@@ -28,7 +28,7 @@ export class GooglePlacePlugin implements PlacePlugin {
     });
   }
 
-  async getAddress(param: Location): Promise<string> {
+  async getAddress(param: Coordinate): Promise<string> {
     return this.client
       .reverseGeocode({
         latlng: {

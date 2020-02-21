@@ -1,23 +1,17 @@
-export type QueryPlaceRequest = {
-  readonly location: Location;
-  readonly radius: number;
-  readonly count: number;
-};
-
 export type QueryAddressRequest = {
   readonly longitude: number;
   readonly latitude: number;
 };
 
-export type Location = {
+export type Coordinate = {
   readonly longitude: number;
   readonly latitude: number;
 };
 
-export type Place = {
+export type Location = {
   readonly id: string;
   readonly name: string;
   readonly rating: number;
   readonly userRatingsTotal: number;
-  readonly location: Location;
+  readonly location: Coordinate;
 };

@@ -1,27 +1,11 @@
-import { Location } from '@/domain/place/dto';
-import { PlaceOpeningHours } from '../place/placePlugin';
+import { Coordinate } from '@/domain/coordinate/dto';
+import { PlaceOpeningHours } from '../coordinate/placePlugin';
 import { CategoryType, SituationType } from '@/entities';
 
-export type QueryCategoryRequest = {
-  readonly utcNow: Date;
-};
-
-export type QuerySituationRequest = {
-  readonly category: CategoryType;
-};
-
 export type QueryRecommendRestaurantRequest = {
-  readonly location: Location;
+  readonly location: Coordinate;
   readonly category: CategoryType;
   readonly situation: SituationType;
-};
-
-export type QueryPreferencesRequest = {
-  readonly situation: string;
-};
-
-export type PreferencesResponse = {
-  readonly name: string;
 };
 
 export type RestaurantDetailResponse = {
@@ -31,7 +15,7 @@ export type RestaurantDetailResponse = {
   readonly userRatingsTotal: number;
   readonly priceLevel: number;
   readonly types: string[];
-  readonly location: Location;
+  readonly location: Coordinate;
   readonly formattedAddress: string;
   readonly formattedPhoneNumber?: string;
   readonly website?: string;

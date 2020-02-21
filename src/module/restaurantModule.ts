@@ -6,7 +6,7 @@ import {
   RuleBasedRestaurantRecommender,
 } from '@/domain/restaurant';
 import { GooglePlacePlugin } from '@/infrastructure/place/goolgePlacePlugin';
-import { PlacePluginToken } from '@/domain/place/placePlugin';
+import { PlacePluginToken } from '@/domain/coordinate/placePlugin';
 import {
   CategoryRepositoryToken,
   SituationRepositoryToken,

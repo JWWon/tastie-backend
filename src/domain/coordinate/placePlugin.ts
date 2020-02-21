@@ -1,14 +1,14 @@
-import { Location, Place } from './dto';
+import { Coordinate } from './dto';
 
 export type QueryRestaurantParam = {
-  location: Location;
+  location: Coordinate;
   category: string;
   situation: string;
 };
 
 export type PlaceType = 'restaurant' | 'cafe' | 'bar' | 'tourist_attraction';
 export type QueryPlacesParam = {
-  readonly location: Location;
+  readonly location: Coordinate;
   readonly radius?: number;
   readonly placeType: PlaceType;
   readonly keyword?: string;
@@ -21,7 +21,7 @@ export type PlaceQueryResponse = {
   readonly userRatingsTotal: number;
   readonly priceLevel: number;
   readonly types: string[];
-  readonly location: Location;
+  readonly location: Coordinate;
 };
 
 export type PlaceOpeningHours = {
@@ -43,7 +43,7 @@ export type PlaceDetailResponse = {
   readonly userRatingsTotal: number;
   readonly priceLevel: number;
   readonly types: string[];
-  readonly location: Location;
+  readonly location: Coordinate;
   readonly formattedAddress: string;
   readonly formattedPhoneNumber?: string;
   readonly website?: string;
@@ -52,7 +52,7 @@ export type PlaceDetailResponse = {
 };
 
 export interface PlacePlugin {
-  getAddress(param: Location): Promise<string>;
+  getAddress(param: Coordinate): Promise<string>;
   getPlaces(param: QueryPlacesParam): Promise<PlaceQueryResponse[]>;
   getPlaceDetailByPlaceID(placeID: string): Promise<PlaceDetailResponse>;
   getPhotoUrls(photos: PlacePhoto[]): Promise<string[]>;

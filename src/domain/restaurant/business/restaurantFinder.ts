@@ -3,13 +3,13 @@ import {
   PlacePlugin,
   PlaceQueryResponse,
   PlaceType,
-  Location,
-} from '@/domain/place';
+  Coordinate,
+} from '@/domain/coordinate';
 import { FoodKeywordType, CategoryType } from '@/entities';
 
 interface Param {
   category: CategoryType;
-  location: Location;
+  location: Coordinate;
   foodKeywords: FoodKeywordType[];
 }
 
@@ -49,7 +49,7 @@ export class RestaurantFinder {
   }
 
   private async getAllPlaces(
-    location: Location,
+    location: Coordinate,
     placeType: PlaceType,
     keywords: FoodKeywordType[],
   ): Promise<PlaceQueryResponse[]> {
