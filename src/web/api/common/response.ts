@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class LocationResponseDTO {
+export class CoordinateResponseDTO {
   @ApiProperty()
   readonly longitude: number;
 

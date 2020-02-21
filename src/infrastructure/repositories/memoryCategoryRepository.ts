@@ -1,6 +1,6 @@
 import { CategoryRepository } from '@/interfaces/repositories';
 import { Category, CategoryType } from '@/entities';
-import { convertKoreanDateFromUTC } from '@/domain/restaurant/business/timeSlotConverter';
+import { convertKoreanDateFromUTC } from '@/domain/recommendation/business/timeSlotConverter';
 
 type Time = {
   readonly hour: number;
@@ -65,7 +65,7 @@ export class MemoryCategoryRepository implements CategoryRepository {
     },
   ];
 
-  async getAll(utcNow: Date): Promise<Category[]> {
+  async getCategoriesByUTCDate(utcNow: Date): Promise<Category[]> {
     const koreanDate = convertKoreanDateFromUTC(utcNow);
     const categories: Category[] = [];
 
