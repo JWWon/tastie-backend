@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { LocationResponseDTO } from '../common/response';
+import { CoordinateResponseDTO } from '../common/response';
 
 export class CategoryResponseDTO {
   @ApiProperty()
@@ -43,8 +43,8 @@ export class RestaurantResponseDTO {
   @ApiProperty()
   readonly types: string[];
 
-  @ApiProperty({ type: LocationResponseDTO })
-  readonly location: LocationResponseDTO;
+  @ApiProperty({ type: CoordinateResponseDTO })
+  readonly location: CoordinateResponseDTO;
 
   @ApiProperty()
   readonly formattedAddress: string;
