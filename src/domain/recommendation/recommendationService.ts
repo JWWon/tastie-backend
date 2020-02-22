@@ -27,7 +27,7 @@ export class RecommendationService {
     @Inject(RestaurantRecommenderToken)
     private readonly restaurantRecommender: RestaurantRecommender,
     @Inject(SituationRepositoryToken)
-    private readonly situationRepository: SituationRepository,
+    private readonly situationRepo: SituationRepository,
   ) {}
 
   async convertPlacesToDetail(
@@ -42,10 +42,56 @@ export class RecommendationService {
     return detailPlaces;
   }
 
+  async toRestaurantDetailResponse(
+    detail: PlaceDetailResponse,
+  ): Promise<RestaurantDetailResponse> {
+    return {
+      ...detail,
+      photoUrls: await this.placePlugin.getPhotoUrls(detail.photos),
+    };
+  }
+
+  async getRecommendations(
+    req: QueryRecommendRestaurantRequest,
+  ): Promise<RestaurantDetailResponse[]> {
+    const foodKeywords = this.situationRepo.getFoodKeywordsBySituation(
+      req.situation,
+    );
+
+    const restaurantFinder = new RestaurantFinder(this.placePlugin);
+    const places = await restaurantFinder.find({
+      ...req,
+      foodKeywords,
+    });
+
+    const openRestaurantFilter = (detail: PlaceDetailResponse) =>
+      detail.openingHours?.openNow === true;
+    const openedRestaurants = (
+      await Promise.all(
+        places.map(restaurant =>
+          this.placePlugin.getPlaceDetailByPlaceID(restaurant.placeID),
+        ),
+      )
+    ).filter(openRestaurantFilter);
+
+    const recommendedRestaurants = this.restaurantRecommender.recommends(
+      req,
+      openedRestaurants,
+    );
+
+    const result = await Promise.all(
+      recommendedRestaurants.map(restaurant =>
+        this.toRestaurantDetailResponse(restaurant),
+      ),
+    );
+
+    return result;
+  }
+
   async getRecommendRestaurant(
     req: QueryRecommendRestaurantRequest,
   ): Promise<RestaurantDetailResponse | undefined> {
-    const foodKeywords = this.situationRepository.getFoodKeywordsBySituation(
+    const foodKeywords = this.situationRepo.getFoodKeywordsBySituation(
       req.situation,
     );
 
