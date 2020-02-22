@@ -8,7 +8,10 @@ import {
 import { ApiTags, ApiResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { RecommendationResponseDTO } from './response';
 import { RecommendationRequestDTO } from './request';
-import { RecommendationService } from '@/domain/recommendation';
+import {
+  RecommendationService,
+  RestaurantDetailResponse,
+} from '@/domain/recommendation';
 import { HttpExceptionResponseDTO } from '../common/response';
 import { CategoryType, SituationType } from '@/entities';
 
@@ -26,7 +29,34 @@ export class RestaurantController {
   async getRecommendations(
     @Query() req: RecommendationRequestDTO,
   ): Promise<RecommendationResponseDTO[]> {
-    return [];
+    const recommendations = await this.restaurantService.getRecommendations({
+      location: {
+        latitude: req.latitude,
+        longitude: req.longitude,
+      },
+      category: req.category as CategoryType,
+      situation: req.situation as SituationType,
+      length: req.length ?? 5,
+    });
+
+    const convertResponse = (
+      restaurant: RestaurantDetailResponse,
+    ): RecommendationResponseDTO => ({
+      id: restaurant.placeID,
+      name: restaurant.name,
+      rating: restaurant.rating,
+      userRatingsTotal: restaurant.userRatingsTotal,
+      priceLevel: restaurant.priceLevel,
+      types: restaurant.types,
+      location: restaurant.coordinate,
+      formattedAddress: restaurant.formattedAddress,
+      formattedPhoneNumber: restaurant.formattedPhoneNumber,
+      website: restaurant.website,
+      openingHours: restaurant.openingHours,
+      photoUrls: restaurant.photoUrls,
+    });
+
+    return recommendations.map(convertResponse);
   }
 
   @Get('recommendation')
@@ -45,6 +75,7 @@ export class RestaurantController {
       },
       category: req.category as CategoryType,
       situation: req.situation as SituationType,
+      length: 0,
     });
 
     if (restaurant === undefined) {

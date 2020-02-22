@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CategoryTypeList } from '@/entities/category';
 import { SituationTypeList } from '@/entities';
 
@@ -14,4 +14,7 @@ export class RecommendationRequestDTO {
 
   @ApiProperty({ enum: SituationTypeList })
   readonly situation: string;
+
+  @ApiPropertyOptional({ default: 5 })
+  readonly length?: number;
 }
