@@ -13,11 +13,23 @@ import { HttpExceptionResponseDTO } from '../common/response';
 import { CategoryType, SituationType } from '@/entities';
 
 @ApiTags('Recommendation')
-@Controller('recommendation')
+@Controller('')
 export class RestaurantController {
   constructor(private readonly restaurantService: RecommendationService) {}
 
-  @Get('')
+  @Get('recommendations')
+  @ApiResponse({ status: 200, type: RecommendationResponseDTO, isArray: true })
+  @ApiNotFoundResponse({
+    type: HttpExceptionResponseDTO,
+    description: '적절한 추천을 찾지 못했을 경우',
+  })
+  async getRecommendations(
+    @Query() req: RecommendationRequestDTO,
+  ): Promise<RecommendationResponseDTO[]> {
+    return [];
+  }
+
+  @Get('recommendation')
   @ApiResponse({ status: 200, type: RecommendationResponseDTO })
   @ApiNotFoundResponse({
     type: HttpExceptionResponseDTO,
