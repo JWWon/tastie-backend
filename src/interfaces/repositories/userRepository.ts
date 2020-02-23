@@ -1,11 +1,11 @@
-import { User } from '@/entities';
+import { User, SocialUser, EmailUser } from '@/entities';
 
 export interface UserRepository {
-  getUserByEmail(email: string): Promise<User>;
+  getUserByEmail(email: string): Promise<EmailUser>;
   getUserBySocial(
     socialProviderID: number,
     socialUserID: string,
-  ): Promise<User>;
+  ): Promise<SocialUser>;
 }
 
 export const UserRepositoryToken = Symbol();
