@@ -1,0 +1,10 @@
+import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
+
+@Entity({ name: 'user' })
+export class User {
+  @PrimaryGeneratedColumn({ name: 'user_id' })
+  readonly id: number;
+
+  @Column({ name: 'username' })
+  readonly name: string;
+}
