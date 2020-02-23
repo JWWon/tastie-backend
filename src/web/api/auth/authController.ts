@@ -4,9 +4,10 @@ import {
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
 import { Controller, Post, Body } from '@nestjs/common';
-import { AccessTokenRequest } from './request';
+import { AccessTokenRequest, AccessTokenRequestSchema } from './request';
 import { AccessTokenResponse } from './response';
 import { HttpExceptionResponseDTO } from '../common/response';
+import { JoiValidationPipe } from '@/web/validation';
 
 @ApiTags('Auth API')
 @Controller('auth')
@@ -21,7 +22,8 @@ export class AuthController {
     type: HttpExceptionResponseDTO,
   })
   async accessToken(
-    @Body() req: AccessTokenRequest,
+    @Body(new JoiValidationPipe(AccessTokenRequestSchema))
+    req: AccessTokenRequest,
   ): Promise<AccessTokenResponse> {
     return {
       type: 'Bearer',
