@@ -5,7 +5,7 @@ export class EmailUser {
   @PrimaryColumn({ name: 'user_id' })
   readonly userID: number;
 
-  @Column({ name: 'email' })
+  @Column({ name: 'email', unique: true })
   readonly email: string;
 
   @Column({ name: 'password_hash' })
