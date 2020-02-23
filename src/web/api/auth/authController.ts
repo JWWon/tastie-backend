@@ -4,14 +4,17 @@ import {
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
 import { Controller, Post, Body } from '@nestjs/common';
-import { AccessTokenRequest, AccessTokenRequestSchema } from './request';
-import { AccessTokenResponse } from './response';
+import { AccessTokenRequest, AccessTokenResponse } from './dto';
+import { AccessTokenRequestSchema } from './schema';
 import { HttpExceptionResponseDTO } from '../common/response';
 import { JoiValidationPipe } from '@/web/validation';
+import { AuthService } from '@/domain/auth';
 
 @ApiTags('Auth API')
 @Controller('auth')
 export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
   @Post('token')
   @ApiCreatedResponse({
     description: 'Generate new accessToken',
@@ -25,10 +28,7 @@ export class AuthController {
     @Body(new JoiValidationPipe(AccessTokenRequestSchema))
     req: AccessTokenRequest,
   ): Promise<AccessTokenResponse> {
-    return {
-      type: 'Bearer',
-      accessToken: '',
-      expiresIn: 1000,
-    };
+    const token = await this.authService.getAccessToken(req);
+    return token;
   }
 }
