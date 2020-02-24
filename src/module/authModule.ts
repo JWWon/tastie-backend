@@ -6,6 +6,8 @@ import { OrmUserRepository } from '@/infrastructure/typeorm/repository/ormUserRe
 import { UserRepositoryToken } from '@/interfaces/repositories';
 import { User, SocialUser, EmailUser } from '@/infrastructure/typeorm/model';
 import { EmailAuthenticator } from '@/infrastructure/authenticator';
+import { BcryptPassport } from '@/infrastructure/security';
+import { PassportToken } from '@/interfaces/security';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, SocialUser, EmailUser])],
@@ -14,6 +16,7 @@ import { EmailAuthenticator } from '@/infrastructure/authenticator';
     AuthService,
     EmailAuthenticator,
     { provide: UserRepositoryToken, useClass: OrmUserRepository },
+    { provide: PassportToken, useClass: BcryptPassport },
   ],
 })
 export class AuthModule {}
