@@ -7,4 +7,7 @@ export class User {
 
   @Column({ name: 'username' })
   readonly name: string;
+
+  @Column({ name: 'email' })
+  readonly email: string;
 }

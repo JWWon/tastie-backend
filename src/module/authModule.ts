@@ -4,13 +4,20 @@ import { AuthController } from '@/web/api/auth/authController';
 import { AuthService } from '@/domain/auth';
 import { OrmUserRepository } from '@/infrastructure/typeorm/repository/ormUserRepository';
 import { UserRepositoryToken } from '@/interfaces/repositories';
-import { User, SocialUser, EmailUser } from '@/infrastructure/typeorm/model';
+import {
+  User,
+  SocialUser,
+  EmailUser,
+  SocialProvider,
+} from '@/infrastructure/typeorm/model';
 import { EmailAuthenticator } from '@/infrastructure/authenticator';
 import { BcryptPassport } from '@/infrastructure/security';
 import { PassportToken } from '@/interfaces/security';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, SocialUser, EmailUser])],
+  imports: [
+    TypeOrmModule.forFeature([User, SocialUser, EmailUser, SocialProvider]),
+  ],
   controllers: [AuthController],
   providers: [
     AuthService,

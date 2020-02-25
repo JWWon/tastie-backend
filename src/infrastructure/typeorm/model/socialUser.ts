@@ -15,7 +15,7 @@ export class SocialUser {
   @PrimaryColumn({ name: 'user_id' })
   readonly userID: number;
 
-  @OneToOne(type => User)
+  @OneToOne(type => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   readonly user: User;
 
