@@ -14,8 +14,7 @@ cache:
 build:
   stage: build
   before_script:
-    - apk add python
-    - python --version
+    - apk add python alpine-sdk
     - npm install
   script:
     - npm run build
@@ -23,6 +22,7 @@ build:
 test:
   stage: test
   before_script:
+    - apk add python alpine-sdk
     - npm install
   script:
     - npm run test
