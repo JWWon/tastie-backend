@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { Passport } from '@/interfaces/security';
 
 export class BcryptPassport implements Passport {
