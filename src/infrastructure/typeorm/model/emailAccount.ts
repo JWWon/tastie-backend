@@ -1,8 +1,8 @@
 import { PrimaryColumn, Column, Entity, OneToOne, JoinColumn } from 'typeorm';
 import { User } from './user';
 
-@Entity({ name: 'email_user' })
-export class EmailUser {
+@Entity({ name: 'EmailAccount' })
+export class EmailAccount {
   @PrimaryColumn({ name: 'user_id' })
   readonly userID: number;
 
@@ -13,6 +13,6 @@ export class EmailUser {
   @Column({ name: 'email', unique: true })
   readonly email: string;
 
-  @Column({ name: 'password_hash' })
-  readonly passwordHash: string;
+  @Column({ name: 'encrypted_password', length: 62 })
+  readonly encryptedPassword: string;
 }

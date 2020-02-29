@@ -32,7 +32,7 @@ import {
         password: configService.get('db.password'),
         database: configService.get('db.database'),
         entities: [`${__dirname}/infrastructure/typeorm/model/*{.ts,.js}`],
-        synchronize: false,
+        synchronize: configService.get('db.synchronize'),
       }),
     }),
   ],

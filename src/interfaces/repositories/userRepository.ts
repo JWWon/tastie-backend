@@ -1,20 +1,21 @@
-import { User, SocialUser, EmailUser } from '@/entities';
+import { User, SocialAccount, EmailAccount } from '@/entities';
 
 export type CreateUserParam = {
   readonly type: string;
   readonly username: string;
   readonly email: string;
-  readonly password?: string;
+  readonly birthYear?: number;
+  readonly encryptedPassword?: string;
   readonly socialUserID?: string;
 };
 
 export interface UserRepository {
   createUser(param: CreateUserParam): Promise<User>;
-  getUserByEmail(email: string): Promise<EmailUser>;
+  getUserByEmail(email: string): Promise<EmailAccount>;
   getUserBySocial(
-    socialProviderID: number,
+    socialProviderName: string,
     socialUserID: string,
-  ): Promise<SocialUser>;
+  ): Promise<SocialAccount>;
 }
 
 export const UserRepositoryToken = Symbol();

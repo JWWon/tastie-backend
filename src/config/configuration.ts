@@ -3,6 +3,12 @@ const defaultGoogleOutputFormat = 'json';
 
 export default () => ({
   port: parseInt(process.env.PORT, 10) || defaultPort,
+  jwt: {
+    secretKey: process.env.JWT_SECRET_KEY || 'debugkey',
+    accessTokenExpiresInSec: Number(
+      process.env.ACCESS_TOKEN_EXPIRES_IN_SEC || 3600 * 24 * 30,
+    ),
+  },
   google: {
     apiKey: process.env.GOOGLE_PLACES_API_KEY,
     format:
@@ -14,5 +20,6 @@ export default () => ({
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres',
     database: process.env.DB_DBNAME || 'postgres',
+    synchronize: process.env.DB_SYNC === 'true',
   },
 });

@@ -9,9 +9,9 @@ import {
 import { User } from './user';
 import { SocialProvider } from './socialProvider';
 
-@Entity({ name: 'social_user' })
+@Entity({ name: 'SocialAccount' })
 @Unique(['socialUserID', 'socialProviderID'])
-export class SocialUser {
+export class SocialAccount {
   @PrimaryColumn({ name: 'user_id' })
   readonly userID: number;
 

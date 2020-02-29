@@ -4,6 +4,7 @@ stages:
   - build
   - test
   - before-deploy
+  - migration
   - deploy
 
 cache:
@@ -40,6 +41,29 @@ build-docker-image:
     - master
     - production
 
+migration-staging:
+  stage: migration
+  before_script:
+    - npm install
+  script:
+    - npm run typeorm:run
+  environment:
+    name: staging
+  only:
+    - master
+
+migration-production:
+  stage: migration
+  before_script:
+    - npm install
+  script:
+    - npm run typeorm:run
+  environment:
+    name: production
+  when: manual
+  only:
+    - production
+
 deploy-staging:
   stage: deploy
   image: coxauto/aws-ebcli
@@ -55,6 +79,9 @@ deploy-staging:
     ENVIRONMENT: staging
     APP_VERSION: "staging-b$CI_PIPELINE_ID"
     GIT_STRATEGY: clone
+  environment:
+    name: staging
+    url: https://staging.tastie.me
   only:
     - master
 
@@ -73,6 +100,9 @@ deploy-production:
     ENVIRONMENT: production
     APP_VERSION: "production-b$CI_PIPELINE_ID"
     GIT_STRATEGY: clone
+  environment:
+    name: production
+    url: https://production.tastie.me
   when: manual
   only:
     - production

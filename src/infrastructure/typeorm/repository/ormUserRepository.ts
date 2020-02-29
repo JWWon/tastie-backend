@@ -1,67 +1,148 @@
-import { Repository } from 'typeorm';
+import { Repository, Connection, QueryRunner } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { UserRepository, CreateUserParam } from '@/interfaces/repositories';
 import {
   User as UserModel,
-  SocialUser as SocialUserModel,
-  EmailUser as EmailUserModel,
+  SocialAccount as SocialUserModel,
+  EmailAccount as EmailUserModel,
   SocialProvider,
+  SocialAccount as SocialAccountModel,
 } from '../model';
-import { User, SocialUser, EmailUser } from '@/entities';
+import { User, SocialAccount, EmailAccount } from '@/entities';
+import { AlreadyExistsAccountError } from '@/domain/auth/exception';
+
+type BeforeInsertCheckFunc = (p: CreateUserParam) => Promise<boolean>;
+type AccountInsertFunc = (userID: number, p: CreateUserParam) => Promise<void>;
 
 @Injectable()
 export class OrmUserRepository implements UserRepository {
+  private readonly providerIDMap: Map<string, number>;
+
   constructor(
+    private readonly connection: Connection,
     @InjectRepository(UserModel)
-    private readonly userRepo: Repository<User>,
+    private readonly userRepo: Repository<UserModel>,
     @InjectRepository(SocialUserModel)
-    private readonly socialUserRepo: Repository<SocialUser>,
+    private readonly socialUserRepo: Repository<SocialUserModel>,
     @InjectRepository(EmailUserModel)
-    private readonly emailUserRepo: Repository<EmailUser>,
+    private readonly emailUserRepo: Repository<EmailUserModel>,
     @InjectRepository(SocialProvider)
     private readonly providerRepo: Repository<SocialProvider>,
-  ) {}
+  ) {
+    this.providerIDMap = new Map<string, number>();
+    this.providerRepo.find().then(providers =>
+      providers.forEach(provider => {
+        this.providerIDMap.set(provider.name, provider.id);
+      }),
+    );
+  }
 
-  async createUser(param: CreateUserParam): Promise<User> {
-    const { queryRunner } = this.userRepo;
-    const socialProviderID = await this.providerRepo.findOne({
-      select: ['id'],
-      where: {
-        name: param.type,
-      },
-    });
+  private getCheckAccountFuncByLoginType(type: string): BeforeInsertCheckFunc {
+    const whenEmailCheckFunc = async (p: CreateUserParam) => {
+      const user = await this.emailUserRepo.findOne({
+        select: ['email'],
+        where: { email: p.email },
+      });
 
-    const user: Partial<UserModel> = {
-      name: param.username,
-      email: param.email,
+      return user !== undefined;
     };
 
-    await queryRunner.startTransaction();
+    const whenSocialCheckFunc = async (p: CreateUserParam) => {
+      const user = await this.socialUserRepo.findOne({
+        select: ['socialUserID', 'socialProviderID'],
+        where: {
+          socialUserID: p.socialUserID,
+          socialProviderID: this.providerIDMap.get(p.type),
+        },
+      });
 
+      return user !== undefined;
+    };
+
+    return type === 'email' ? whenEmailCheckFunc : whenSocialCheckFunc;
+  }
+
+  private getInsertAccountFunc(
+    type: string,
+    queryRunner: QueryRunner,
+  ): AccountInsertFunc {
+    const insertEmailAccountFunc = async (
+      userID: number,
+      p: CreateUserParam,
+    ) => {
+      await queryRunner.manager.insert(EmailUserModel, {
+        userID,
+        email: p.email,
+        encryptedPassword: p.encryptedPassword,
+      });
+    };
+
+    const insertSocialAccountFunc = async (
+      userID: number,
+      p: CreateUserParam,
+    ) => {
+      await queryRunner.manager.insert(SocialAccountModel, {
+        userID,
+        socialProviderID: this.providerIDMap.get(p.type),
+        socialUserID: p.socialUserID,
+      });
+    };
+
+    return type === 'email' ? insertEmailAccountFunc : insertSocialAccountFunc;
+  }
+
+  async createUser(param: CreateUserParam): Promise<User> {
+    const queryRunner = this.connection.createQueryRunner();
+    const userProfile: Partial<UserModel> = {
+      name: param.username,
+      email: param.email,
+      birthYear: param.birthYear,
+    };
+
+    const beforeCheckFunc = this.getCheckAccountFuncByLoginType(param.type);
+    const existsAccount = await beforeCheckFunc(param);
+    if (existsAccount) {
+      throw new AlreadyExistsAccountError();
+    }
+
+    let createdUser: User;
     try {
-      const insertedUser = await queryRunner.manager.insert(UserModel, user);
-      const insertedUserID = insertedUser.identifiers[0];
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      const insertAccountFunc = this.getInsertAccountFunc(
+        param.type,
+        queryRunner,
+      );
+
+      const insertResult = await queryRunner.manager.insert(
+        UserModel,
+        userProfile,
+      );
+      const insertedUserID: number = insertResult.identifiers[0].id;
+      await insertAccountFunc(insertedUserID, param);
 
       await queryRunner.commitTransaction();
 
-      return {
-        id: 10,
+      createdUser = {
+        id: insertedUserID,
         name: param.username,
+        email: param.email,
+        birthYear: param.birthYear,
       };
     } catch (err) {
       await queryRunner.rollbackTransaction();
+
+      throw err;
     } finally {
       await queryRunner.release();
     }
 
-    return {
-      id: 10,
-      name: '',
-    };
+    return createdUser;
   }
 
-  async getUserByEmail(email: string): Promise<EmailUser> {
+  async getUserByEmail(email: string): Promise<EmailAccount> {
     const user = await this.emailUserRepo.findOne({
       relations: ['user'],
       where: {
@@ -73,9 +154,18 @@ export class OrmUserRepository implements UserRepository {
   }
 
   async getUserBySocial(
-    socialProviderID: number,
+    socialProviderName: string,
     socialUserID: string,
-  ): Promise<SocialUser> {
-    throw new Error('Method not implemented.');
+  ): Promise<SocialAccount> {
+    const socialProviderID = this.providerIDMap.get(socialProviderName);
+    const user = await this.socialUserRepo.findOne({
+      relations: ['user'],
+      where: {
+        socialProviderID,
+        socialUserID,
+      },
+    });
+
+    return user;
   }
 }
