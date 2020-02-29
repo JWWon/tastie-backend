@@ -19,11 +19,13 @@ export class EmailAuthenticator implements Authenticator {
   ) {}
 
   async signup(req: SignupRequest): Promise<User> {
+    const encryptedPassword = await this.passport.encryptPassword(req.password);
     const param: CreateUserParam = {
       type: req.type,
       username: req.username,
+      birthYear: req.birthYear,
       email: req.email,
-      password: req.password,
+      encryptedPassword,
     };
 
     const user = await this.userRepo.createUser(param);
@@ -32,8 +34,12 @@ export class EmailAuthenticator implements Authenticator {
 
   async authenticate(req: AccessTokenRequest): Promise<User | undefined> {
     const credential = await this.userRepo.getUserByEmail(req.email);
+    if (credential === undefined) {
+      return undefined;
+    }
+
     const valid = await this.passport.comparedPassword(
-      credential.passwordHash,
+      credential.encryptedPassword,
       req.password,
     );
 

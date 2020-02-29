@@ -1,7 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AccessTokenRequest } from './accessTokenRequest';
 
 export class SignupRequest extends AccessTokenRequest {
-  @ApiProperty()
+  @ApiProperty({ description: 'Max length 20' })
   readonly username: string;
+
+  @ApiPropertyOptional()
+  readonly birthYear?: number;
 }

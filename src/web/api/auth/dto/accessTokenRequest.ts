@@ -1,16 +1,20 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export type LoginType = 'email' | 'google' | 'facebook';
-export class AccessTokenRequest {
-  @ApiProperty()
-  readonly type: LoginType;
+export const AuthTypeList = ['email', 'google', 'facebook'];
+type AuthType = typeof AuthTypeList[number];
 
-  @ApiPropertyOptional()
+export class AccessTokenRequest {
+  @ApiProperty({ description: 'Auth Type', enum: AuthTypeList })
+  readonly type: AuthType;
+
+  @ApiPropertyOptional({
+    description: 'social accessToken, require field when social auth',
+  })
   readonly token: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: 'require field when email auth' })
   readonly email: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ description: 'require field when email auth' })
   readonly password: string;
 }

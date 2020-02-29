@@ -1,4 +1,4 @@
 export * from './user';
-export * from './emailUser';
+export * from './emailAccount';
 export * from './socialProvider';
-export * from './socialUser';
+export * from './socialAccount';
