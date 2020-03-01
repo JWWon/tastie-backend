@@ -142,15 +142,25 @@ export class OrmUserRepository implements UserRepository {
     return createdUser;
   }
 
+  async getUserByUserID(userID: number): Promise<User | undefined> {
+    const user = await this.userRepo.findOne({
+      where: {
+        id: userID,
+      },
+    });
+
+    return user;
+  }
+
   async getUserByEmail(email: string): Promise<EmailAccount> {
-    const user = await this.emailUserRepo.findOne({
+    const account = await this.emailUserRepo.findOne({
       relations: ['user'],
       where: {
         email,
       },
     });
 
-    return user;
+    return account;
   }
 
   async getUserBySocial(
@@ -158,7 +168,7 @@ export class OrmUserRepository implements UserRepository {
     socialUserID: string,
   ): Promise<SocialAccount> {
     const socialProviderID = this.providerIDMap.get(socialProviderName);
-    const user = await this.socialUserRepo.findOne({
+    const account = await this.socialUserRepo.findOne({
       relations: ['user'],
       where: {
         socialProviderID,
@@ -166,6 +176,6 @@ export class OrmUserRepository implements UserRepository {
       },
     });
 
-    return user;
+    return account;
   }
 }

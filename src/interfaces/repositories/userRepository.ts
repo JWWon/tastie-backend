@@ -11,11 +11,13 @@ export type CreateUserParam = {
 
 export interface UserRepository {
   createUser(param: CreateUserParam): Promise<User>;
-  getUserByEmail(email: string): Promise<EmailAccount>;
+
+  getUserByUserID(userID: number): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<EmailAccount | undefined>;
   getUserBySocial(
     socialProviderName: string,
     socialUserID: string,
-  ): Promise<SocialAccount>;
+  ): Promise<SocialAccount | undefined>;
 }
 
 export const UserRepositoryToken = Symbol();
