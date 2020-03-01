@@ -80,7 +80,10 @@ export class AuthController {
     let token: AccessTokenResponse;
 
     try {
-      token = await this.authService.signup(req);
+      token = await this.authService.signup({
+        ...req,
+        username: req.name,
+      });
     } catch (err) {
       if (err instanceof AlreadyExistsAccountError) {
         throw new ConflictException({

@@ -2,7 +2,7 @@ import * as Joi from 'joi';
 import { AccessTokenRequestSchema } from './accessTokenRequestSchema';
 
 export const SignupRequestSchema = AccessTokenRequestSchema.keys({
-  username: Joi.string()
+  name: Joi.string()
     .required()
     .min(2)
     .max(20),
