@@ -1,4 +1,4 @@
-import { Repository, Connection, QueryRunner } from 'typeorm';
+import { Repository, Connection, QueryRunner, FindOneOptions } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { UserRepository, CreateUserParam } from '@/interfaces/repositories';

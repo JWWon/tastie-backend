@@ -45,4 +45,9 @@ export class EmailAuthenticator implements Authenticator {
 
     return valid ? credential.user : undefined;
   }
+
+  async hasAccountByEmail(email: string): Promise<boolean> {
+    const credential = await this.userRepo.getUserByEmail(email);
+    return credential !== undefined;
+  }
 }

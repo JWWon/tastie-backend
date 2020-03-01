@@ -17,8 +17,6 @@ export const AccessTokenRequestSchema = Joi.object({
   }),
   password: Joi.when('type', {
     is: 'email',
-    then: Joi.string()
-      .max(8)
-      .required(),
+    then: Joi.string().required(),
   }),
 });

@@ -34,6 +34,11 @@ export class AuthService {
     return this.tokenIssuer.issueAccessToken(user);
   }
 
+  async hasEmailAccountByEmail(email: string): Promise<boolean> {
+    const exists = await this.emailAuthenticator.hasAccountByEmail(email);
+    return exists;
+  }
+
   private getAuthenticatorByAuthType(authType: string): Authenticator {
     if (authType === 'email') {
       return this.emailAuthenticator;
