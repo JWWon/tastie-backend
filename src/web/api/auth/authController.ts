@@ -4,6 +4,7 @@ import {
   ApiNotFoundResponse,
   ApiConflictResponse,
   ApiUnauthorizedResponse,
+  ApiOkResponse,
 } from '@nestjs/swagger';
 import {
   Controller,
@@ -12,13 +13,23 @@ import {
   ConflictException,
   UnauthorizedException,
   NotFoundException,
+  Get,
+  Query,
 } from '@nestjs/common';
-import { AccessTokenRequest, AccessTokenResponse } from './dto';
-import { AccessTokenRequestSchema, SignupRequestSchema } from './schema';
+import {
+  AccessTokenRequest,
+  AccessTokenResponse,
+  SignupRequest,
+  QueryExistsAccountRequest,
+} from './dto';
+import {
+  AccessTokenRequestSchema,
+  SignupRequestSchema,
+  QueryExistsAccountExistsSchema,
+} from './schema';
 import { HttpExceptionResponseDTO } from '../common/response';
 import { JoiValidationPipe } from '@/web/validation';
 import { AuthService } from '@/domain/auth';
-import { SignupRequest } from './dto/signupRequest';
 import {
   AlreadyExistsAccountError,
   InvalidCredentialError,
@@ -69,6 +80,10 @@ export class AuthController {
   }
 
   @Post('signup')
+  @ApiCreatedResponse({
+    description: 'Sign up',
+    type: AccessTokenResponse,
+  })
   @ApiConflictResponse({
     description: 'User already exists',
     type: HttpExceptionResponseDTO,
@@ -96,4 +111,15 @@ export class AuthController {
 
     return token;
   }
+
+  @Get('accounts')
+  @ApiOkResponse({ description: 'User is not exists' })
+  @ApiConflictResponse({
+    description: 'User already exists',
+    type: HttpExceptionResponseDTO,
+  })
+  async existsAccount(
+    @Query(new JoiValidationPipe(QueryExistsAccountExistsSchema))
+    req: QueryExistsAccountRequest,
+  ): Promise<void> {}
 }
