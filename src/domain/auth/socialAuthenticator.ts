@@ -60,7 +60,7 @@ export class SocialAuthenticator implements Authenticator {
       throw new InvalidCredentialError();
     }
 
-    const credential = await this.userRepo.getUserBySocial(
+    const credential = await this.userRepo.getAccountBySocial(
       req.type,
       socialProfile.userID,
     );

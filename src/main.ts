@@ -8,6 +8,7 @@ function registerSwaggerDoc(app: INestApplication) {
     .setTitle('Pickat Bakend')
     .setDescription('The pickat API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

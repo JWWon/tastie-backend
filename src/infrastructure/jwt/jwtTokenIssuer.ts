@@ -37,4 +37,15 @@ export class JwtTokenIssuer implements TokenIssuer {
 
     return token;
   }
+
+  extractTokenClaims(token: string): User {
+    const claims: any = jwt.verify(token, this.jwtSecretKey);
+
+    return {
+      id: claims.sub,
+      email: claims.email,
+      name: claims.name,
+      birthYear: claims.birthYear,
+    };
+  }
 }

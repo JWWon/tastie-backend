@@ -9,6 +9,7 @@ import {
   CoordinateModule,
   CaseModule,
   AuthModule,
+  UserModule,
 } from './module';
 
 @Module({
@@ -17,6 +18,7 @@ import {
     CoordinateModule,
     CaseModule,
     AuthModule,
+    UserModule,
     ConfigModule.forRoot({
       load: [config],
       isGlobal: true,
