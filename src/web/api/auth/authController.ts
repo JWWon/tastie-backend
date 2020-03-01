@@ -121,5 +121,12 @@ export class AuthController {
   async existsAccount(
     @Query(new JoiValidationPipe(QueryExistsAccountExistsSchema))
     req: QueryExistsAccountRequest,
-  ): Promise<void> {}
+  ): Promise<void> {
+    const exists = await this.authService.hasEmailAccountByEmail(req.email);
+    if (exists) {
+      throw new ConflictException({
+        message: 'Already exists user',
+      });
+    }
+  }
 }
