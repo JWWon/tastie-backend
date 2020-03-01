@@ -100,7 +100,11 @@ export class AuthController {
         username: req.name,
       });
     } catch (err) {
-      if (err instanceof AlreadyExistsAccountError) {
+      if (err instanceof InvalidCredentialError) {
+        throw new UnauthorizedException({
+          message: 'invalid credentials',
+        });
+      } else if (err instanceof AlreadyExistsAccountError) {
         throw new ConflictException({
           message: 'Already exists user',
         });
