@@ -152,7 +152,7 @@ export class OrmUserRepository implements UserRepository {
     return user;
   }
 
-  async getUserByEmail(email: string): Promise<EmailAccount> {
+  async getAccountByEmail(email: string): Promise<EmailAccount> {
     const account = await this.emailUserRepo.findOne({
       relations: ['user'],
       where: {
@@ -163,7 +163,7 @@ export class OrmUserRepository implements UserRepository {
     return account;
   }
 
-  async getUserBySocial(
+  async getAccountBySocial(
     socialProviderName: string,
     socialUserID: string,
   ): Promise<SocialAccount> {

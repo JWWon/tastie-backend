@@ -13,8 +13,8 @@ export interface UserRepository {
   createUser(param: CreateUserParam): Promise<User>;
 
   getUserByUserID(userID: number): Promise<User | undefined>;
-  getUserByEmail(email: string): Promise<EmailAccount | undefined>;
-  getUserBySocial(
+  getAccountByEmail(email: string): Promise<EmailAccount | undefined>;
+  getAccountBySocial(
     socialProviderName: string,
     socialUserID: string,
   ): Promise<SocialAccount | undefined>;

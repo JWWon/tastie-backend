@@ -33,7 +33,7 @@ export class EmailAuthenticator implements Authenticator {
   }
 
   async authenticate(req: AccessTokenRequest): Promise<User | undefined> {
-    const credential = await this.userRepo.getUserByEmail(req.email);
+    const credential = await this.userRepo.getAccountByEmail(req.email);
     if (credential === undefined) {
       return undefined;
     }
@@ -47,7 +47,7 @@ export class EmailAuthenticator implements Authenticator {
   }
 
   async hasAccountByEmail(email: string): Promise<boolean> {
-    const credential = await this.userRepo.getUserByEmail(email);
+    const credential = await this.userRepo.getAccountByEmail(email);
     return credential !== undefined;
   }
 }
