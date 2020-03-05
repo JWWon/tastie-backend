@@ -5,13 +5,15 @@ import {
   SocialAccount,
   EmailAccount,
   SocialProvider,
+  UserPlaceLike,
 } from '@/infrastructure/typeorm/model';
 import { UserController } from '@/web/api/user/userController';
-import { UserService } from '@/domain/user';
+import { UserService, UserPlaceLikeRepositoryToken } from '@/domain/user';
 import { UserRepositoryToken } from '@/interfaces/repositories';
 import { OrmUserRepository } from '@/infrastructure/typeorm/repository/ormUserRepository';
 import { TokenIssuerToken } from '@/domain/auth';
 import { JwtTokenIssuer } from '@/infrastructure/jwt';
+import { OrmUserPlaceLikeRepository } from '@/infrastructure/typeorm/repository/ormUserPlaceLikeRepository';
 
 @Module({
   imports: [
@@ -20,12 +22,17 @@ import { JwtTokenIssuer } from '@/infrastructure/jwt';
       SocialAccount,
       EmailAccount,
       SocialProvider,
+      UserPlaceLike,
     ]),
   ],
   controllers: [UserController],
   providers: [
     UserService,
     { provide: UserRepositoryToken, useClass: OrmUserRepository },
+    {
+      provide: UserPlaceLikeRepositoryToken,
+      useClass: OrmUserPlaceLikeRepository,
+    },
     { provide: TokenIssuerToken, useClass: JwtTokenIssuer },
   ],
 })
