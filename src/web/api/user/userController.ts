@@ -2,8 +2,6 @@ import {
   ApiTags,
   ApiCreatedResponse,
   ApiNotFoundResponse,
-  ApiConflictResponse,
-  ApiUnauthorizedResponse,
   ApiOkResponse,
   ApiBearerAuth,
   ApiNoContentResponse,
@@ -13,8 +11,6 @@ import {
   Controller,
   Post,
   Body,
-  ConflictException,
-  UnauthorizedException,
   NotFoundException,
   Get,
   Query,
@@ -25,7 +21,7 @@ import {
 import { User } from '@/entities';
 import { UserDecorator } from '@/web/decorator';
 import { JwtAuthGuard } from '@/web/guard';
-import { UserService } from '@/domain/user';
+import { UserService, NotFoundUserPlaceLikeError } from '@/domain/user';
 import {
   UserResponse,
   UserPlaceLikeResponse,
@@ -62,22 +58,67 @@ export class UserController {
   @Post('likes')
   @ApiCreatedResponse({ description: 'ok' })
   async createPlaceLike(
+    @UserDecorator() me: User,
     @Body() req: CreateUserPlaceLikeRequest,
   ): Promise<void> {
-    // try {
-    //   await this.userService
-    // }
+    try {
+      await this.userService.createUserPlaceLike({
+        userID: me.id,
+        placeID: req.placeID,
+        positive: req.positive,
+      });
+    } catch (err) {
+      if (err instanceof NotFoundUserPlaceLikeError) {
+        throw new NotFoundException({
+          message: 'Like is not exists',
+        });
+      } else {
+        throw err;
+      }
+    }
   }
 
   @Put('likes')
   @ApiOkResponse({ description: 'ok' })
   @ApiNotFoundResponse({ description: 'row is not found' })
   async updatePlaceLike(
+    @UserDecorator() me: User,
     @Body() req: CreateUserPlaceLikeRequest,
-  ): Promise<void> {}
+  ): Promise<void> {
+    try {
+      await this.userService.updateUserPlaceLike({
+        userID: me.id,
+        placeID: req.placeID,
+        positive: req.positive,
+      });
+    } catch (err) {
+      if (err instanceof NotFoundUserPlaceLikeError) {
+        throw new NotFoundException({
+          message: 'Like is not exists',
+        });
+      } else {
+        throw err;
+      }
+    }
+  }
 
   @Delete('likes')
   @ApiNoContentResponse({ description: 'ok' })
   @ApiNotFoundResponse({ description: 'row is not found' })
-  async removePlaceLike(@Query('place_id') placeID: string): Promise<void> {}
+  async removePlaceLike(
+    @UserDecorator() me: User,
+    @Query('place_id') placeID: string,
+  ): Promise<void> {
+    try {
+      await this.userService.removeUserPlaceLike(me.id, placeID);
+    } catch (err) {
+      if (err instanceof NotFoundUserPlaceLikeError) {
+        throw new NotFoundException({
+          message: 'Like is not exists',
+        });
+      } else {
+        throw err;
+      }
+    }
+  }
 }
