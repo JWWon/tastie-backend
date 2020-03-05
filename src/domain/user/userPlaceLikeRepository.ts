@@ -6,7 +6,7 @@ export interface UserPlaceLikeRepository {
 
   createLike(req: CreateUserPlaceLikeRequest): Promise<void>;
   updateLike(req: CreateUserPlaceLikeRequest): Promise<void>;
-  removeLike(userID: number, placeID: string): Promise<boolean>;
+  removeLike(userID: number, placeID: string): Promise<void>;
 }
 
 export const UserPlaceLikeRepositoryToken = Symbol();

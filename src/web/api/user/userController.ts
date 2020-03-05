@@ -79,7 +79,7 @@ export class UserController {
   }
 
   @Delete('likes')
-  @ApiNoContentResponse({ description: 'ok' })
+  @ApiOkResponse({ description: 'ok' })
   @ApiNotFoundResponse({ description: 'row is not found' })
   async removePlaceLike(
     @UserDecorator() me: User,
