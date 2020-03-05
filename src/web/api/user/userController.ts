@@ -78,30 +78,6 @@ export class UserController {
     }
   }
 
-  @Put('likes')
-  @ApiOkResponse({ description: 'ok' })
-  @ApiNotFoundResponse({ description: 'row is not found' })
-  async updatePlaceLike(
-    @UserDecorator() me: User,
-    @Body() req: CreateUserPlaceLikeRequest,
-  ): Promise<void> {
-    try {
-      await this.userService.updateUserPlaceLike({
-        userID: me.id,
-        placeID: req.placeID,
-        positive: req.positive,
-      });
-    } catch (err) {
-      if (err instanceof NotFoundUserPlaceLikeError) {
-        throw new NotFoundException({
-          message: 'Like is not exists',
-        });
-      } else {
-        throw err;
-      }
-    }
-  }
-
   @Delete('likes')
   @ApiNoContentResponse({ description: 'ok' })
   @ApiNotFoundResponse({ description: 'row is not found' })
