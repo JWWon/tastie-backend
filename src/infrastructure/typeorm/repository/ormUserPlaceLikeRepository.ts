@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { UserPlaceLikeRepository } from '@/domain/user';
 import { UserPlaceLike } from '@/entities';
-import { CreateUserLikeRequest } from '@/domain/user/dto';
+import { CreateUserPlaceLikeRequest } from '@/domain/user/dto';
 import { UserPlaceLike as UserPlaceLikeModel } from '../model';
 
 @Injectable()
@@ -17,15 +17,11 @@ export class OrmUserPlaceLikeRepository implements UserPlaceLikeRepository {
     throw new Error('Method not implemented.');
   }
 
-  createLike(req: CreateUserLikeRequest): Promise<void> {
+  createLike(req: CreateUserPlaceLikeRequest): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  updateLike(
-    userID: number,
-    placeID: string,
-    positive: boolean,
-  ): Promise<void> {
+  updateLike(req: CreateUserPlaceLikeRequest): Promise<void> {
     throw new Error('Method not implemented.');
   }
 

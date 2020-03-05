@@ -1,11 +1,11 @@
 import { UserPlaceLike } from '@/entities';
-import { CreateUserLikeRequest } from './dto';
+import { CreateUserPlaceLikeRequest } from './dto';
 
 export interface UserPlaceLikeRepository {
   getLikesByUserID(userID: number): Promise<UserPlaceLike[]>;
 
-  createLike(req: CreateUserLikeRequest): Promise<void>;
-  updateLike(userID: number, placeID: string, positive: boolean): Promise<void>;
+  createLike(req: CreateUserPlaceLikeRequest): Promise<void>;
+  updateLike(req: CreateUserPlaceLikeRequest): Promise<void>;
   removeLike(userID: number, placeID: string): Promise<boolean>;
 }
 
