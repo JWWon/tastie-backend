@@ -4,8 +4,14 @@ import {
   Query,
   HttpException,
   HttpStatus,
+  Param,
 } from '@nestjs/common';
-import { ApiTags, ApiResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { RecommendationResponseDTO } from './response';
 import { RecommendationRequestDTO } from './request';
 import {
@@ -19,6 +25,25 @@ import { CategoryType, SituationType } from '@/entities';
 @Controller('')
 export class RestaurantController {
   constructor(private readonly restaurantService: RecommendationService) {}
+
+  toRecommendationResponse(
+    restaurant: RestaurantDetailResponse,
+  ): RecommendationResponseDTO {
+    return {
+      id: restaurant.placeID,
+      name: restaurant.name,
+      rating: restaurant.rating,
+      userRatingsTotal: restaurant.userRatingsTotal,
+      priceLevel: restaurant.priceLevel,
+      types: restaurant.types,
+      location: restaurant.coordinate,
+      formattedAddress: restaurant.formattedAddress,
+      formattedPhoneNumber: restaurant.formattedPhoneNumber,
+      website: restaurant.website,
+      openingHours: restaurant.openingHours,
+      photoUrls: restaurant.photoUrls,
+    };
+  }
 
   @Get('recommendations')
   @ApiResponse({ status: 200, type: RecommendationResponseDTO, isArray: true })
@@ -39,24 +64,27 @@ export class RestaurantController {
       length: req.length ?? 5,
     });
 
-    const convertResponse = (
-      restaurant: RestaurantDetailResponse,
-    ): RecommendationResponseDTO => ({
-      id: restaurant.placeID,
-      name: restaurant.name,
-      rating: restaurant.rating,
-      userRatingsTotal: restaurant.userRatingsTotal,
-      priceLevel: restaurant.priceLevel,
-      types: restaurant.types,
-      location: restaurant.coordinate,
-      formattedAddress: restaurant.formattedAddress,
-      formattedPhoneNumber: restaurant.formattedPhoneNumber,
-      website: restaurant.website,
-      openingHours: restaurant.openingHours,
-      photoUrls: restaurant.photoUrls,
-    });
+    return recommendations.map(this.toRecommendationResponse);
+  }
 
-    return recommendations.map(convertResponse);
+  @Get('recommendations/:placeID')
+  @ApiOkResponse({ type: RecommendationResponseDTO })
+  @ApiNotFoundResponse({
+    type: HttpExceptionResponseDTO,
+    description: 'PlaceID에 해당하는 추천이 존재하지 않을 때',
+  })
+  async getRecommendationByPlaceID(
+    @Param('placeID') placeID: string,
+  ): Promise<RecommendationResponseDTO> {
+    const recommendation = await this.restaurantService.getRecommendationByPlaceID(
+      placeID,
+    );
+
+    if (recommendation === undefined) {
+      throw new HttpException('Restaurant not found', HttpStatus.NOT_FOUND);
+    }
+
+    return this.toRecommendationResponse(recommendation);
   }
 
   @Get('recommendation')
@@ -82,19 +110,6 @@ export class RestaurantController {
       throw new HttpException('Restaurant not found', HttpStatus.NOT_FOUND);
     }
 
-    return {
-      id: restaurant.placeID,
-      name: restaurant.name,
-      rating: restaurant.rating,
-      userRatingsTotal: restaurant.userRatingsTotal,
-      priceLevel: restaurant.priceLevel,
-      types: restaurant.types,
-      location: restaurant.coordinate,
-      formattedAddress: restaurant.formattedAddress,
-      formattedPhoneNumber: restaurant.formattedPhoneNumber,
-      website: restaurant.website,
-      openingHours: restaurant.openingHours,
-      photoUrls: restaurant.photoUrls,
-    };
+    return this.toRecommendationResponse(restaurant);
   }
 }
