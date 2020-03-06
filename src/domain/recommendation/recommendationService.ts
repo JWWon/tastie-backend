@@ -45,6 +45,10 @@ export class RecommendationService {
   async toRestaurantDetailResponse(
     detail: PlaceDetailResponse,
   ): Promise<RestaurantDetailResponse> {
+    if (detail === undefined) {
+      return undefined;
+    }
+
     return {
       ...detail,
       photoUrls: await this.placePlugin.getPhotoUrls(detail.photos),
@@ -86,6 +90,20 @@ export class RecommendationService {
     );
 
     return result;
+  }
+
+  async getRecommendationByPlaceID(
+    placeID: string,
+  ): Promise<RestaurantDetailResponse | undefined> {
+    try {
+      const recommendation = await this.placePlugin.getPlaceDetailByPlaceID(
+        placeID,
+      );
+
+      return this.toRestaurantDetailResponse(recommendation);
+    } catch (err) {
+      return undefined;
+    }
   }
 
   async getRecommendRestaurant(
