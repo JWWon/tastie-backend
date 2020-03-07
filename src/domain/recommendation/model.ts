@@ -1,4 +1,4 @@
-import { Coordinate } from '@/domain/coordinate/dto';
+import { Coordinate } from '@/entities';
 
 export type Restaurant = {
   readonly placeID: string;
