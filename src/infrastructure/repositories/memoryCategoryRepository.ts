@@ -1,6 +1,6 @@
 import { CategoryRepository } from '@/interfaces/repositories';
 import { Category, CategoryType } from '@/entities';
-import { convertKoreanDateFromUTC } from '@/domain/recommendation/business/timeSlotConverter';
+import { convertKoreanDateFromUTC } from '@/domain/recommendation/timeSlotConverter';
 
 type Time = {
   readonly hour: number;

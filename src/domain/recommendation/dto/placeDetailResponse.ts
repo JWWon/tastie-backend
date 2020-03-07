@@ -1,13 +1,5 @@
-import { Coordinate } from '@/domain/coordinate/dto';
-import { CategoryType, SituationType } from '@/entities';
 import { PlaceOpeningHours } from '@/interfaces/place';
-
-export type QueryRecommendRestaurantRequest = {
-  readonly location: Coordinate;
-  readonly category: CategoryType;
-  readonly situation: SituationType;
-  readonly length: number;
-};
+import { Coordinate } from '@/entities';
 
 export type RestaurantDetailResponse = {
   readonly placeID: string;

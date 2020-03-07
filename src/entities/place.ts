@@ -1,6 +1,6 @@
-import { Coordinate } from '@/entities';
+import { Coordinate } from './coordinate';
 
-export type Restaurant = {
+export type Place = {
   readonly placeID: string;
   readonly name: string;
   readonly rating: number;

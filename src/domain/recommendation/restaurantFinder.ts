@@ -1,6 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { Coordinate } from '@/domain/coordinate';
-import { FoodKeywordType, CategoryType } from '@/entities';
+import { FoodKeywordType, CategoryType, Coordinate } from '@/entities';
 import {
   PlacePlugin,
   PlaceSearchResponse,
