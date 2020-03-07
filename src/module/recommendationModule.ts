@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { RestaurantController } from '@/web/api/recommendation/controller';
 import {
   RecommendationService,
-  RestaurantRecommenderToken,
   RuleBasedRestaurantRecommender,
+  RestaurantRecommenderToken,
 } from '@/domain/recommendation';
 import { GooglePlacePlugin } from '@/infrastructure/place/goolgePlacePlugin';
 import { PlacePluginToken } from '@/interfaces/place';

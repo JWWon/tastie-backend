@@ -7,18 +7,17 @@ import {
 import {
   PlacePluginToken,
   PlacePlugin,
-  PlaceSearchResponse,
   PlaceDetailResponse,
 } from '@/interfaces/place';
-import {
-  RestaurantRecommender,
-  RestaurantRecommenderToken,
-} from './business/restaurantRecommender';
 import {
   SituationRepositoryToken,
   SituationRepository,
 } from '@/interfaces/repositories';
 import { RestaurantFinder } from './restaurantFinder';
+import {
+  RestaurantRecommenderToken,
+  RestaurantRecommender,
+} from './restaurantRecommender';
 
 export class RecommendationService {
   constructor(
@@ -31,7 +30,7 @@ export class RecommendationService {
   ) {}
 
   async convertPlacesToDetail(
-    places: PlaceSearchResponse[],
+    places: { placeID: string }[],
   ): Promise<PlaceDetailResponse[]> {
     const tasks = [];
     for (const place of places) {
@@ -42,7 +41,7 @@ export class RecommendationService {
     return detailPlaces;
   }
 
-  async toRestaurantDetailResponse(
+  async mergePhotos(
     detail: PlaceDetailResponse,
   ): Promise<RestaurantDetailResponse> {
     if (detail === undefined) {
@@ -68,14 +67,12 @@ export class RecommendationService {
       foodKeywords,
     });
 
-    const recommendedRestaurants = this.restaurantRecommender.recommends(
-      req,
-      places,
-    );
+    const recommended = this.restaurantRecommender.recommends(req, places);
+    const detailRecommendations = await this.convertPlacesToDetail(recommended);
 
     const result = await Promise.all(
-      recommendedRestaurants.map(restaurant =>
-        this.toRestaurantDetailResponse(restaurant),
+      detailRecommendations.map(recommendation =>
+        this.mergePhotos(recommendation),
       ),
     );
 
@@ -90,7 +87,7 @@ export class RecommendationService {
         placeID,
       );
 
-      return this.toRestaurantDetailResponse(recommendation);
+      return this.mergePhotos(recommendation);
     } catch (err) {
       return undefined;
     }
