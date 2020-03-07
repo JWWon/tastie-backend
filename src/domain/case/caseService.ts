@@ -10,7 +10,7 @@ import {
 import {
   QueryCategoryRequest,
   QuerySituationRequest,
-  QueryPreferencesRequest,
+  QueryPreferenceRequest,
   PreferencesResponse,
   QueryPlaceRequest,
   PlaceResponse,
@@ -51,7 +51,7 @@ export class CaseService {
   }
 
   async getPreferences(
-    req: QueryPreferencesRequest,
+    req: QueryPreferenceRequest,
   ): Promise<PreferencesResponse[]> {
     const preferences = this.preferenceRepository.getPreferences();
     return preferences;
