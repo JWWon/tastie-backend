@@ -18,7 +18,7 @@ import {
   SituationRepositoryToken,
   SituationRepository,
 } from '@/interfaces/repositories';
-import { RestaurantFinder } from './business/restaurantFinder';
+import { RestaurantFinder } from './restaurantFinder';
 
 export class RecommendationService {
   constructor(
@@ -68,19 +68,9 @@ export class RecommendationService {
       foodKeywords,
     });
 
-    const openRestaurantFilter = (detail: PlaceDetailResponse) =>
-      detail.openingHours?.openNow === true;
-    const openedRestaurants = (
-      await Promise.all(
-        places.map(restaurant =>
-          this.placePlugin.getPlaceDetailByPlaceID(restaurant.placeID),
-        ),
-      )
-    ).filter(openRestaurantFilter);
-
     const recommendedRestaurants = this.restaurantRecommender.recommends(
       req,
-      openedRestaurants,
+      places,
     );
 
     const result = await Promise.all(

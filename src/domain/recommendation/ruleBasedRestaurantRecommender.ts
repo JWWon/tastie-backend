@@ -1,6 +1,6 @@
 import { RestaurantRecommender } from './restaurantRecommender';
-import { Restaurant } from '../model';
-import { QueryRecommendRestaurantRequest } from '..';
+import { Restaurant } from './model';
+import { QueryRecommendRestaurantRequest } from '.';
 import { PlaceDetailResponse } from '@/interfaces/place';
 
 export class RuleBasedRestaurantRecommender implements RestaurantRecommender {
