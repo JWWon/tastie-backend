@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Authentication": {
-    "Bucket": "pickat-deploy",
+    "Bucket": "tastie-deploy",
     "Key": ".dockercfg"
   },
   "Image": {

@@ -1,22 +1,11 @@
 branch-defaults:
+  default:
+    environment: staging
   master:
     environment: staging
   production:
     environment: prod
 global:
-  application_name: pickat-backend
-  branch: null
-  default_ec2_keyname: null
-  default_platform: docker
+  application_name: Tastie-Backend
   default_region: ap-northeast-2
-  include_git_submodules: true
-  instance_profile: null
-  platform_name: null
-  platform_version: null
-  profile: null
-  repository: null
-  sc: git
-  workspace_type: Application
-option_settings:
-  aws:autoscaling:launchconfiguration:
-    InstanceType: t3.micro
+  profile: eb-cli
