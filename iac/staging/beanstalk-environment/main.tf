@@ -11,7 +11,7 @@ terraform {
 
 module "beanstalk_environment" {
   source  = "app.terraform.io/tastie/eb-backend/aws"
-  version = "0.0.7"
+  version = "0.0.8"
 
   name          = "staging"
   solution_stack_name = "64bit Amazon Linux 2018.03 v2.14.2 running Docker 18.09.9-ce"
