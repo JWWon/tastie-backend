@@ -1,8 +1,8 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Authentication": {
-    "Bucket": "tastie-deploy",
-    "Key": ".dockercfg"
+    "Bucket": "tastie-backend-deploy",
+    "Key": "dockercfg"
   },
   "Image": {
     "Name": "${CI_REGISTRY_IMAGE}:${APP_VERSION}",
