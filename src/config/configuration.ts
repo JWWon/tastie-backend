@@ -4,6 +4,7 @@ const defaultGoogleOutputFormat = 'json';
 export default () => ({
   port: parseInt(process.env.PORT, 10) || defaultPort,
   jwt: {
+    authCodePrivateKey: process.env.AUTH_CODE_PRIVATE_KEY || 'privatekey',
     secretKey: process.env.JWT_SECRET_KEY || 'debugkey',
     accessTokenExpiresInSec: Number(
       process.env.ACCESS_TOKEN_EXPIRES_IN_SEC || 3600 * 24 * 30,
@@ -21,5 +22,9 @@ export default () => ({
     password: process.env.DB_PASSWORD || 'postgres',
     database: process.env.DB_DBNAME || 'postgres',
     synchronize: process.env.DB_SYNC === 'true',
+  },
+  mailjet: {
+    apiKey: process.env.MAILJET_API_KEY || 'debug',
+    apiSecret: process.env.MAILJET_API_SECRET || 'debug',
   },
 });
