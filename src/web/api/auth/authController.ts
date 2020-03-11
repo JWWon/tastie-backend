@@ -21,11 +21,13 @@ import {
   AccessTokenResponse,
   SignupRequest,
   QueryExistsAccountRequest,
+  AuthCodeRequest,
 } from './dto';
 import {
   AccessTokenRequestSchema,
   SignupRequestSchema,
   QueryExistsAccountExistsSchema,
+  AuthCodeRequestSchema,
 } from './schema';
 import { HttpExceptionResponseDTO } from '../common/response';
 import { JoiValidationPipe } from '@/web/validation';
@@ -133,4 +135,11 @@ export class AuthController {
       });
     }
   }
+
+  @Get('code')
+  @ApiOkResponse({ description: 'ok' })
+  async getAuthCode(
+    @Query(new JoiValidationPipe(AuthCodeRequestSchema))
+    req: AuthCodeRequest,
+  ): Promise<void> {}
 }
