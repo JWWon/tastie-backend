@@ -6,4 +6,5 @@ branch-defaults:
 global:
   application_name: Tastie-Backend
   default_region: ap-northeast-2
+  sc: git
   profile: null

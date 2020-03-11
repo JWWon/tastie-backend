@@ -70,7 +70,6 @@ deploy-staging:
   script:
     - apk --no-cache add gettext
     - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
-    - git rev-parse --abbrev-ref HEAD
     - cd eb
     - cat Dockerrun.aws.json.template | envsubst > Dockerrun.aws.json
     - git add Dockerrun.aws.json
