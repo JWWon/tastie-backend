@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-import { AuthCodeIssuer } from '@/domain/auth';
+import { AuthCodeIssuer } from '@/domain/auth/authCodeIssuer';
 
 @Injectable()
 export class JwtAuthCodeIssuer implements AuthCodeIssuer {

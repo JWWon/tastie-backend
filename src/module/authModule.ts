@@ -20,7 +20,7 @@ import {
 import { BcryptPassport } from '@/infrastructure/security';
 import { PassportToken } from '@/interfaces/security';
 import { JwtTokenIssuer, JwtAuthCodeIssuer } from '@/infrastructure/jwt';
-import { MailjetEmailSender } from '@/infrastructure/email';
+import { NodeMailerEmailSender } from '@/infrastructure/email';
 
 @Module({
   imports: [
@@ -39,7 +39,7 @@ import { MailjetEmailSender } from '@/infrastructure/email';
     { provide: UserRepositoryToken, useClass: OrmUserRepository },
     { provide: PassportToken, useClass: BcryptPassport },
     { provide: TokenIssuerToken, useClass: JwtTokenIssuer },
-    { provide: EmailSenderToken, useClass: MailjetEmailSender },
+    { provide: EmailSenderToken, useClass: NodeMailerEmailSender },
     { provide: AuthCodeIssuerToken, useClass: JwtAuthCodeIssuer },
   ],
 })

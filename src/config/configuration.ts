@@ -23,8 +23,10 @@ export default () => ({
     database: process.env.DB_DBNAME || 'postgres',
     synchronize: process.env.DB_SYNC === 'true',
   },
-  mailjet: {
-    apiKey: process.env.MAILJET_API_KEY || 'debug',
-    apiSecret: process.env.MAILJET_API_SECRET || 'debug',
+  email: {
+    sender: process.env.SENDER_EMAIL || 'mytastie@gmail.com'
+  },
+  sendinblue: {
+    apiKey: process.env.SENDINBLUE_API_KEY || 'debug',
   },
 });

@@ -141,5 +141,7 @@ export class AuthController {
   async getAuthCode(
     @Query(new JoiValidationPipe(AuthCodeRequestSchema))
     req: AuthCodeRequest,
-  ): Promise<void> {}
+  ): Promise<void> {
+    await this.authService.sendAuthCodeByEmail(req);
+  }
 }
