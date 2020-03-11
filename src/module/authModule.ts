@@ -6,6 +6,8 @@ import {
   EmailAuthenticator,
   SocialAuthenticator,
   TokenIssuerToken,
+  EmailSenderToken,
+  AuthCodeIssuerToken,
 } from '@/domain/auth';
 import { OrmUserRepository } from '@/infrastructure/typeorm/repository/ormUserRepository';
 import { UserRepositoryToken } from '@/interfaces/repositories';
@@ -17,7 +19,8 @@ import {
 } from '@/infrastructure/typeorm/model';
 import { BcryptPassport } from '@/infrastructure/security';
 import { PassportToken } from '@/interfaces/security';
-import { JwtTokenIssuer } from '@/infrastructure/jwt';
+import { JwtTokenIssuer, JwtAuthCodeIssuer } from '@/infrastructure/jwt';
+import { MailjetEmailSender } from '@/infrastructure/email';
 
 @Module({
   imports: [
@@ -36,6 +39,8 @@ import { JwtTokenIssuer } from '@/infrastructure/jwt';
     { provide: UserRepositoryToken, useClass: OrmUserRepository },
     { provide: PassportToken, useClass: BcryptPassport },
     { provide: TokenIssuerToken, useClass: JwtTokenIssuer },
+    { provide: EmailSenderToken, useClass: MailjetEmailSender },
+    { provide: AuthCodeIssuerToken, useClass: JwtAuthCodeIssuer },
   ],
 })
 export class AuthModule {}
