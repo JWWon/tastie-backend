@@ -18,6 +18,11 @@ export interface UserRepository {
     socialProviderName: string,
     socialUserID: string,
   ): Promise<SocialAccount | undefined>;
+
+  patchPasswordOfEmailAccount(
+    email: string,
+    encryptedPassword: string,
+  ): Promise<void>;
 }
 
 export const UserRepositoryToken = Symbol();
