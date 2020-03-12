@@ -15,6 +15,7 @@ import {
   NotFoundException,
   Get,
   Query,
+  Patch,
 } from '@nestjs/common';
 import {
   AccessTokenRequest,
@@ -22,12 +23,14 @@ import {
   SignupRequest,
   QueryExistsAccountRequest,
   AuthCodeRequest,
+  PatchPasswordRequest,
 } from './dto';
 import {
   AccessTokenRequestSchema,
   SignupRequestSchema,
   QueryExistsAccountExistsSchema,
   AuthCodeRequestSchema,
+  PatchPasswordRequestSchema,
 } from './schema';
 import { HttpExceptionResponseDTO } from '../common/response';
 import { JoiValidationPipe } from '@/web/validation';
@@ -36,6 +39,7 @@ import {
   AlreadyExistsAccountError,
   InvalidCredentialError,
   NotFoundAccountError,
+  InvalidAuthCodeError,
 } from '@/domain/auth/exception';
 
 @ApiTags('Auth API')
@@ -143,5 +147,35 @@ export class AuthController {
     req: AuthCodeRequest,
   ): Promise<void> {
     await this.authService.sendAuthCodeByEmail(req);
+  }
+
+  @Patch('password')
+  @ApiUnauthorizedResponse({
+    description: 'Invalid auth code',
+    type: HttpExceptionResponseDTO,
+  })
+  @ApiNotFoundResponse({
+    description: 'Not exists any account that has the email',
+    type: HttpExceptionResponseDTO,
+  })
+  async patchPasswordOfEmailAccount(
+    @Body(new JoiValidationPipe(PatchPasswordRequestSchema))
+    req: PatchPasswordRequest,
+  ): Promise<void> {
+    try {
+      await this.authService.patchPasswordOfEmailAccount(req);
+    } catch (err) {
+      if (err instanceof InvalidAuthCodeError) {
+        throw new UnauthorizedException({
+          message: 'invalid code',
+        });
+      } else if (err instanceof NotFoundAccountError) {
+        throw new NotFoundException({
+          message: 'Not exists any account that has the email',
+        });
+      } else {
+        throw err;
+      }
+    }
   }
 }

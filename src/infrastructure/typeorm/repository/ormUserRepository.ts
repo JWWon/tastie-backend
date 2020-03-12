@@ -10,7 +10,10 @@ import {
   SocialAccount as SocialAccountModel,
 } from '../model';
 import { User, SocialAccount, EmailAccount } from '@/entities';
-import { AlreadyExistsAccountError } from '@/domain/auth/exception';
+import {
+  AlreadyExistsAccountError,
+  NotFoundAccountError,
+} from '@/domain/auth/exception';
 
 type BeforeInsertCheckFunc = (p: CreateUserParam) => Promise<boolean>;
 type AccountInsertFunc = (userID: number, p: CreateUserParam) => Promise<void>;
@@ -177,5 +180,23 @@ export class OrmUserRepository implements UserRepository {
     });
 
     return account;
+  }
+
+  async patchPasswordOfEmailAccount(
+    email: string,
+    encryptedPassword: string,
+  ): Promise<void> {
+    const result = await this.emailUserRepo.update(
+      {
+        email,
+      },
+      {
+        encryptedPassword,
+      },
+    );
+
+    if (result.affected <= 0) {
+      throw new NotFoundAccountError();
+    }
   }
 }

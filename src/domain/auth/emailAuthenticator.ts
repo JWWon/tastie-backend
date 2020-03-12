@@ -50,4 +50,9 @@ export class EmailAuthenticator implements Authenticator {
     const credential = await this.userRepo.getAccountByEmail(email);
     return credential !== undefined;
   }
+
+  async patchPassword(email: string, password: string): Promise<void> {
+    const encryptedPassword = await this.passport.encryptPassword(password);
+    await this.userRepo.patchPasswordOfEmailAccount(email, encryptedPassword);
+  }
 }

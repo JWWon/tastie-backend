@@ -1,12 +1,11 @@
 import * as Joi from 'joi';
 import { AccessTokenRequestSchema } from './accessTokenRequestSchema';
+import { PasswordPolicySchema } from './passwordPolicySchema';
 
 export const SignupRequestSchema = AccessTokenRequestSchema.keys({
   password: Joi.when('type', {
     is: 'email',
-    then: Joi.string()
-      .regex(new RegExp('^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$'))
-      .required(),
+    then: PasswordPolicySchema,
   }),
 
   name: Joi.string()

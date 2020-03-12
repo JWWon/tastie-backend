@@ -1,5 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { AccessTokenRequest, AccessTokenResponse, SignupRequest } from './dto';
+import {
+  AccessTokenRequest,
+  AccessTokenResponse,
+  SignupRequest,
+  PatchPasswordRequest,
+} from './dto';
 import { Authenticator } from './authenticator';
 import { EmailAuthenticator } from './emailAuthenticator';
 import { InvalidCredentialError, NotFoundAccountError } from './exception';
@@ -57,6 +62,11 @@ export class AuthService {
       title: 'Reset password about Tastie account',
       contents: template,
     });
+  }
+
+  async patchPasswordOfEmailAccount(req: PatchPasswordRequest): Promise<void> {
+    const email = this.authCodeIssuer.extractEmail(req.code);
+    await this.emailAuthenticator.patchPassword(email, req.password);
   }
 
   private getAuthenticatorByAuthType(authType: string): Authenticator {
