@@ -1,4 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   AccessTokenRequest,
   AccessTokenResponse,
@@ -16,6 +17,8 @@ import { AuthCodeRequest } from '@/web/api/auth/dto';
 
 @Injectable()
 export class AuthService {
+  private readonly passwordResetUrl: string;
+
   constructor(
     @Inject(TokenIssuerToken)
     private readonly tokenIssuer: TokenIssuer,
@@ -25,7 +28,10 @@ export class AuthService {
     private readonly socialAuthenticator: SocialAuthenticator,
     @Inject(EmailSenderToken)
     private readonly emailSender: EmailSender,
-  ) {}
+    configService: ConfigService,
+  ) {
+    this.passwordResetUrl = configService.get('email.passwordResetUrl');
+  }
 
   async signup(req: SignupRequest): Promise<AccessTokenResponse> {
     const authenticator = this.getAuthenticatorByAuthType(req.type);
@@ -54,7 +60,7 @@ export class AuthService {
   async sendAuthCodeByEmail(req: AuthCodeRequest): Promise<void> {
     const code = this.authCodeIssuer.issue(req.email);
     const template = `
-      비밀번호 재설정 페이지입니다. ${req.redirect}?code=${code}
+      테이스티 비밀번호 재설정 페이지입니다. \n${this.passwordResetUrl}?code=${code}
     `;
 
     await this.emailSender.send({
