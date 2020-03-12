@@ -24,6 +24,7 @@ export default () => ({
     synchronize: process.env.DB_SYNC === 'true',
   },
   email: {
+    passwordResetUrl: process.env.PASSWORD_RESET_URL || 'https://www.tastie.me/reset-password',
     sender: process.env.SENDER_EMAIL || 'mytastie@gmail.com'
   },
   sendinblue: {
