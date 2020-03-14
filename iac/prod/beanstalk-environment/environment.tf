@@ -11,8 +11,8 @@ module "beanstalk_environment" {
   loadbalancer_certificate_arn = var.loadbalancer_certificate_arn
 
   google_place_apikey = var.google_place_apikey
-  postgres_host       = ""
-  postgres_dbname     = ""
-  postgres_username   = ""
-  postgres_password   = ""
+  postgres_host       = var.postgres_host
+  postgres_dbname     = var.postgres_dbname
+  postgres_username   = var.postgres_username
+  postgres_password   = var.postgres_password
 }
