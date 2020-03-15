@@ -8,9 +8,11 @@ import {
   TokenIssuerToken,
   EmailSenderToken,
   AuthCodeIssuerToken,
+  UserRepositoryToken,
+  PassportToken,
 } from '@/domain/auth';
 import { OrmUserRepository } from '@/infrastructure/typeorm/repository/ormUserRepository';
-import { UserRepositoryToken } from '@/interfaces/repositories';
+
 import {
   User,
   SocialAccount,
@@ -18,7 +20,7 @@ import {
   SocialProvider,
 } from '@/infrastructure/typeorm/model';
 import { BcryptPassport } from '@/infrastructure/security';
-import { PassportToken } from '@/interfaces/security';
+
 import { JwtTokenIssuer, JwtAuthCodeIssuer } from '@/infrastructure/jwt';
 import { NodeMailerEmailSender } from '@/infrastructure/email';
 

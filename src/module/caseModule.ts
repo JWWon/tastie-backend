@@ -2,11 +2,9 @@ import { Module } from '@nestjs/common';
 import { CaseService } from '@/domain/case';
 import { GooglePlacePlugin } from '@/infrastructure/place/goolgePlacePlugin';
 import { PlacePluginToken } from '@/domain/place';
-import {
-  CategoryRepositoryToken,
-  SituationRepositoryToken,
-  PreferenceRepositoryToken,
-} from '@/interfaces/repositories';
+import { PreferenceRepositoryToken } from '@/domain/case/preferenceRepository';
+import { SituationRepositoryToken } from '@/domain/case/situationRepository';
+import { CategoryRepositoryToken } from '@/domain/case/categoryRepository';
 import {
   MemoryCategoryRepository,
   MemorySituationRepository,

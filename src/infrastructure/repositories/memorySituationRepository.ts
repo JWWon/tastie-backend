@@ -1,4 +1,4 @@
-import { SituationRepository } from '@/interfaces/repositories';
+import { SituationRepository } from '@/domain/case/situationRepository';
 import {
   CategoryType,
   SituationType,

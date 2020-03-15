@@ -4,7 +4,7 @@ import {
   UserRepository,
   UserRepositoryToken,
   CreateUserParam,
-} from '@/interfaces/repositories';
+} from './userRepository';
 import { SignupRequest, AccessTokenRequest } from './dto';
 import { User } from '@/entities';
 import { SocialGateway } from './socialGateway';

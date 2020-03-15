@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { UserRepositoryToken, UserRepository } from '@/interfaces/repositories';
+import { UserRepositoryToken, UserRepository } from '../auth/userRepository';
 import { UserResponse, CreateUserPlaceLikeRequest } from './dto';
 import { UserPlaceLike } from '@/entities';
 import {

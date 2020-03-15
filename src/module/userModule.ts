@@ -9,7 +9,7 @@ import {
 } from '@/infrastructure/typeorm/model';
 import { UserController } from '@/web/api/user/userController';
 import { UserService, UserPlaceLikeRepositoryToken } from '@/domain/user';
-import { UserRepositoryToken } from '@/interfaces/repositories';
+import { UserRepositoryToken } from '@/domain/auth/userRepository';
 import { OrmUserRepository } from '@/infrastructure/typeorm/repository/ormUserRepository';
 import { TokenIssuerToken } from '@/domain/auth';
 import { JwtTokenIssuer } from '@/infrastructure/jwt';

@@ -1,4 +1,4 @@
-import { PreferenceRepository } from '@/interfaces/repositories';
+import { PreferenceRepository } from '@/domain/case/preferenceRepository';
 import { Preference } from '@/entities';
 
 export class MemoryPreferenceRepository implements PreferenceRepository {

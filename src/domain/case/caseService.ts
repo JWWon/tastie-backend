@@ -2,11 +2,7 @@ import { Inject } from '@nestjs/common';
 import {
   CategoryRepositoryToken,
   CategoryRepository,
-  SituationRepositoryToken,
-  SituationRepository,
-  PreferenceRepositoryToken,
-  PreferenceRepository,
-} from '@/interfaces/repositories';
+} from './categoryRepository';
 import {
   QueryCategoryRequest,
   QuerySituationRequest,
@@ -21,6 +17,14 @@ import {
   PlacePlugin,
   PlaceSearchResponse,
 } from '@/domain/place';
+import {
+  SituationRepository,
+  SituationRepositoryToken,
+} from './situationRepository';
+import {
+  PreferenceRepositoryToken,
+  PreferenceRepository,
+} from './preferenceRepository';
 
 export class CaseService {
   constructor(

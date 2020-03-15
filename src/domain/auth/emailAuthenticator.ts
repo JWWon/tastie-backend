@@ -4,10 +4,10 @@ import {
   UserRepository,
   UserRepositoryToken,
   CreateUserParam,
-} from '@/interfaces/repositories';
+} from './userRepository';
 import { AccessTokenRequest, SignupRequest } from '@/domain/auth/dto';
 import { User } from '@/entities';
-import { Passport, PassportToken } from '@/interfaces/security';
+import { Passport, PassportToken } from './passport';
 
 @Injectable()
 export class EmailAuthenticator implements Authenticator {
