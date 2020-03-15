@@ -17,6 +17,7 @@ import {
   MemorySituationRepository,
   MemoryPreferenceRepository,
 } from '@/infrastructure/repositories';
+import { GooglePlaceV2Plugin } from '@/infrastructure/place/googlePlaceV2Plugin';
 
 @Module({
   controllers: [RecommendationController],
@@ -38,7 +39,7 @@ import {
       provide: PreferenceRepositoryToken,
       useClass: MemoryPreferenceRepository,
     },
-    { provide: PlacePluginToken, useClass: GooglePlacePlugin },
+    { provide: PlacePluginToken, useClass: GooglePlaceV2Plugin },
   ],
 })
 export class RecommendationModule {}
