@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { RestaurantController } from '@/web/api/recommendation/controller';
+import { RecommendationController } from '@/web/api/recommendation/recommendationController';
 import {
   RecommendationService,
   RuleBasedRestaurantRecommender,
@@ -19,7 +19,7 @@ import {
 } from '@/infrastructure/repositories';
 
 @Module({
-  controllers: [RestaurantController],
+  controllers: [RecommendationController],
   providers: [
     RecommendationService,
     {

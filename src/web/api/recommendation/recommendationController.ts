@@ -22,7 +22,7 @@ import { RecommendationResponsePresenter } from './presenter';
 
 @ApiTags('Recommendation')
 @Controller('')
-export class RestaurantController {
+export class RecommendationController {
   constructor(private readonly restaurantService: RecommendationService) {}
 
   toRecommendationResponse(restaurant: any): RecommendationResponseDTO {
