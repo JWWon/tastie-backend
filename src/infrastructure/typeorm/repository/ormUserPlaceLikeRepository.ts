@@ -21,6 +21,9 @@ export class OrmUserPlaceLikeRepository implements UserPlaceLikeRepository {
       where: {
         userID,
       },
+      order: {
+        updatedAt: 'DESC',
+      },
     });
 
     return likes;
