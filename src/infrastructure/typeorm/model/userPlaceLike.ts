@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'UserPlaceLike' })
 export class UserPlaceLike {
@@ -10,4 +10,7 @@ export class UserPlaceLike {
 
   @Column({ name: 'positive' })
   readonly positive: boolean;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  readonly updatedAt: Date;
 }
