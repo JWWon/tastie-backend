@@ -83,15 +83,7 @@ export class GooglePlacePlugin implements PlacePlugin {
           formattedAddress: place.formatted_address,
           formattedPhoneNumber: place.formatted_phone_number,
           openingHours,
-          photos:
-            place.photos?.map(photo => {
-              return {
-                reference: photo.photo_reference,
-                width: photo.width,
-                height: photo.height,
-                url: '',
-              };
-            }) ?? [],
+          photos: place.photos ?? [],
         };
 
         return result;
@@ -125,6 +117,7 @@ export class GooglePlacePlugin implements PlacePlugin {
               longitude: place.geometry.location.lng,
               latitude: place.geometry.location.lat,
             },
+            photos: place.photos ?? [],
           };
         };
 
@@ -140,7 +133,7 @@ export class GooglePlacePlugin implements PlacePlugin {
       tasks.push(
         this.client
           .placesPhoto({
-            photoreference: photo.reference,
+            photoreference: photo.photo_reference,
             maxwidth: photo.width,
           })
           .asPromise(),
@@ -156,5 +149,18 @@ export class GooglePlacePlugin implements PlacePlugin {
     }
 
     return urls;
+  }
+
+  async getPhotoUrl(photo: PlacePhoto): Promise<string> {
+    if (photo === undefined) {
+      return '';
+    }
+
+    const res = await this.client.placesPhoto({
+      photoreference: photo.photo_reference,
+      maxwidth: photo.width,
+    }).asPromise();
+    
+    return `https://lh3.googleusercontent.com${res.req.path}`;
   }
 }

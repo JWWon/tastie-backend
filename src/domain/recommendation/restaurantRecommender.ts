@@ -1,9 +1,15 @@
 import { QueryRecommendRestaurantRequest } from './dto';
-import { Place } from '@/entities';
+import { PlaceSearchResponse } from '@/interfaces/place';
 
 export interface RestaurantRecommender {
-  recommend(req: QueryRecommendRestaurantRequest, places: Place[]): Place;
-  recommends(req: QueryRecommendRestaurantRequest, places: Place[]): Place[];
+  recommend(
+    req: QueryRecommendRestaurantRequest,
+    places: PlaceSearchResponse[],
+  ): PlaceSearchResponse;
+  recommends(
+    req: QueryRecommendRestaurantRequest,
+    places: PlaceSearchResponse[],
+  ): PlaceSearchResponse[];
 }
 
 export const RestaurantRecommenderToken = Symbol();

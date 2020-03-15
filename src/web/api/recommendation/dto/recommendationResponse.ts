@@ -23,7 +23,4 @@ export class RecommendationResponse {
 
   @ApiProperty()
   readonly photoUrl: string;
-
-  @ApiProperty()
-  readonly openingHours: OpeningHours;
 }

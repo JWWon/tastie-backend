@@ -1,14 +1,13 @@
 import { RestaurantRecommender } from './restaurantRecommender';
 import { Restaurant } from './model';
 import { QueryRecommendRestaurantRequest } from './dto';
-import { PlaceDetailResponse } from '@/interfaces/place';
-import { Place } from '@/entities';
+import { PlaceSearchResponse } from '@/interfaces/place';
 
 export class RuleBasedRestaurantRecommender implements RestaurantRecommender {
   recommend(
     req: QueryRecommendRestaurantRequest,
-    places: Place[],
-  ): Place | undefined {
+    places: PlaceSearchResponse[],
+  ): PlaceSearchResponse | undefined {
     if (places.length < 1) {
       return undefined;
     }
@@ -29,8 +28,11 @@ export class RuleBasedRestaurantRecommender implements RestaurantRecommender {
     return places.sort(cmpFunc)[idx];
   }
 
-  recommends(req: QueryRecommendRestaurantRequest, places: Place[]): Place[] {
-    const cmpFunc = (a: Place, b: Place) => {
+  recommends(
+    req: QueryRecommendRestaurantRequest,
+    places: PlaceSearchResponse[],
+  ): PlaceSearchResponse[] {
+    const cmpFunc = (a: PlaceSearchResponse, b: PlaceSearchResponse) => {
       if (a.userRatingsTotal > b.userRatingsTotal) return -1;
       if (a.userRatingsTotal < b.userRatingsTotal) return 1;
       return 0;

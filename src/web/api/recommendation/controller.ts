@@ -14,10 +14,7 @@ import {
 } from '@nestjs/swagger';
 import { RecommendationResponseDTO } from './response';
 import { RecommendationRequestDTO } from './request';
-import {
-  RecommendationService,
-  RestaurantDetailResponse,
-} from '@/domain/recommendation';
+import { RecommendationService } from '@/domain/recommendation';
 import { HttpExceptionResponseDTO } from '../common/response';
 import { CategoryType, SituationType } from '@/entities';
 import { RecommendationResponse } from './dto';

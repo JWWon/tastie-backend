@@ -8,7 +8,16 @@ interface ControllerPresenter<T> {
 const fromRestaurantResponse = (
   res: RestaurantResponse,
 ): RecommendationResponse => {
-  const { placeID, name, priceLevel, rating, userRatingsTotal, photoUrl } = res;
+  const {
+    placeID,
+    name,
+    priceLevel,
+    rating,
+    userRatingsTotal,
+    photoUrl,
+    coordinate,
+  } = res;
+
   return {
     id: placeID,
     name,
@@ -16,8 +25,7 @@ const fromRestaurantResponse = (
     rating,
     userRatingsTotal,
     photoUrl,
-    location: undefined,
-    openingHours: undefined,
+    location: coordinate,
   };
 };
 
