@@ -1,7 +1,7 @@
 import { RestaurantRecommender } from './restaurantRecommender';
 import { Restaurant } from './model';
 import { QueryRecommendRestaurantRequest } from './dto';
-import { PlaceSearchResponse } from '@/interfaces/place';
+import { PlaceSearchResponse } from '@/domain/place';
 
 export class RuleBasedRestaurantRecommender implements RestaurantRecommender {
   recommend(

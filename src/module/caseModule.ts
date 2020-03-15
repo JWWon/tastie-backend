@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CaseService } from '@/domain/case';
 import { GooglePlacePlugin } from '@/infrastructure/place/goolgePlacePlugin';
-import { PlacePluginToken } from '@/interfaces/place';
+import { PlacePluginToken } from '@/domain/place';
 import {
   CategoryRepositoryToken,
   SituationRepositoryToken,

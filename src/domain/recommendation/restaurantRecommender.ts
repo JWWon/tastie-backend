@@ -1,5 +1,5 @@
 import { QueryRecommendRestaurantRequest } from './dto';
-import { PlaceSearchResponse } from '@/interfaces/place';
+import { PlaceSearchResponse } from '@/domain/place';
 
 export interface RestaurantRecommender {
   recommend(

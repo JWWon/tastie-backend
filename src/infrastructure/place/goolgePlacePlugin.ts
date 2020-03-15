@@ -12,7 +12,7 @@ import {
   PlaceDetailResponse,
   PlacePhoto,
   PlaceOpeningHours,
-} from '@/interfaces/place';
+} from '@/domain/place';
 import { Coordinate } from '@/entities';
 
 @Injectable()

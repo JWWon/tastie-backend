@@ -10,7 +10,7 @@ import {
   PlacePlugin,
   PlaceDetailResponse,
   PlaceSearchResponse,
-} from '@/interfaces/place';
+} from '@/domain/place';
 import {
   SituationRepositoryToken,
   SituationRepository,

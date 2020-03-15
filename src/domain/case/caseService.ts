@@ -20,7 +20,7 @@ import {
   PlacePluginToken,
   PlacePlugin,
   PlaceSearchResponse,
-} from '@/interfaces/place';
+} from '@/domain/place';
 
 export class CaseService {
   constructor(

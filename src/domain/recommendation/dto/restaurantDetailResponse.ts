@@ -1,4 +1,4 @@
-import { PlaceOpeningHours } from '@/interfaces/place';
+import { PlaceOpeningHours } from '@/domain/place';
 import { Coordinate } from '@/entities';
 
 export type RestaurantDetailResponse = {

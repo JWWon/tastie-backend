@@ -1,10 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import { FoodKeywordType, CategoryType, Coordinate } from '@/entities';
-import {
-  PlacePlugin,
-  PlaceSearchResponse,
-  PlaceType,
-} from '@/interfaces/place';
+import { PlacePlugin, PlaceSearchResponse, PlaceType } from '@/domain/place';
 
 interface Param {
   category: CategoryType;
