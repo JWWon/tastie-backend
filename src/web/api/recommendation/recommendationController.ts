@@ -12,12 +12,14 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
 } from '@nestjs/swagger';
-import { RecommendationResponseDTO } from './response';
-import { RecommendationRequestDTO } from './request';
+import {
+  RecommendationRequest,
+  RecommendationResponse,
+  RecommendationDetailResponse,
+} from './dto';
 import { RecommendationService } from '@/domain/recommendation';
 import { HttpExceptionResponseDTO } from '../common/response';
 import { CategoryType, SituationType } from '@/entities';
-import { RecommendationResponse } from './dto';
 import { RecommendationResponsePresenter } from './presenter';
 
 @ApiTags('Recommendation')
@@ -25,7 +27,7 @@ import { RecommendationResponsePresenter } from './presenter';
 export class RecommendationController {
   constructor(private readonly restaurantService: RecommendationService) {}
 
-  toRecommendationResponse(restaurant: any): RecommendationResponseDTO {
+  toRecommendationResponse(restaurant: any): RecommendationDetailResponse {
     return {
       id: restaurant.placeID,
       name: restaurant.name,
@@ -43,13 +45,13 @@ export class RecommendationController {
   }
 
   @Get('recommendations')
-  @ApiResponse({ status: 200, type: RecommendationResponseDTO, isArray: true })
+  @ApiResponse({ status: 200, type: RecommendationResponse, isArray: true })
   @ApiNotFoundResponse({
     type: HttpExceptionResponseDTO,
     description: '적절한 추천을 찾지 못했을 경우',
   })
   async getRecommendations(
-    @Query() req: RecommendationRequestDTO,
+    @Query() req: RecommendationRequest,
   ): Promise<RecommendationResponse[]> {
     const recommendations = await this.restaurantService.getRecommendations({
       location: {
@@ -66,14 +68,14 @@ export class RecommendationController {
   }
 
   @Get('recommendations/:placeID')
-  @ApiOkResponse({ type: RecommendationResponseDTO })
+  @ApiOkResponse({ type: RecommendationDetailResponse })
   @ApiNotFoundResponse({
     type: HttpExceptionResponseDTO,
     description: 'PlaceID에 해당하는 추천이 존재하지 않을 때',
   })
   async getRecommendationByPlaceID(
     @Param('placeID') placeID: string,
-  ): Promise<RecommendationResponseDTO> {
+  ): Promise<RecommendationDetailResponse> {
     const recommendation = await this.restaurantService.getRecommendationByPlaceID(
       placeID,
     );
@@ -87,14 +89,14 @@ export class RecommendationController {
 
   // deprecated api
   @Get('recommendation')
-  @ApiResponse({ status: 200, type: RecommendationResponseDTO })
+  @ApiResponse({ status: 200, type: RecommendationDetailResponse })
   @ApiNotFoundResponse({
     type: HttpExceptionResponseDTO,
     description: '적절한 추천을 찾지 못했을 경우',
   })
   async getRecommendRestaurant(
-    @Query() req: RecommendationRequestDTO,
-  ): Promise<RecommendationResponseDTO> {
+    @Query() req: RecommendationRequest,
+  ): Promise<RecommendationDetailResponse> {
     const restaurant = await this.restaurantService.getRecommendRestaurant({
       location: {
         latitude: req.latitude,
