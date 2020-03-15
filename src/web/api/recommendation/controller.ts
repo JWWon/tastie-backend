@@ -20,15 +20,15 @@ import {
 } from '@/domain/recommendation';
 import { HttpExceptionResponseDTO } from '../common/response';
 import { CategoryType, SituationType } from '@/entities';
+import { RecommendationResponse } from './dto';
+import { RecommendationResponsePresenter } from './presenter';
 
 @ApiTags('Recommendation')
 @Controller('')
 export class RestaurantController {
   constructor(private readonly restaurantService: RecommendationService) {}
 
-  toRecommendationResponse(
-    restaurant: RestaurantDetailResponse,
-  ): RecommendationResponseDTO {
+  toRecommendationResponse(restaurant: any): RecommendationResponseDTO {
     return {
       id: restaurant.placeID,
       name: restaurant.name,
@@ -53,7 +53,7 @@ export class RestaurantController {
   })
   async getRecommendations(
     @Query() req: RecommendationRequestDTO,
-  ): Promise<RecommendationResponseDTO[]> {
+  ): Promise<RecommendationResponse[]> {
     const recommendations = await this.restaurantService.getRecommendations({
       location: {
         latitude: req.latitude,
@@ -64,7 +64,8 @@ export class RestaurantController {
       length: req.length ?? 5,
     });
 
-    return recommendations.map(this.toRecommendationResponse);
+    const presenter = new RecommendationResponsePresenter(recommendations);
+    return presenter.present();
   }
 
   @Get('recommendations/:placeID')
@@ -87,6 +88,7 @@ export class RestaurantController {
     return this.toRecommendationResponse(recommendation);
   }
 
+  // deprecated api
   @Get('recommendation')
   @ApiResponse({ status: 200, type: RecommendationResponseDTO })
   @ApiNotFoundResponse({
