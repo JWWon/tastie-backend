@@ -7,6 +7,8 @@ import {
 } from '@/domain/recommendation';
 import { PlacePluginToken } from '@/domain/place';
 import { GooglePlaceV2Plugin } from '@/infrastructure/place/googlePlaceV2Plugin';
+import { SituationRepositoryToken } from '@/domain/case/situationRepository';
+import { MemorySituationRepository } from '@/infrastructure/repositories';
 
 @Module({
   controllers: [RecommendationController],
@@ -15,6 +17,10 @@ import { GooglePlaceV2Plugin } from '@/infrastructure/place/googlePlaceV2Plugin'
     {
       provide: RestaurantRecommenderToken,
       useClass: RuleBasedRestaurantRecommender,
+    },
+    {
+      provide: SituationRepositoryToken,
+      useClass: MemorySituationRepository,
     },
     { provide: PlacePluginToken, useClass: GooglePlaceV2Plugin },
   ],

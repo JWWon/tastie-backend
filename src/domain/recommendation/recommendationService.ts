@@ -11,24 +11,25 @@ import {
   PlaceDetailResponse,
   PlaceSearchResponse,
 } from '@/domain/place';
-// import {
-//   SituationRepositoryToken,
-//   SituationRepository,
-// } from '@/interfaces/repositories';
 import { RestaurantFinder } from './restaurantFinder';
 import {
   RestaurantRecommenderToken,
   RestaurantRecommender,
 } from './restaurantRecommender';
+import {
+  SituationRepositoryToken,
+  SituationRepository,
+} from '../case/situationRepository';
 
 export class RecommendationService {
   constructor(
     @Inject(PlacePluginToken)
     private readonly placePlugin: PlacePlugin,
     @Inject(RestaurantRecommenderToken)
-    private readonly restaurantRecommender: RestaurantRecommender, // @Inject(SituationRepositoryToken)
-  ) // private readonly situationRepo: SituationRepository,
-  {}
+    private readonly restaurantRecommender: RestaurantRecommender,
+    @Inject(SituationRepositoryToken)
+    private readonly situationRepo: SituationRepository,
+  ) {}
 
   async convertPlacesToDetail(
     places: { placeID: string }[],
@@ -81,10 +82,9 @@ export class RecommendationService {
   async getRecommendations(
     req: QueryRecommendRestaurantRequest,
   ): Promise<RestaurantResponse[]> {
-    const foodKeywords = [];
-    // const foodKeywords = this.situationRepo.getFoodKeywordsBySituation(
-    //   req.situation,
-    // );
+    const foodKeywords = this.situationRepo.getFoodKeywordsBySituation(
+      req.situation,
+    );
 
     const restaurantFinder = new RestaurantFinder(this.placePlugin);
     const places = await restaurantFinder.find({
