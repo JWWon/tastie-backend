@@ -1,5 +1,5 @@
 import { CategoryRepository } from '@/domain/case/categoryRepository';
-import { Category, CategoryType } from '@/entities';
+import { Category, CategoryType, CategoryTypeList } from '@/entities';
 import { convertKoreanDateFromUTC } from '@/domain/recommendation/timeSlotConverter';
 
 type Time = {
@@ -26,6 +26,10 @@ const valid = (condition: Condition, date: Date): boolean => {
   return start <= pivot && pivot < end;
 };
 
+const allCategories = CategoryTypeList.map(type => ({
+  name: type,
+}));
+
 export class MemoryCategoryRepository implements CategoryRepository {
   private readonly conditions: Condition[] = [
     {
@@ -43,11 +47,11 @@ export class MemoryCategoryRepository implements CategoryRepository {
       end: { hour: 14, minute: 0 },
       category: '점심',
     },
-    {
-      start: { hour: 13, minute: 0 },
-      end: { hour: 21, minute: 0 },
-      category: '디저트',
-    },
+    // {
+    //   start: { hour: 13, minute: 0 },
+    //   end: { hour: 21, minute: 0 },
+    //   category: '디저트',
+    // },
     {
       start: { hour: 16, minute: 30 },
       end: { hour: 22, minute: 0 },
@@ -64,6 +68,10 @@ export class MemoryCategoryRepository implements CategoryRepository {
       category: '야식',
     },
   ];
+
+  async getCategories(): Promise<Category[]> {
+    return allCategories;
+  }
 
   async getCategoriesByUTCDate(utcNow: Date): Promise<Category[]> {
     const koreanDate = convertKoreanDateFromUTC(utcNow);

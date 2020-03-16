@@ -118,13 +118,13 @@ export class RecommendationService {
   async getRecommendRestaurant(
     req: QueryRecommendRestaurantRequest,
   ): Promise<RestaurantDetailResponse | undefined> {
-    const foodKeywords = [];
-    // const foodKeywords = this.situationRepo.getFoodKeywordsBySituation(
-    //   req.situation,
-    // );
+    const foodKeywords = this.situationRepo.getFoodKeywordsBySituation(
+      req.situation,
+    );
 
     const restaurantFinder = new RestaurantFinder(this.placePlugin);
     const places = await restaurantFinder.find({
+      situation: req.situation,
       category: req.category,
       location: req.location,
       foodKeywords,

@@ -1,16 +1,22 @@
 /* eslint-disable no-restricted-syntax */
-import { FoodKeywordType, CategoryType, Coordinate } from '@/entities';
+import {
+  FoodKeywordType,
+  CategoryType,
+  Coordinate,
+  SituationType,
+} from '@/entities';
 import { PlacePlugin, PlaceSearchResponse, PlaceType } from '@/domain/place';
 
 interface Param {
-  category: CategoryType;
-  location: Coordinate;
-  foodKeywords: FoodKeywordType[];
+  readonly category: CategoryType;
+  readonly situation: SituationType;
+  readonly location: Coordinate;
+  readonly foodKeywords: FoodKeywordType[];
 }
 
 const getPlaceTypeByCategory = (category: CategoryType): PlaceType => {
   const categoryPlaceTypeMapper = new Map<CategoryType, PlaceType>([
-    ['디저트', 'cafe'],
+    ['카페', 'cafe'],
     ['술자리', 'bar'],
   ]);
 
@@ -24,23 +30,19 @@ export class RestaurantFinder {
 
   async find(param: Param): Promise<PlaceSearchResponse[]> {
     const placeType = getPlaceTypeByCategory(param.category);
-    const places = await this.getAllPlaces(
-      param.location,
-      placeType,
-      param.foodKeywords,
-    );
+    const coordinate = param.location;
+    const radius = 1000;
 
-    if (places.length > 0) {
-      return places;
-    }
+    const places =
+      param.foodKeywords.length > 0
+        ? await this.getAllPlaces(coordinate, placeType, param.foodKeywords)
+        : await this.placePlugin.getPlaces({
+            placeType,
+            coordinate,
+            radius,
+          });
 
-    const minorPlaces = await this.placePlugin.getPlaces({
-      coordinate: param.location,
-      radius: 1000,
-      placeType,
-    });
-
-    return minorPlaces;
+    return places;
   }
 
   private async getAllPlaces(
