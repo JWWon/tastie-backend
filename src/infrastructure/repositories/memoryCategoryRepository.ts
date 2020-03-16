@@ -1,4 +1,4 @@
-import { CategoryRepository } from '@/interfaces/repositories';
+import { CategoryRepository } from '@/domain/case/categoryRepository';
 import { Category, CategoryType } from '@/entities';
 import { convertKoreanDateFromUTC } from '@/domain/recommendation/timeSlotConverter';
 

@@ -1,7 +1,7 @@
 import { Repository, Connection, QueryRunner, FindOneOptions } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { UserRepository, CreateUserParam } from '@/interfaces/repositories';
+import { UserRepository, CreateUserParam } from '@/domain/auth/userRepository';
 import {
   User as UserModel,
   SocialAccount as SocialUserModel,

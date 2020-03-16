@@ -1,15 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CoordinateResponseDTO } from '../common/response';
+import { OpeningHours } from './openingHours';
+import { Coordinate } from '../../common/dto';
 
-export class OpeningHoursDTO {
-  @ApiProperty()
-  readonly openNow?: boolean;
-
-  @ApiProperty()
-  readonly weekdayText: string[];
-}
-
-export class RecommendationResponseDTO {
+export class RecommendationDetailResponse {
   @ApiProperty()
   readonly id: string;
 
@@ -28,8 +21,8 @@ export class RecommendationResponseDTO {
   @ApiProperty()
   readonly types: string[];
 
-  @ApiProperty({ type: CoordinateResponseDTO })
-  readonly location: CoordinateResponseDTO;
+  @ApiProperty()
+  readonly location: Coordinate;
 
   @ApiProperty()
   readonly formattedAddress: string;
@@ -44,5 +37,5 @@ export class RecommendationResponseDTO {
   readonly photoUrls: string[];
 
   @ApiProperty()
-  readonly openingHours: OpeningHoursDTO;
+  readonly openingHours: OpeningHours;
 }

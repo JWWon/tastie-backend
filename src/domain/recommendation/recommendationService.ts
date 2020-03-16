@@ -3,21 +3,23 @@ import { Inject } from '@nestjs/common';
 import {
   QueryRecommendRestaurantRequest,
   RestaurantDetailResponse,
+  RestaurantResponse,
 } from './dto';
 import {
   PlacePluginToken,
   PlacePlugin,
   PlaceDetailResponse,
-} from '@/interfaces/place';
-import {
-  SituationRepositoryToken,
-  SituationRepository,
-} from '@/interfaces/repositories';
+  PlaceSearchResponse,
+} from '@/domain/place';
 import { RestaurantFinder } from './restaurantFinder';
 import {
   RestaurantRecommenderToken,
   RestaurantRecommender,
 } from './restaurantRecommender';
+import {
+  SituationRepositoryToken,
+  SituationRepository,
+} from '../case/situationRepository';
 
 export class RecommendationService {
   constructor(
@@ -54,9 +56,32 @@ export class RecommendationService {
     };
   }
 
+  async assignPhotoInRecommendations(
+    recommended: PlaceSearchResponse[],
+  ): Promise<RestaurantResponse[]> {
+    const tasks = [];
+    for (const recommend of recommended) {
+      tasks.push(
+        this.placePlugin
+          .getPhotoUrl(
+            recommend.photos.length > 0 ? recommend.photos[0] : undefined,
+          )
+          .then(url => {
+            return {
+              ...recommend,
+              photoUrl: url,
+            };
+          }),
+      );
+    }
+
+    const res = await Promise.all(tasks);
+    return res;
+  }
+
   async getRecommendations(
     req: QueryRecommendRestaurantRequest,
-  ): Promise<RestaurantDetailResponse[]> {
+  ): Promise<RestaurantResponse[]> {
     const foodKeywords = this.situationRepo.getFoodKeywordsBySituation(
       req.situation,
     );
@@ -67,16 +92,12 @@ export class RecommendationService {
       foodKeywords,
     });
 
-    const recommended = this.restaurantRecommender.recommends(req, places);
-    const detailRecommendations = await this.convertPlacesToDetail(recommended);
-
-    const result = await Promise.all(
-      detailRecommendations.map(recommendation =>
-        this.mergePhotos(recommendation),
-      ),
+    const recommendations = this.restaurantRecommender.recommends(req, places);
+    const restaurants = await this.assignPhotoInRecommendations(
+      recommendations,
     );
 
-    return result;
+    return restaurants;
   }
 
   async getRecommendationByPlaceID(
@@ -93,12 +114,14 @@ export class RecommendationService {
     }
   }
 
+  // deprecated api
   async getRecommendRestaurant(
     req: QueryRecommendRestaurantRequest,
   ): Promise<RestaurantDetailResponse | undefined> {
-    const foodKeywords = this.situationRepo.getFoodKeywordsBySituation(
-      req.situation,
-    );
+    const foodKeywords = [];
+    // const foodKeywords = this.situationRepo.getFoodKeywordsBySituation(
+    //   req.situation,
+    // );
 
     const restaurantFinder = new RestaurantFinder(this.placePlugin);
     const places = await restaurantFinder.find({

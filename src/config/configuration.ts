@@ -1,8 +1,8 @@
-const defaultPort = 3000;
+const defaultListenPort = 3000;
 const defaultGoogleOutputFormat = 'json';
 
 export default () => ({
-  port: parseInt(process.env.PORT, 10) || defaultPort,
+  listen_port: parseInt(process.env.LISTEN_PORT, 10) || defaultListenPort,
   jwt: {
     authCodePrivateKey: process.env.AUTH_CODE_PRIVATE_KEY || 'privatekey',
     secretKey: process.env.JWT_SECRET_KEY || 'debugkey',
@@ -24,8 +24,9 @@ export default () => ({
     synchronize: process.env.DB_SYNC === 'true',
   },
   email: {
-    passwordResetUrl: process.env.PASSWORD_RESET_URL || 'https://www.tastie.me/reset-password',
-    sender: process.env.SENDER_EMAIL || 'mytastie@gmail.com'
+    passwordResetUrl:
+      process.env.PASSWORD_RESET_URL || 'https://www.tastie.me/reset-password',
+    sender: process.env.SENDER_EMAIL || 'mytastie@gmail.com',
   },
   sendinblue: {
     apiKey: process.env.SENDINBLUE_API_KEY || 'debug',

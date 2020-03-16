@@ -1,2 +1,3 @@
 export * from './queryRecommendationRequest';
-export * from './placeDetailResponse';
+export * from './restaurantDetailResponse';
+export * from './restaurantResponse';

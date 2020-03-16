@@ -1,25 +1,17 @@
 import { Module } from '@nestjs/common';
-import { RestaurantController } from '@/web/api/recommendation/controller';
+import { RecommendationController } from '@/web/api/recommendation/recommendationController';
 import {
   RecommendationService,
   RuleBasedRestaurantRecommender,
   RestaurantRecommenderToken,
 } from '@/domain/recommendation';
-import { GooglePlacePlugin } from '@/infrastructure/place/goolgePlacePlugin';
-import { PlacePluginToken } from '@/interfaces/place';
-import {
-  CategoryRepositoryToken,
-  SituationRepositoryToken,
-  PreferenceRepositoryToken,
-} from '@/interfaces/repositories';
-import {
-  MemoryCategoryRepository,
-  MemorySituationRepository,
-  MemoryPreferenceRepository,
-} from '@/infrastructure/repositories';
+import { PlacePluginToken } from '@/domain/place';
+import { GooglePlaceV2Plugin } from '@/infrastructure/place/googlePlaceV2Plugin';
+import { SituationRepositoryToken } from '@/domain/case/situationRepository';
+import { MemorySituationRepository } from '@/infrastructure/repositories';
 
 @Module({
-  controllers: [RestaurantController],
+  controllers: [RecommendationController],
   providers: [
     RecommendationService,
     {
@@ -27,18 +19,10 @@ import {
       useClass: RuleBasedRestaurantRecommender,
     },
     {
-      provide: CategoryRepositoryToken,
-      useClass: MemoryCategoryRepository,
-    },
-    {
       provide: SituationRepositoryToken,
       useClass: MemorySituationRepository,
     },
-    {
-      provide: PreferenceRepositoryToken,
-      useClass: MemoryPreferenceRepository,
-    },
-    { provide: PlacePluginToken, useClass: GooglePlacePlugin },
+    { provide: PlacePluginToken, useClass: GooglePlaceV2Plugin },
   ],
 })
 export class RecommendationModule {}

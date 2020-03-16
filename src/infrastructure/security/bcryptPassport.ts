@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcryptjs';
-import { Passport } from '@/interfaces/security';
+import { Passport } from '@/domain/auth';
 
 export class BcryptPassport implements Passport {
   async encryptPassword(password: string): Promise<string> {
