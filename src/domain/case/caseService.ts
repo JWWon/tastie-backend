@@ -39,10 +39,7 @@ export class CaseService {
   ) {}
 
   async getCategories(req: QueryCategoryRequest): Promise<Category[]> {
-    const categories = await this.categoryRepository.getCategoriesByUTCDate(
-      req.utcNow,
-    );
-
+    const categories = await this.categoryRepository.getCategories();
     return categories;
   }
 

@@ -2,10 +2,10 @@ export const CategoryTypeList = [
   '아침',
   '브런치',
   '점심',
-  '디저트',
   '저녁',
-  '술자리',
+  '카페',
   '야식',
+  '술자리',
 ] as const;
 
 export type CategoryType = typeof CategoryTypeList[number];
