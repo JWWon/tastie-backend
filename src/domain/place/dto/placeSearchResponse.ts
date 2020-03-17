@@ -10,4 +10,5 @@ export type PlaceSearchResponse = {
   readonly types: string[];
   readonly photos: PlacePhoto[];
   readonly coordinate: Coordinate;
+  readonly address?: string;
 };

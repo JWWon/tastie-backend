@@ -16,6 +16,7 @@ const fromRestaurantResponse = (
     userRatingsTotal,
     photoUrl,
     coordinate,
+    address,
   } = res;
 
   return {
@@ -26,6 +27,7 @@ const fromRestaurantResponse = (
     userRatingsTotal,
     photoUrl,
     location: coordinate,
+    address,
   };
 };
 
