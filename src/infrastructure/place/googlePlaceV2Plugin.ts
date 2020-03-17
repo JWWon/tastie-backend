@@ -109,6 +109,7 @@ export class GooglePlaceV2Plugin implements PlacePlugin {
             latitude: place.geometry.location.lat,
           },
           photos: place.photos ?? [],
+          address: place.vicinity,
         };
       },
     );

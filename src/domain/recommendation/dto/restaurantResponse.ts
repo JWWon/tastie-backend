@@ -8,4 +8,5 @@ export interface RestaurantResponse {
   readonly priceLevel: number;
   readonly photoUrl: string;
   readonly coordinate: Coordinate;
+  readonly address: string;
 }

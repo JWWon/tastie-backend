@@ -118,6 +118,7 @@ export class GooglePlacePlugin implements PlacePlugin {
               latitude: place.geometry.location.lat,
             },
             photos: place.photos ?? [],
+            address: place.vicinity,
           };
         };
 
