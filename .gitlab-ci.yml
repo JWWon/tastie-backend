@@ -1,8 +1,7 @@
 image: node:12.14.1-alpine
 
 stages:
-  - build
-  - test
+  - inspect
   - before-deploy
   - migration
   - deploy
@@ -13,18 +12,25 @@ cache:
     - node_modules/
 
 build:
-  stage: build
+  stage: inspect
   before_script:
     - npm install
   script:
     - npm run build
 
 test:
-  stage: test
+  stage: inspect
   before_script:
     - npm install
   script:
     - npm run test
+
+lint:
+  stage: inspect
+  before_script:
+    - npm install
+  script:
+    - npm run lint:ci
 
 build-docker-image:
   stage: before-deploy
@@ -77,7 +83,7 @@ deploy-staging:
     - cd ../ && EXIT_STATUS=$? scripts/to_slack.sh
   variables:
     ENVIRONMENT: staging
-    APP_VERSION: "staging-b$CI_PIPELINE_ID"
+    APP_VERSION: 'staging-b$CI_PIPELINE_ID'
     GIT_STRATEGY: clone
   environment:
     name: staging
@@ -98,7 +104,7 @@ deploy-production:
     - cd ../ && EXIT_STATUS=$? scripts/to_slack.sh
   variables:
     ENVIRONMENT: production
-    APP_VERSION: "production-b$CI_PIPELINE_ID"
+    APP_VERSION: 'production-b$CI_PIPELINE_ID'
     GIT_STRATEGY: clone
   environment:
     name: production
