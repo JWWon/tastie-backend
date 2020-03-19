@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class InitialMigration1582952987222 implements MigrationInterface {
-  name = 'InitialMigration1582952987222';
+export class InitialMigration1584616241345 implements MigrationInterface {
+  name = 'InitialMigration1584616241345';
 
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.query(
@@ -17,7 +17,7 @@ export class InitialMigration1582952987222 implements MigrationInterface {
       undefined,
     );
     await queryRunner.query(
-      `CREATE TABLE "SocialAccount" ("user_id" integer NOT NULL, "social_user_id" character varying NOT NULL, "social_provider_id" integer NOT NULL, CONSTRAINT "UQ_53ba44d34590bac5575fd9bdb1d" UNIQUE ("social_user_id", "social_provider_id"), CONSTRAINT "REL_58bc4dc6374351b11d0df66d60" UNIQUE ("user_id"), CONSTRAINT "REL_58a660a0f873bdc10d17e8cc2f" UNIQUE ("social_provider_id"), CONSTRAINT "PK_58bc4dc6374351b11d0df66d60b" PRIMARY KEY ("user_id"))`,
+      `CREATE TABLE "SocialAccount" ("user_id" integer NOT NULL, "social_user_id" character varying NOT NULL, "social_provider_id" integer NOT NULL, CONSTRAINT "UQ_53ba44d34590bac5575fd9bdb1d" UNIQUE ("social_user_id", "social_provider_id"), CONSTRAINT "REL_58bc4dc6374351b11d0df66d60" UNIQUE ("user_id"), CONSTRAINT "PK_58bc4dc6374351b11d0df66d60b" PRIMARY KEY ("user_id"))`,
       undefined,
     );
     await queryRunner.query(
