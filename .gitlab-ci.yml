@@ -8,7 +8,7 @@ stages:
   - deploy
 
 variables:
-  DOCKER_DRIVER: overlay2
+  DOCKER_DRIVER: overlay
 
 install_dependencies:
   stage: install_dependencies
