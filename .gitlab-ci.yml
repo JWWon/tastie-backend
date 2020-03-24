@@ -11,12 +11,26 @@ cache:
   paths:
     - node_modules/
 
+# build:
+#   stage: inspect
+#   before_script:
+#     - npm install
+#   script:
+#     - npm run build
+
 build:
   stage: inspect
-  before_script:
-    - npm install
+  image: docker:19.03.5-git
+  services:
+    - docker:19.03.5-dind
   script:
-    - npm run build
+    - ls
+    - docker build -t app .
+    - mkdir image/
+    - docker save app > image/app.tar
+  artifacts:
+    paths:
+      - image
 
 test:
   stage: inspect
@@ -43,6 +57,8 @@ build-docker-image:
   script:
     - docker build -t $CI_REGISTRY_IMAGE:$DOCKER_TAG .
     - docker push $CI_REGISTRY_IMAGE:$DOCKER_TAG
+  variables:
+    DOCKER_DRIVER: overlay2
   only:
     - master
     - production
@@ -83,7 +99,7 @@ deploy-staging:
     - cd ../ && EXIT_STATUS=$? scripts/to_slack.sh
   variables:
     ENVIRONMENT: staging
-    APP_VERSION: 'staging-b$CI_PIPELINE_ID'
+    APP_VERSION: "staging-b$CI_PIPELINE_ID"
     GIT_STRATEGY: clone
   environment:
     name: staging
@@ -104,7 +120,7 @@ deploy-production:
     - cd ../ && EXIT_STATUS=$? scripts/to_slack.sh
   variables:
     ENVIRONMENT: production
-    APP_VERSION: 'production-b$CI_PIPELINE_ID'
+    APP_VERSION: "production-b$CI_PIPELINE_ID"
     GIT_STRATEGY: clone
   environment:
     name: production
