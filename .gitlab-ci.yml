@@ -2,8 +2,8 @@ image: node:12.14.1-alpine
 
 stages:
   - install_dependencies
-  - inspect
-  - before-deploy
+  - build
+  - push-docker-image
   - migration
   - deploy
 
@@ -23,7 +23,7 @@ install_dependencies:
       - node_modules/
 
 build:
-  stage: inspect
+  stage: build
   image: docker:19.03.5-git
   services:
     - docker:19.03.5-dind
@@ -41,17 +41,17 @@ build:
       - image.tar
 
 test:
-  stage: inspect
+  stage: build
   script:
     - npm run test
 
 lint:
-  stage: inspect
+  stage: build
   script:
     - npm run lint:ci
 
-build-docker-image:
-  stage: before-deploy
+push-docker-image:
+  stage: push-docker-image
   image: docker:19.03.5-git
   services:
     - docker:19.03.5-dind
@@ -59,10 +59,9 @@ build-docker-image:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - DOCKER_TAG=$([ "$CI_COMMIT_REF_NAME" == "master" ] && echo "staging-b$CI_PIPELINE_ID" || echo "production-b$CI_PIPELINE_ID")
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:$DOCKER_TAG .
+    - docker load < image.tar
+    - docker image tag app:latest $CI_REGISTRY_IMAGE:$DOCKER_TAG
     - docker push $CI_REGISTRY_IMAGE:$DOCKER_TAG
-  variables:
-    DOCKER_DRIVER: overlay2
   only:
     - master
     - production
