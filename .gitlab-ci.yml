@@ -1,22 +1,23 @@
 image: node:12.14.1-alpine
 
 stages:
+  - install_dependencies
   - inspect
   - before-deploy
   - migration
   - deploy
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - node_modules/
-
-# build:
-#   stage: inspect
-#   before_script:
-#     - npm install
-#   script:
-#     - npm run build
+install_dependencies:
+  stage: install_dependencies
+  script:
+    - npm install
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  artifacts:
+    paths:
+      - node_modules/
 
 build:
   stage: inspect
@@ -24,25 +25,25 @@ build:
   services:
     - docker:19.03.5-dind
   script:
-    - ls
-    - docker build -t app .
+    - docker load < image/app.tar || true
+    - docker build --cache-from app:latest -t app .
     - mkdir image/
     - docker save app > image/app.tar
+  cache:
+    key: docker-image-cache
+    paths:
+      - image/app.tar
   artifacts:
     paths:
-      - image
+      - image/app.tar
 
 test:
   stage: inspect
-  before_script:
-    - npm install
   script:
     - npm run test
 
 lint:
   stage: inspect
-  before_script:
-    - npm install
   script:
     - npm run lint:ci
 
