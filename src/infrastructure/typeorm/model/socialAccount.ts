@@ -5,6 +5,7 @@ import {
   Unique,
   OneToOne,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { User } from './user';
 import { SocialProvider } from './socialProvider';
@@ -25,7 +26,7 @@ export class SocialAccount {
   @Column({ name: 'social_provider_id' })
   readonly socialProviderID: number;
 
-  @OneToOne(type => SocialProvider)
+  @ManyToOne(type => SocialProvider)
   @JoinColumn({ name: 'social_provider_id' })
   readonly socialProvider: SocialProvider;
 }
