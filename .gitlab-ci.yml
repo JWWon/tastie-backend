@@ -31,14 +31,18 @@ build:
   services:
     - docker:19.03.5-dind
   script:
+    - docker load < builder.tar || true
     - docker load < image.tar || true
+    - docker build --target builder --cache-from app:builder --tag app:builder .
     - docker build --cache-from app:latest -t app .
     - docker save app > image.tar
+    - docker save app:builder > builder.tar
   dependencies: []
   cache:
     key: docker-image-cache
     paths:
       - image.tar
+      - builder.tar
   artifacts:
     paths:
       - image.tar
@@ -68,6 +72,7 @@ push-docker-image:
   image: docker:19.03.5-git
   services:
     - docker:19.03.5-dind
+  dependencies: []
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - DOCKER_TAG=$([ "$CI_COMMIT_REF_NAME" == "master" ] && echo "staging-b$CI_PIPELINE_ID" || echo "production-b$CI_PIPELINE_ID")
@@ -81,6 +86,7 @@ push-docker-image:
 
 migration-staging:
   stage: migration
+  dependencies: []
   before_script:
     - npm install
   script:
@@ -92,6 +98,7 @@ migration-staging:
 
 migration-production:
   stage: migration
+  dependencies: []
   before_script:
     - npm install
   script:
@@ -105,6 +112,7 @@ migration-production:
 deploy-staging:
   stage: deploy
   image: coxauto/aws-ebcli
+  dependencies: []
   script:
     - apk --no-cache add gettext
     - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
@@ -126,6 +134,7 @@ deploy-staging:
 deploy-production:
   stage: deploy
   image: coxauto/aws-ebcli
+  dependencies: []
   script:
     - apk --no-cache add gettext
     - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
