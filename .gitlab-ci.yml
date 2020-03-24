@@ -28,18 +28,17 @@ build:
   services:
     - docker:19.03.5-dind
   script:
-    - docker load < image/app.tar || true
+    - docker load < image.tar || true
     - docker build --cache-from app:latest -t app .
-    - mkdir image/
-    - docker save app > image/app.tar
+    - docker save app > image.tar
   dependencies: []
   cache:
     key: docker-image-cache
     paths:
-      - image/app.tar
+      - image.tar
   artifacts:
     paths:
-      - image/app.tar
+      - image.tar
 
 test:
   stage: inspect
