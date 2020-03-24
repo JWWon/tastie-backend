@@ -7,6 +7,9 @@ stages:
   - migration
   - deploy
 
+variables:
+  DOCKER_DRIVER: overlay2
+
 install_dependencies:
   stage: install_dependencies
   script:
@@ -29,6 +32,7 @@ build:
     - docker build --cache-from app:latest -t app .
     - mkdir image/
     - docker save app > image/app.tar
+  dependencies: []
   cache:
     key: docker-image-cache
     paths:
