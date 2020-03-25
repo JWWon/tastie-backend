@@ -14,6 +14,9 @@ WORKDIR /app
 COPY --from=builder /app/dist /app/dist
 COPY package.json /app/
 
-RUN npm install --production
+RUN npm set progress=false && \
+    npm config set depth 0 && \
+    npm install --production && \
+    npm cache clean
 
 ENTRYPOINT [ "npm", "run", "start:prod" ]
