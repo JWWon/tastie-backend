@@ -7,7 +7,7 @@ COPY package.json tsconfig.json tsconfig.build.json /app/
 RUN npm set progress=false && npm config set depth 0
 RUN npm install --production
 RUN cp -R node_modules prod_node_modules
-RUN npm install --save-dev
+RUN npm install
 RUN npm run build
 
 # production stage
