@@ -5,7 +5,8 @@ WORKDIR /app
 COPY src /app/src
 COPY package*.json tsconfig.json tsconfig.build.json /app/
 
-RUN npm set progress=false && \
+RUN --mount=type=cache,target=/app/node_modules \
+    npm set progress=false && \
     npm config set depth 0 && \
     npm ci && \
     npm run build
@@ -22,7 +23,8 @@ COPY --from=builder /app/dist /app/dist
 # COPY --from=builder /app/prod_node_modules /app/node_modules
 COPY package*.json /app/
 
-RUN npm set progress=false && \
+RUN --mount=type=cache,target=/app/node_modules \
+    npm set progress=false && \
     npm config set depth 0 && \
     npm ci --only=production
 

@@ -44,13 +44,12 @@ build:
     - mkdir -p cache
     - ls cache
     - >
-      docker buildx build --cache-to=type=local,dest=./cache -t app .
-    # if [ -d cache ]; then
-    #   echo 'using cache';
-    #   docker buildx build --cache-from=./cache --cache-to=type=local,dest=./cache -t app .
-    # else
-      
-    # fi
+      if [ -d cache ]; then
+        echo 'using cache';
+        docker buildx build --cache-from=./cache --cache-to=type=local,dest=./cache -t app .
+      else
+        docker buildx build --cache-to=type=local,dest=./cache -t app .  
+      fi
     # - docker save app > image.tar
   cache:
     key: docker-image-cache
