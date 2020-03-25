@@ -30,17 +30,29 @@ build:
   image: docker:19.03.5-git
   services:
     - docker:19.03.5-dind
+  before_script:
+    - >
+      if [ ! -f buildx-v0.3.1.linux-amd64 ]; then
+        wget -q https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64;
+        chmod 777 buildx-v0.3.1.linux-amd64;
+        mkdir -p ~/.docker/cli-plugins/;
+      fi
   script:
-    - docker load < builder.tar || true
-    - docker load < image.tar || true
-    - docker build --target builder --cache-from app:builder --build-arg=BUILDKIT_INLINE_CACHE=1 -t app:builder .
-    - docker build --cache-from app:latest --cache-from app:builder --build-arg=BUILDKIT_INLINE_CACHE=1 -t app .
-    - docker save app > image.tar
-    - docker save app:builder > builder.tar
+    - cp buildx-v0.3.1.linux-amd64 ~/.docker/cli-plugins/docker-buildx;
+    - docker buildx ls
+    # - ls ~/.docker/cli-plugins/
+    # - realpath ~/.docker
+    # - docker load < builder.tar || true
+    # - docker load < image.tar || true
+    # - docker build --target builder --cache-from app:builder --build-arg=BUILDKIT_INLINE_CACHE=1 -t app:builder .
+    # - docker build --cache-from app:builder --build-arg=BUILDKIT_INLINE_CACHE=1 -t app .
+    # - docker save app > image.tar
+    # - docker save app:builder > builder.tar
   dependencies: []
   cache:
     key: docker-image-cache
     paths:
+      - buildx-v0.3.1.linux-amd64
       # - image.tar
       - builder.tar
   artifacts:
