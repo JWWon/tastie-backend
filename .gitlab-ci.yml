@@ -34,7 +34,7 @@ build:
     - docker load < builder.tar || true
     - docker load < image.tar || true
     - docker build --target builder --cache-from app:builder --tag app:builder .
-    - docker build --cache-from app:builder --cache-from app:latest -t app .
+    - docker build --cache-from app:builder,app:latest -t app .
     - docker save app > image.tar
     - docker save app:builder > builder.tar
   dependencies: []
