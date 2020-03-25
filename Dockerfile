@@ -5,8 +5,7 @@ WORKDIR /app
 COPY src /app/src
 COPY package*.json tsconfig.json tsconfig.build.json /app/
 
-RUN --mount=type=bind,target=/app/node_modules,source=node_modules,rw \
-    npm set progress=false && \
+RUN npm set progress=false && \
     npm config set depth 0 && \
     npm ci && \
     npm run build
