@@ -33,8 +33,8 @@ build:
   script:
     - docker load < builder.tar || true
     - docker load < image.tar || true
-    - DOCKER_BUILDKIT=1 docker build --target builder --cache-from app:builder --tag app:builder .
-    - DOCKER_BUILDKIT=1 docker build --cache-from app:latest -t app .
+    - DOCKER_BUILDKIT=1 docker build --target builder --cache-from app:builder --build-arg=BUILDKIT_INLINE_CACHE=1 --tag app:builder .
+    - DOCKER_BUILDKIT=1 docker build --cache-from --build-arg=BUILDKIT_INLINE_CACHE=1 app:latest -t app .
     - docker save app > image.tar
     - docker save app:builder > builder.tar
   dependencies: []
