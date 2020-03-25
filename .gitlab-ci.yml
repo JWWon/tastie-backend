@@ -52,7 +52,6 @@ build:
       
     # fi
     # - docker save app > image.tar
-  dependencies: []
   cache:
     key: docker-image-cache
     paths:
