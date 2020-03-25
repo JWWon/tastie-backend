@@ -16,7 +16,7 @@ WORKDIR /app
 
 COPY --from=builder /app/dist /app/dist
 COPY --from=builder /app/prod_node_modules /app/node_modules
-# COPY package.json /app/
+COPY package.json /app/
 
 # RUN npm set progress=false && \
 #     npm config set depth 0 && \

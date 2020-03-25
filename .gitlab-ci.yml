@@ -41,7 +41,7 @@ build:
   cache:
     key: docker-image-cache
     paths:
-      - image.tar
+      # - image.tar
       - builder.tar
   artifacts:
     paths:
