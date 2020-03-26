@@ -63,7 +63,6 @@ push-docker-image:
   image: docker:19.03.5-git
   services:
     - docker:19.03.5-dind
-  dependencies: []
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - DOCKER_TAG=$([ "$CI_COMMIT_REF_NAME" == "master" ] && echo "staging-b$CI_PIPELINE_ID" || echo "production-b$CI_PIPELINE_ID")
