@@ -52,7 +52,7 @@ build:
     #     docker buildx build --cache-to=type=local,dest=./cache -t app .  
     #   fi
     - DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t app .
-    - docker save app > image.tar
+    - docker save app > app.tar
   # cache:
   #   key: docker-image-cache
   #   paths:
