@@ -30,32 +30,34 @@ build:
   image: docker:19.03.5-git
   services:
     - docker:19.03.5-dind
-  before_script:
-    - >
-      if [ ! -f buildx-v0.3.1.linux-amd64 ]; then
-        wget -q https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64;
-        chmod 777 buildx-v0.3.1.linux-amd64;
-      fi
+  dependencies: []
+  # before_script:
+  #   - >
+  #     if [ ! -f buildx-v0.3.1.linux-amd64 ]; then
+  #       wget -q https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64;
+  #       chmod 777 buildx-v0.3.1.linux-amd64;
+  #     fi
   script:
-    - mkdir -p ~/.docker/cli-plugins/;
-    - cp buildx-v0.3.1.linux-amd64 ~/.docker/cli-plugins/docker-buildx
-    - docker buildx create --name mybuilder --use
-    - docker buildx ls
-    - mkdir -p cache
-    - ls cache
-    - >
-      if [ -d cache ]; then
-        echo 'using cache';
-        docker buildx build --cache-from=./cache --cache-to=type=local,dest=./cache -t app .
-      else
-        docker buildx build --cache-to=type=local,dest=./cache -t app .  
-      fi
-    # - docker save app > image.tar
-  cache:
-    key: docker-image-cache
-    paths:
-      - cache/
-      - buildx-v0.3.1.linux-amd64
+    # - mkdir -p ~/.docker/cli-plugins/;
+    # - cp buildx-v0.3.1.linux-amd64 ~/.docker/cli-plugins/docker-buildx
+    # - docker buildx create --name mybuilder --use
+    # - docker buildx ls
+    # - mkdir -p cache
+    # - ls cache
+    # - >
+    #   if [ -d cache ]; then
+    #     echo 'using cache';
+    #     docker buildx build --cache-from=./cache --cache-to=type=local,dest=./cache -t app .
+    #   else
+    #     docker buildx build --cache-to=type=local,dest=./cache -t app .  
+    #   fi
+    - DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t app .
+    - docker save app > image.tar
+  # cache:
+  #   key: docker-image-cache
+  #   paths:
+  #     - cache/
+  #     - buildx-v0.3.1.linux-amd64
   artifacts:
     paths:
       - app.tar
