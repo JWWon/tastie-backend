@@ -31,14 +31,8 @@ build:
   services:
     - docker:19.03.5-dind
   dependencies: []
-  before_script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-  variables:
-    IMAGE: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
   script:
     - DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t app .
-    - docker image tag app:latest $IMAGE
-    - docker push $IMAGE
     - mkdir -p images
     - docker save app > images/app.tar
   artifacts:
@@ -75,6 +69,7 @@ push-docker-image:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - DOCKER_TAG=$([ "$CI_COMMIT_REF_NAME" == "master" ] && echo "staging-b$CI_PIPELINE_ID" || echo "production-b$CI_PIPELINE_ID")
   script:
+    - ls
     - docker load < images/app.tar
     - docker image tag app:latest $CI_REGISTRY_IMAGE:$DOCKER_TAG
     - docker push $CI_REGISTRY_IMAGE:$DOCKER_TAG
