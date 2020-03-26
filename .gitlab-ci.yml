@@ -1,41 +1,75 @@
 image: node:12.14.1-alpine
 
 stages:
+  - install_dependencies
   - build
-  - test
-  - before-deploy
+  - push-docker-image
   - migration
   - deploy
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - node_modules/
+variables:
+  DOCKER_DRIVER: overlay
+
+install_dependencies:
+  stage: install_dependencies
+  script:
+    - npm install
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  artifacts:
+    paths:
+      - node_modules/
+  only:
+    changes:
+      - package-lock.json
 
 build:
   stage: build
-  before_script:
-    - npm install
-  script:
-    - npm run build
-
-test:
-  stage: test
-  before_script:
-    - npm install
-  script:
-    - npm run test
-
-build-docker-image:
-  stage: before-deploy
   image: docker:19.03.5-git
   services:
     - docker:19.03.5-dind
+  dependencies: []
+  script:
+    - DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t app .
+    - docker save app > app.tar
+  artifacts:
+    paths:
+      - app.tar
+
+test:
+  stage: build
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+  script:
+    - npm run test
+
+lint:
+  stage: build
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+  script:
+    - npm run lint:ci
+
+push-docker-image:
+  stage: push-docker-image
+  image: docker:19.03.5-git
+  services:
+    - docker:19.03.5-dind
+  dependencies: []
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - DOCKER_TAG=$([ "$CI_COMMIT_REF_NAME" == "master" ] && echo "staging-b$CI_PIPELINE_ID" || echo "production-b$CI_PIPELINE_ID")
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:$DOCKER_TAG .
+    - docker load < app.tar
+    - docker image tag app:latest $CI_REGISTRY_IMAGE:$DOCKER_TAG
     - docker push $CI_REGISTRY_IMAGE:$DOCKER_TAG
   only:
     - master
@@ -43,6 +77,7 @@ build-docker-image:
 
 migration-staging:
   stage: migration
+  dependencies: []
   before_script:
     - npm install
   script:
@@ -54,6 +89,7 @@ migration-staging:
 
 migration-production:
   stage: migration
+  dependencies: []
   before_script:
     - npm install
   script:
@@ -67,6 +103,7 @@ migration-production:
 deploy-staging:
   stage: deploy
   image: coxauto/aws-ebcli
+  dependencies: []
   script:
     - apk --no-cache add gettext
     - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
@@ -88,6 +125,7 @@ deploy-staging:
 deploy-production:
   stage: deploy
   image: coxauto/aws-ebcli
+  dependencies: []
   script:
     - apk --no-cache add gettext
     - git checkout -B "$CI_BUILD_REF_NAME" "$CI_BUILD_REF"
