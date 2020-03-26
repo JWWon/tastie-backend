@@ -18,6 +18,7 @@
     "typeorm:run": "npm run typeorm migration:run",
     "typeorm:revert": "npm run typeorm migration:revert",
     "lint": "eslint --fix --ext .ts src/",
+    "lint:ci": "eslint --ext .ts .",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
