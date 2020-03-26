@@ -10,9 +10,6 @@ stages:
 variables:
   DOCKER_DRIVER: overlay
 
-include:
-  template: Container-Scanning.gitlab-ci.yml
-
 install_dependencies:
   stage: install_dependencies
   script:
