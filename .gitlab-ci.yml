@@ -10,6 +10,9 @@ stages:
 variables:
   DOCKER_DRIVER: overlay
 
+include:
+  template: Container-Scanning.gitlab-ci.yml
+
 install_dependencies:
   stage: install_dependencies
   script:
@@ -31,8 +34,14 @@ build:
   services:
     - docker:19.03.5-dind
   dependencies: []
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+  variables:
+    IMAGE: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
   script:
     - DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 -t app .
+    - docker image tag app:latest $IMAGE
+    - docker push $IMAGE
     - mkdir -p images
     - docker save app > images/app.tar
   artifacts:
@@ -115,7 +124,7 @@ deploy-staging:
     - cd ../ && EXIT_STATUS=$? scripts/to_slack.sh
   variables:
     ENVIRONMENT: staging
-    APP_VERSION: "staging-b$CI_PIPELINE_ID"
+    APP_VERSION: 'staging-b$CI_PIPELINE_ID'
     GIT_STRATEGY: clone
   environment:
     name: staging
@@ -137,7 +146,7 @@ deploy-production:
     - cd ../ && EXIT_STATUS=$? scripts/to_slack.sh
   variables:
     ENVIRONMENT: production
-    APP_VERSION: "production-b$CI_PIPELINE_ID"
+    APP_VERSION: 'production-b$CI_PIPELINE_ID'
     GIT_STRATEGY: clone
   environment:
     name: production
