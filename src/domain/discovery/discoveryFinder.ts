@@ -7,7 +7,7 @@ import {
 } from '@/entities';
 import { PlacePlugin, PlaceSearchResponse, PlaceType } from '@/domain/place';
 
-interface Param {
+interface FindRequest {
   readonly category: CategoryType;
   readonly situation: SituationType;
   readonly location: Coordinate;
@@ -25,10 +25,10 @@ const getPlaceTypeByCategory = (category: CategoryType): PlaceType => {
     : 'restaurant';
 };
 
-export class RestaurantFinder {
+export class DiscoveryFinder {
   constructor(private readonly placePlugin: PlacePlugin) {}
 
-  async find(param: Param): Promise<PlaceSearchResponse[]> {
+  async find(param: FindRequest): Promise<PlaceSearchResponse[]> {
     const placeType = getPlaceTypeByCategory(param.category);
     const coordinate = param.location;
     const radius = 1000;

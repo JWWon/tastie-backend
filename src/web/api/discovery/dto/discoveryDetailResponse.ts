@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { OpeningHours } from './openingHours';
 import { Coordinate } from '../../common/dto';
 
-export class RecommendationDetailResponse {
+export class DiscoveryDetailResponse {
   @ApiProperty()
   readonly id: string;
 

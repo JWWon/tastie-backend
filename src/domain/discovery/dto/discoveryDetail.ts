@@ -1,7 +1,7 @@
 import { PlaceOpeningHours } from '@/domain/place';
 import { Coordinate } from '@/entities';
 
-export type RestaurantDetailResponse = {
+export type DiscoveryDetail = {
   readonly placeID: string;
   readonly name: string;
   readonly rating: number;
