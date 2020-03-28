@@ -1,5 +1,22 @@
 image: node:12.14.1-alpine
 
+.pull_node_modules_cache: &pull_node_modules_cache
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+
+.default_migration: &default_migration
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+  stage: migration
+  script:
+    - npm run typeorm:run
+
 stages:
   - install_dependencies
   - build
@@ -41,21 +58,13 @@ build:
 
 test:
   stage: build
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - node_modules/
-    policy: pull
+  <<: *pull_node_modules_cache
   script:
     - npm run test
 
 lint:
   stage: build
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - node_modules/
-    policy: pull
+  <<: *pull_node_modules_cache
   script:
     - npm run lint:ci
 
@@ -76,29 +85,25 @@ push-docker-image:
     - production
 
 migration-staging:
-  stage: migration
-  dependencies: []
-  before_script:
-    - npm install
-  script:
-    - npm run typeorm:run
   environment:
     name: staging
+  <<: *default_migration
   only:
-    - master
+    changes:
+      - migrations/*.ts
+    refs:
+      - master
 
 migration-production:
-  stage: migration
-  dependencies: []
-  before_script:
-    - npm install
-  script:
-    - npm run typeorm:run
   environment:
     name: production
+  <<: *default_migration
   when: manual
   only:
-    - production
+    changes:
+      - migrations/*
+    refs:
+      - production-v*
 
 deploy-staging:
   stage: deploy
