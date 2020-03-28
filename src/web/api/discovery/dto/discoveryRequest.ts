@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { SituationTypeList, CategoryTypeList } from '@/entities';
 
-export class RecommendationRequest {
+export class DiscoveryRequest {
   @ApiProperty()
   readonly longitude: number;
 

@@ -1,9 +1,12 @@
 import { Coordinate } from '@/entities';
 
-export type Restaurant = {
+export interface Discovery {
   readonly placeID: string;
   readonly name: string;
   readonly rating: number;
   readonly userRatingsTotal: number;
+  readonly priceLevel: number;
+  readonly photoUrl: string;
   readonly coordinate: Coordinate;
-};
+  readonly address: string;
+}

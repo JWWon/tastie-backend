@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
-import { RecommendationController } from '@/web/api/recommendation/recommendationController';
+import { DiscoveryController } from '@/web/api/discovery/discoveryController';
 import {
-  RecommendationService,
-  RuleBasedRestaurantRecommender,
-  RestaurantRecommenderToken,
-} from '@/domain/recommendation';
+  DiscoveryService,
+  RuleBasedRecommender,
+  DiscoveryRecommenderToken,
+} from '@/domain/discovery';
 import { PlacePluginToken } from '@/domain/place';
 import { GooglePlaceV2Plugin } from '@/infrastructure/place/googlePlaceV2Plugin';
 import { SituationRepositoryToken } from '@/domain/case/situationRepository';
 import { MemorySituationRepository } from '@/infrastructure/repositories';
 
 @Module({
-  controllers: [RecommendationController],
+  controllers: [DiscoveryController],
   providers: [
-    RecommendationService,
+    DiscoveryService,
     {
-      provide: RestaurantRecommenderToken,
-      useClass: RuleBasedRestaurantRecommender,
+      provide: DiscoveryRecommenderToken,
+      useClass: RuleBasedRecommender,
     },
     {
       provide: SituationRepositoryToken,
@@ -25,4 +25,4 @@ import { MemorySituationRepository } from '@/infrastructure/repositories';
     { provide: PlacePluginToken, useClass: GooglePlaceV2Plugin },
   ],
 })
-export class RecommendationModule {}
+export class DiscoveryModule {}

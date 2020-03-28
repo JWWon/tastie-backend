@@ -5,7 +5,7 @@ import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
 import config from '@/config/configuration';
 import {
-  RecommendationModule,
+  DiscoveryModule,
   CoordinateModule,
   CaseModule,
   AuthModule,
@@ -14,7 +14,7 @@ import {
 
 @Module({
   imports: [
-    RecommendationModule,
+    DiscoveryModule,
     CoordinateModule,
     CaseModule,
     AuthModule,
