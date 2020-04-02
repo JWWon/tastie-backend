@@ -10,6 +10,7 @@ import {
   CaseModule,
   AuthModule,
   UserModule,
+  RestaurantModule,
 } from './module';
 
 @Module({
@@ -19,6 +20,7 @@ import {
     CaseModule,
     AuthModule,
     UserModule,
+    RestaurantModule,
     ConfigModule.forRoot({
       load: [config],
       isGlobal: true,
@@ -35,6 +37,15 @@ import {
         database: configService.get('db.database'),
         entities: [`${__dirname}/infrastructure/typeorm/model/*{.ts,.js}`],
         synchronize: configService.get('db.synchronize'),
+      }),
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'mongodb' as 'mongodb',
+        url: configService.get('mongo.url'),
+        ssl: true,
       }),
     }),
   ],
