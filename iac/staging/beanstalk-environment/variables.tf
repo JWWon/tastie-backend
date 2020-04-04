@@ -5,3 +5,6 @@ variable "postgres_dbname" { type = string }
 variable "postgres_host" { type = string }
 variable "postgres_password" { type = string }
 variable "postgres_username" { type = string }
+variable "sendinblue_apikey" { type = string }
+variable "listen_port" { type = string }
+variable "mongo_url" { type = string }

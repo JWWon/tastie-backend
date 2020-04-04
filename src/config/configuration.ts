@@ -23,6 +23,9 @@ export default () => ({
     database: process.env.DB_DBNAME || 'postgres',
     synchronize: process.env.DB_SYNC === 'true',
   },
+  mongo: {
+    url: process.env.MONGO_URL || '',
+  },
   email: {
     passwordResetUrl:
       process.env.PASSWORD_RESET_URL || 'https://www.tastie.me/reset-password',
