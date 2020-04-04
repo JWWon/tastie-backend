@@ -4,7 +4,7 @@ export class RestaurantCategory {}
 export class RestaurantMenu {}
 export class RestaurantOpeningHours {}
 
-@Entity()
+@Entity({ name: 'restaurants' })
 export class Restaurant {
   @ObjectIdColumn()
   readonly id: ObjectID;
