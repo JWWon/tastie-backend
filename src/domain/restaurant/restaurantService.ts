@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { RestaurantUsecase } from './restaurantUsecase';
-import { CreateRestaurantRequest } from './dto';
 import {
   RestaurantRepository,
   RestaurantRepositoryToken,
 } from './restaurantRepository';
+import { Restaurant } from '@/entities';
 
 @Injectable()
 export class RestaurantService implements RestaurantUsecase {
@@ -13,7 +13,7 @@ export class RestaurantService implements RestaurantUsecase {
     private readonly restaurantRepo: RestaurantRepository,
   ) {}
 
-  async createRestaurant(req: CreateRestaurantRequest): Promise<void> {
+  async createRestaurant(req: Partial<Restaurant>): Promise<void> {
     await this.restaurantRepo.createRestaurant(req);
   }
 }
