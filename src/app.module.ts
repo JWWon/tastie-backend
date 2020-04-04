@@ -12,6 +12,7 @@ import {
   UserModule,
   RestaurantModule,
 } from './module';
+import { Restaurant } from './infrastructure/typeorm/document/restaurant';
 
 @Module({
   imports: [
@@ -42,9 +43,11 @@ import {
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
+      name: 'restaurantConnection',
       useFactory: async (configService: ConfigService) => ({
         type: 'mongodb' as 'mongodb',
         url: configService.get('mongo.url'),
+        entities: [Restaurant],
         ssl: true,
       }),
     }),
