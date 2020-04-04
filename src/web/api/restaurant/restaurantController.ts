@@ -18,10 +18,16 @@ export class RestaurantController {
   @ApiCreatedResponse({})
   async addRestaurant(@Body() req: AddRestaurantRequest): Promise<void> {
     await this.restaurantService.createRestaurant({
-      ...req,
-      category: {},
-      menus: [],
-      openingHours: [],
+      name: req.name,
+      address: req.address,
+      telephone: req.telephone,
+      description: req.description,
+      coordinate: req.coordinate,
+      status: req.status,
+      photoUrls: req.photoUrls,
+      keywords: req.keywords,
+      menus: req.menus,
+      openingHours: req.openingHours,
     });
   }
 }

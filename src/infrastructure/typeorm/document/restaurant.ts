@@ -1,8 +1,10 @@
 import { Entity, ObjectIdColumn, ObjectID, Column } from 'typeorm';
-
-export class RestaurantCategory {}
-export class RestaurantMenu {}
-export class RestaurantOpeningHours {}
+import {
+  Coordinate,
+  RestaurantMenu,
+  RestaurantOpeningHours,
+  RestaurantKeyword,
+} from '@/entities';
 
 @Entity({ name: 'restaurants' })
 export class Restaurant {
@@ -13,16 +15,25 @@ export class Restaurant {
   readonly name: string;
 
   @Column()
-  readonly addresses: string;
+  readonly address: string;
 
   @Column()
-  readonly contact: string;
+  readonly telephone: string;
 
   @Column()
   readonly description: string;
 
   @Column()
-  readonly category: RestaurantCategory;
+  readonly status: string;
+
+  @Column()
+  readonly photoUrls: string[];
+
+  @Column()
+  readonly coordinate: Coordinate;
+
+  @Column()
+  readonly keywords: RestaurantKeyword;
 
   @Column()
   readonly menus: RestaurantMenu[];

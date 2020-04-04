@@ -12,15 +12,18 @@ export class OdmRestaurantRepository implements RestaurantRepository {
     private readonly restaurantRepo: Repository<RestaurantModel>,
   ) {}
 
-  async createRestaurant(restaurant: Restaurant): Promise<void> {
+  async createRestaurant(r: Restaurant): Promise<void> {
     await this.restaurantRepo.insert({
-      name: restaurant.name,
-      addresses: restaurant.addresses,
-      contact: restaurant.contact,
-      category: restaurant.category,
-      description: restaurant.description,
-      menus: restaurant.menus,
-      openingHours: restaurant.openingHours,
+      name: r.name,
+      address: r.address,
+      telephone: r.telephone,
+      keywords: r.keywords,
+      description: r.description,
+      status: r.status,
+      photoUrls: r.photoUrls,
+      coordinate: r.coordinate,
+      menus: r.menus,
+      openingHours: r.openingHours,
     });
   }
 }
