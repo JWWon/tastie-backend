@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, MongoRepository, Any, getMongoRepository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { RestaurantRepository } from '@/domain/restaurant/restaurantRepository';
@@ -9,8 +9,13 @@ import { Restaurant } from '@/entities';
 export class OdmRestaurantRepository implements RestaurantRepository {
   constructor(
     @InjectRepository(RestaurantModel, 'restaurantConnection')
-    private readonly restaurantRepo: Repository<RestaurantModel>,
-  ) {}
+    private readonly restaurantRepo: MongoRepository<RestaurantModel>,
+  ) {
+    this.restaurantRepo = getMongoRepository(
+      RestaurantModel,
+      'restaurantConnection',
+    );
+  }
 
   async createRestaurant(r: Restaurant): Promise<void> {
     await this.restaurantRepo.insert({
@@ -25,5 +30,31 @@ export class OdmRestaurantRepository implements RestaurantRepository {
       menus: r.menus,
       openingHours: r.openingHours,
     });
+  }
+
+  async getRestaurants(query: any): Promise<Restaurant[]> {
+    const where = {};
+    if (query.name) {
+      Object.assign(where, {
+        name: query.name,
+      });
+    }
+
+    if (query.status) {
+      Object.assign(where, {
+        status: query.status,
+      });
+    }
+
+    const res = await this.restaurantRepo.find({
+      where,
+    });
+
+    const result: any[] = res.map(r => ({
+      id: r.id.toString(),
+      ...r,
+    }));
+
+    return result;
   }
 }

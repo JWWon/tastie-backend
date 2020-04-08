@@ -1,6 +1,6 @@
 import { ApiTags, ApiResponse, ApiCreatedResponse } from '@nestjs/swagger';
-import { Controller, Post, Body, Inject } from '@nestjs/common';
-import { AddRestaurantRequest } from './dto';
+import { Controller, Post, Body, Inject, Get, Query } from '@nestjs/common';
+import { AddRestaurantRequest, QueryRestaurantRequest } from './dto';
 import {
   RestaurantUsecaseToken,
   RestaurantUsecase,
@@ -29,5 +29,11 @@ export class RestaurantController {
       menus: req.menus,
       openingHours: req.openingHours,
     });
+  }
+
+  @Get()
+  async getRestaurants(@Query() req: QueryRestaurantRequest): Promise<any[]> {
+    const restaurants = await this.restaurantService.getRestaurants(req);
+    return restaurants;
   }
 }

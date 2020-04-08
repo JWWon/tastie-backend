@@ -12,11 +12,28 @@ export interface RestaurantMenu {
   readonly currency: 'KRW' | 'USD';
 }
 
-export interface RestaurantOpeningHours {
-  readonly range: '주중' | '주말' | string;
-  readonly type: 'OPEN' | 'BREAK_TIME';
-  readonly start: string;
+export const DayTypeList = [
+  'MON',
+  'TUE',
+  'WED',
+  'THUR',
+  'FRI',
+  'SAT',
+  'SUN',
+] as const;
+
+export type DayType = typeof DayTypeList[number];
+
+interface Time {
+  readonly start: string; // HH:MM
   readonly end: string;
+}
+
+export interface RestaurantOpeningHours {
+  readonly range: 'WEEKDAY' | 'WEEKEND' | 'HOLIDAY' | DayType;
+  readonly type: 'OPEN' | 'DAY_OFF';
+  readonly time?: Time;
+  readonly breakTime?: Time;
 }
 
 export interface Restaurant {
