@@ -16,4 +16,9 @@ export class RestaurantService implements RestaurantUsecase {
   async createRestaurant(req: Partial<Restaurant>): Promise<void> {
     await this.restaurantRepo.createRestaurant(req);
   }
+
+  async getRestaurants(req: any): Promise<Restaurant[]> {
+    const res = await this.restaurantRepo.getRestaurants(req);
+    return res;
+  }
 }

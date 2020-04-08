@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Coordinate } from '../../common/dto';
+import { DayType, DayTypeList } from '@/entities';
 
 export class RestaurantKeyword {
   @ApiProperty()
@@ -9,18 +10,26 @@ export class RestaurantKeyword {
   readonly tags: string[];
 }
 
+class Time {
+  @ApiProperty()
+  start: string; // HH:MM
+
+  @ApiProperty()
+  end: string;
+}
+
 export class RestaurantOpeningHours {
-  @ApiProperty()
-  readonly range: '주중' | '주말' | string;
+  @ApiProperty({ enum: ['WEEKDAY', 'WEEKEND', 'HOLIDAY', ...DayTypeList] })
+  readonly range: 'WEEKDAY' | 'WEEKEND' | 'HOLIDAY' | DayType;
 
-  @ApiProperty()
-  readonly type: 'OPEN' | 'BREAK_TIME';
+  @ApiProperty({ enum: ['OPEN', 'DAY_OFF'] })
+  readonly type: 'OPEN' | 'DAY_OFF';
 
-  @ApiProperty()
-  readonly start: string;
+  @ApiProperty({ type: Time })
+  readonly time?: Time;
 
-  @ApiProperty()
-  readonly end: string;
+  @ApiProperty({ type: Time })
+  readonly breakTime?: Time;
 }
 
 export class RestaurantMenu {
