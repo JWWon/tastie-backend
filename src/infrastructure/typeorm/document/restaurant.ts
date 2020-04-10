@@ -21,6 +21,9 @@ export class Restaurant {
   readonly telephone: string;
 
   @Column()
+  readonly categories: string[];
+
+  @Column()
   readonly description: string;
 
   @Column()
