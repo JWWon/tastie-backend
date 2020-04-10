@@ -23,6 +23,7 @@ export class OdmRestaurantRepository implements RestaurantRepository {
       address: r.address,
       telephone: r.telephone,
       keywords: r.keywords,
+      categories: r.categories,
       description: r.description,
       status: r.status,
       photoUrls: r.photoUrls,

@@ -21,6 +21,7 @@ export class RestaurantController {
       name: req.name,
       address: req.address,
       telephone: req.telephone,
+      categories: req.categories,
       description: req.description,
       coordinate: req.coordinate,
       status: req.status,

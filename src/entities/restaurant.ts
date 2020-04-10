@@ -42,6 +42,7 @@ export interface Restaurant {
   readonly address: string;
   readonly telephone: string;
   readonly keywords: RestaurantKeyword;
+  readonly categories: string[];
   readonly description: string;
   readonly status: 'ACTIVE' | 'WAITING_FOR_REVIEW' | 'REMOVED';
   readonly photoUrls: string[];

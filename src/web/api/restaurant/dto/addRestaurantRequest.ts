@@ -57,6 +57,9 @@ export class AddRestaurantRequest {
   readonly telephone: string;
 
   @ApiProperty()
+  readonly categories: string[];
+
+  @ApiProperty()
   readonly description: string;
 
   @ApiProperty({ enum: ['ACTIVE', 'WAITING_FOR_REVIEW', 'REMOVED'] })
