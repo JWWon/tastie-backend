@@ -3,6 +3,9 @@ const defaultGoogleOutputFormat = 'json';
 
 export default () => ({
   listen_port: parseInt(process.env.LISTEN_PORT, 10) || defaultListenPort,
+  swagger: {
+    enable: process.env.SWAGGER_ENABLE === 'true',
+  },
   jwt: {
     authCodePrivateKey: process.env.AUTH_CODE_PRIVATE_KEY || 'privatekey',
     secretKey: process.env.JWT_SECRET_KEY || 'debugkey',

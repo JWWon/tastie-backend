@@ -20,9 +20,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
 
-  registerSwaggerDoc(app);
+  const configService = app.get<ConfigService>('ConfigService');
+  const enableSwagger = configService.get('swagger.enable');
+  if (enableSwagger) {
+    registerSwaggerDoc(app);
+  }
 
-  const port = app.get<ConfigService>('ConfigService').get('listen_port');
+  const port = configService.get('listen_port');
 
   await app.listen(port);
 }
