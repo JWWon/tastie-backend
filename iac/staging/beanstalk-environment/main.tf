@@ -11,7 +11,7 @@ terraform {
 
 module "beanstalk_environment" {
   source  = "app.terraform.io/tastie/eb-backend/aws"
-  version = "0.1.0"
+  version = "0.1.1"
 
   name                = "staging"
   solution_stack_name = "64bit Amazon Linux 2018.03 v2.14.2 running Docker 18.09.9-ce"
@@ -29,4 +29,5 @@ module "beanstalk_environment" {
   sendinblue_apikey   = var.sendinblue_apikey
   listen_port         = var.listen_port
   mongo_url           = var.mongo_url
+  swagger_enable      = true
 }
