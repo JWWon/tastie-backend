@@ -3,7 +3,7 @@ import {
   Coordinate,
   RestaurantMenu,
   RestaurantOpeningHours,
-  RestaurantKeyword,
+  RestaurantKeywords,
 } from '@/entities';
 
 @Entity({ name: 'restaurants' })
@@ -36,7 +36,7 @@ export class Restaurant {
   readonly coordinate: Coordinate;
 
   @Column()
-  readonly keywords: RestaurantKeyword;
+  readonly keywords: RestaurantKeywords;
 
   @Column()
   readonly menus: RestaurantMenu[];

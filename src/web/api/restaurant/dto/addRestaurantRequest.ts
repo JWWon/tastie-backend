@@ -4,10 +4,24 @@ import { DayType, DayTypeList } from '@/entities';
 
 export class RestaurantKeyword {
   @ApiProperty()
-  readonly title: string; // '인기 토픽' | '시설' | '찾는 목적' | '분위기'
+  readonly label: string;
 
   @ApiProperty()
   readonly tags: string[];
+}
+
+export class RestaurantKeywords {
+  @ApiProperty()
+  readonly popularTopic: RestaurantKeyword;
+
+  @ApiProperty()
+  readonly facility: RestaurantKeyword;
+
+  @ApiProperty()
+  readonly purpose: RestaurantKeyword;
+
+  @ApiProperty()
+  readonly atmosphere: RestaurantKeyword;
 }
 
 class Time {
@@ -71,8 +85,8 @@ export class AddRestaurantRequest {
   @ApiProperty()
   readonly coordinate: Coordinate;
 
-  @ApiProperty({ type: RestaurantKeyword })
-  readonly keywords: RestaurantKeyword;
+  @ApiProperty({ type: RestaurantKeywords })
+  readonly keywords: RestaurantKeywords;
 
   @ApiProperty({ type: RestaurantMenu, isArray: true })
   readonly menus: RestaurantMenu[];
