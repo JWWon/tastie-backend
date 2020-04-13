@@ -37,7 +37,9 @@ export class OdmRestaurantRepository implements RestaurantRepository {
     const where = {};
     if (query.name) {
       Object.assign(where, {
-        name: query.name,
+        name: {
+          $regex: query.name,
+        },
       });
     }
 
