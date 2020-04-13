@@ -1,8 +1,15 @@
 import { Coordinate } from './coordinate';
 
 export interface RestaurantKeyword {
-  readonly title: string; // '인기 토픽' | '시설' | '찾는 목적' | '분위기'
+  readonly label: string;
   readonly tags: string[];
+}
+
+export interface RestaurantKeywords {
+  readonly popularTopic: RestaurantKeyword;
+  readonly facility: RestaurantKeyword;
+  readonly purpose: RestaurantKeyword;
+  readonly atmosphere: RestaurantKeyword;
 }
 
 export interface RestaurantMenu {
@@ -41,7 +48,7 @@ export interface Restaurant {
   readonly name: string;
   readonly address: string;
   readonly telephone: string;
-  readonly keywords: RestaurantKeyword;
+  readonly keywords: RestaurantKeywords;
   readonly categories: string[];
   readonly description: string;
   readonly status: 'ACTIVE' | 'WAITING_FOR_REVIEW' | 'REMOVED';
