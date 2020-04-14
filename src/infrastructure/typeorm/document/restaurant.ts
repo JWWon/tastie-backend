@@ -4,7 +4,13 @@ import {
   RestaurantMenu,
   RestaurantOpeningHours,
   RestaurantKeywords,
+  RestaurantStatusType,
 } from '@/entities';
+
+interface GeoJson {
+  readonly type: string;
+  readonly coordinates: number[];
+}
 
 @Entity({ name: 'restaurants' })
 export class Restaurant {
@@ -27,13 +33,13 @@ export class Restaurant {
   readonly description: string;
 
   @Column()
-  readonly status: string;
+  readonly status: RestaurantStatusType;
 
   @Column()
   readonly photoUrls: string[];
 
   @Column()
-  readonly coordinate: Coordinate;
+  readonly coordinate: GeoJson;
 
   @Column()
   readonly keywords: RestaurantKeywords;

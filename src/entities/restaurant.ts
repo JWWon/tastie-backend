@@ -43,6 +43,14 @@ export interface RestaurantOpeningHours {
   readonly breakTime?: Time;
 }
 
+export const RestaurantStatusTypeList = [
+  'ACTIVE',
+  'WAITING_FOR_REVIEW',
+  'REMOVED',
+] as const;
+
+export type RestaurantStatusType = typeof RestaurantStatusTypeList[number];
+
 export interface Restaurant {
   readonly id: string;
   readonly name: string;
@@ -51,7 +59,7 @@ export interface Restaurant {
   readonly keywords: RestaurantKeywords;
   readonly categories: string[];
   readonly description: string;
-  readonly status: 'ACTIVE' | 'WAITING_FOR_REVIEW' | 'REMOVED';
+  readonly status: RestaurantStatusType;
   readonly photoUrls: string[];
   readonly coordinate: Coordinate;
   readonly menus: RestaurantMenu[];
