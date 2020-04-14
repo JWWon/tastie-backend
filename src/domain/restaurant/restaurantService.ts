@@ -5,6 +5,7 @@ import {
   RestaurantRepositoryToken,
 } from './restaurantRepository';
 import { Restaurant } from '@/entities';
+import { QueryRestaurantRequest } from './dto';
 
 @Injectable()
 export class RestaurantService implements RestaurantUsecase {
@@ -17,7 +18,7 @@ export class RestaurantService implements RestaurantUsecase {
     await this.restaurantRepo.createRestaurant(req);
   }
 
-  async getRestaurants(req: any): Promise<Restaurant[]> {
+  async getRestaurants(req: QueryRestaurantRequest): Promise<Restaurant[]> {
     const res = await this.restaurantRepo.getRestaurants(req);
     return res;
   }
