@@ -9,6 +9,7 @@ resource "aws_db_instance" "this" {
   username            = var.username
   password            = var.password
   publicly_accessible = true
+  skip_final_snapshot = true
 
   vpc_security_group_ids = [data.terraform_remote_state.security_groups.outputs.allow_postgres_id]
 }
