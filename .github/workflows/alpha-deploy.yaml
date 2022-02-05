@@ -1,4 +1,8 @@
-on: [workflow_dispatch]
+on:
+  workflow_run:
+    workflows: ["Build And Push"]
+    types: [completed]
+    branches: [master]
 name: Deploy for alpha
 
 env:
@@ -10,6 +14,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-20.04
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     env:
       DB_HOST: ${{ secrets.ALPHA_DB_HOST }}
       DB_USERNAME: ${{ secrets.ALPHA_DB_USERNAME }}
