@@ -8,8 +8,9 @@ env:
 
 jobs:
   build-and-push:
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: ubuntu-20.04
     steps:
+      - uses: actions/checkout@v2
       - name: Get Version
         id: get-version
         env:
@@ -21,25 +22,26 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
           IMAGE_TAG: ${{ steps.get-version.outputs.version }}
-        run: docker build -t $ECR_REGISTRY/$AWS_ECR_REPO:$IMAGE_TAG .
+        run: docker build -t $AWS_ECR_REGISTRY/$AWS_ECR_REPO:$IMAGE_TAG .
       
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
-        if: ${{ always() && format('refs/heads/{0}', ) == github.ref }}
+        if: ${{ github.event.repository.default_branch == github.ref_name }}
         with:
-          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
-        if: ${{ always() && format('refs/heads/{0}', ) == github.ref }}
+        if: ${{ github.event.repository.default_branch == github.ref_name }}
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Push docker image
         env:
           IMAGE_TAG: ${{ steps.get-version.outputs.version }}
+          GITHUB_BRANCH: ${{ github.ref }}
         # when ref is default branch
-        if: ${{ always() && format('refs/heads/{0}', ) == github.ref }}
+        if: ${{ github.event.repository.default_branch == github.ref_name }}
         run: |
-          docker push $ECR_REGISTRY/$AWS_ECR_REPO:$IMAGE_TAG
+          docker push $AWS_ECR_REGISTRY/$AWS_ECR_REPO:$IMAGE_TAG
