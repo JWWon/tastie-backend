@@ -1,5 +1,5 @@
 on: [workflow_dispatch]
-name: Alpha DB Migration
+name: DB migration for alpha
 
 jobs:
   migrate:

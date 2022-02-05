@@ -1,0 +1,56 @@
+on: [workflow_dispatch]
+name: Deploy for alpha
+
+env:
+  INFRA_REPO: gghcode/tastie-infrastructure
+  ENV: alpha
+  PROJECT: backend
+  PROJECT_PATH: ap-northeast-2/apprunner/alpha/backend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    env:
+      DB_HOST: ${{ secrets.ALPHA_DB_HOST }}
+      DB_USERNAME: ${{ secrets.ALPHA_DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.ALPHA_DB_PASSWORD }}
+      DB_DBNAME: ${{ secrets.ALPHA_DB_DBNAME }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ env.INFRA_REPO }}
+          token: ${{ secrets.DEPLOY_GITHUB_TOKEN }}
+
+      - name: Get Version
+        id: get-version
+        env:
+          SHA: ${{ github.sha }}
+        run: |
+          echo "::set-output name=version::${SHA}"
+
+      - name: Get Actor Email
+        id: get-email
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.DEPLOY_GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            const { data } = await github.users.getByUsername({
+              username: context.actor,
+            })
+            return data.email
+
+      - name: Apply New Version
+        env:
+          VERSION: ${{ steps.get-version.outputs.version }}
+          ACTOR_NAME: ${{ github.actor }}
+          ACTOR_EMAIL: ${{ steps.get-email.outputs.result }}
+        run: |
+          git config pull.rebase true
+          git config user.name "$ACTOR_NAME"
+          git config user.email "$ACTOR_EMAIL"
+          cd $PROJECT_PATH
+          echo $VERSION > version.txt
+          git add .
+          git commit -m "ci($ENV/$PROJECT): update version $VERSION"
+          git pull origin main && git push origin main
