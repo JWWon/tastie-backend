@@ -21,12 +21,19 @@ jobs:
           repository: ${{ env.INFRA_REPO }}
           token: ${{ secrets.DEPLOY_GITHUB_TOKEN }}
 
+      - name: Install gh cli
+        run: |
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt update
+          sudo apt install gh
+
       - name: Get Version
         id: get-version
         env:
           SHA: ${{ github.sha }}
         run: |
-          echo "::set-output name=version::${SHA}"
+          echo "::set-output name=version::${SHA:0:9}"
 
       - name: Get Actor Email
         id: get-email
@@ -42,16 +49,20 @@ jobs:
 
       - name: Apply New Version
         env:
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_GITHUB_TOKEN }}
           VERSION: ${{ steps.get-version.outputs.version }}
           ACTOR_NAME: ${{ github.actor }}
           ACTOR_EMAIL: ${{ steps.get-email.outputs.result }}
+          TARGET_BRANCH: deploy/alpha-apprunner-backend-${{ steps.get-version.outputs.version }}
         run: |
           git config pull.rebase true
           git config user.name "$ACTOR_NAME"
           git config user.email "$ACTOR_EMAIL"
-          git checkout -b deploy/apprunner/alpha/$VERSION
+          git checkout -b $TARGET_BRANCH
           cd $PROJECT_PATH
           echo $VERSION > version.txt
           git add .
           git commit -m "ci($ENV/$PROJECT): update version $VERSION"
-          git push origin deploy/apprunner/alpha/$VERSION
+          git push origin $TARGET_BRANCH
+
+          gh pr create --title "Deploy $TARGET_BRANCH" --body "Deploy $TARGET_BRANCH" --base main --head $TARGET_BRANCH
