@@ -16,19 +16,18 @@ function registerSwaggerDoc(app: INestApplication) {
   SwaggerModule.setup('docs', app, document);
 }
 
+const enabledSwaggerDocs = (app: INestApplication): boolean => app.get<ConfigService>('ConfigService').get('swagger.enable')
+const getAppPort = (app: INestApplication): number => app.get<ConfigService>('ConfigService').get('listenPort');
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
 
-  const configService = app.get<ConfigService>('ConfigService');
-  const enableSwagger = configService.get('swagger.enable');
-  if (enableSwagger) {
+  if (enabledSwaggerDocs(app)) {
     registerSwaggerDoc(app);
   }
 
-  const port = configService.get('listenPort');
-
-  await app.listen(port);
+  await app.listen(getAppPort(app));
 }
 
 bootstrap();
