@@ -26,7 +26,7 @@ async function bootstrap() {
     registerSwaggerDoc(app);
   }
 
-  const port = configService.get('listen_port');
+  const port = configService.get('listenPort');
 
   await app.listen(port);
 }

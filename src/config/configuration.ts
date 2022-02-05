@@ -2,7 +2,7 @@ const defaultListenPort = 3000;
 const defaultGoogleOutputFormat = 'json';
 
 export default () => ({
-  listen_port: parseInt(process.env.LISTEN_PORT, 10) || defaultListenPort,
+  listenPort: +process.env.LISTEN_PORT || defaultListenPort,
   swagger: {
     enable: process.env.SWAGGER_ENABLE === 'true',
   },
