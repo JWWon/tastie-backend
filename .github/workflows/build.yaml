@@ -4,7 +4,7 @@ name: Build And Push
 env:
   AWS_ECR_REGISTRY: '645216642656.dkr.ecr.ap-northeast-2.amazonaws.com'
   AWS_ECR_REPO: 'tastie/backend'
-  AWS_REGION: ap-northeast-2
+  AWS_REGION: ap-northeast-1
 
 jobs:
   build-and-push:
