@@ -1,4 +1,4 @@
-on: [workflow_dispatch]
+on: [push]
 name: Build And Push
 
 env:
