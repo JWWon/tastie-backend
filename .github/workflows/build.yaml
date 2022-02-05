@@ -1,0 +1,45 @@
+on: [workflow_dispatch]
+name: Build And Push
+
+env:
+  AWS_ECR_REGISTRY: '645216642656.dkr.ecr.ap-northeast-2.amazonaws.com'
+  AWS_ECR_REPO: 'tastie/backend'
+  AWS_REGION: ap-northeast-2
+
+jobs:
+  build-and-push:
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      - name: Get Version
+        id: get-version
+        env:
+          SHA: ${{ github.sha }}
+        run: |
+          echo "::set-output name=version::${SHA}"
+
+      - name: Build docker image
+        env:
+          DOCKER_BUILDKIT: 1
+          IMAGE_TAG: ${{ steps.get-version.outputs.version }}
+        run: docker build -t $ECR_REGISTRY/$AWS_ECR_REPO:$IMAGE_TAG .
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        if: ${{ always() && format('refs/heads/{0}', ) == github.ref }}
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        if: ${{ always() && format('refs/heads/{0}', ) == github.ref }}
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Push docker image
+        env:
+          IMAGE_TAG: ${{ steps.get-version.outputs.version }}
+        # when ref is default branch
+        if: ${{ always() && format('refs/heads/{0}', ) == github.ref }}
+        run: |
+          docker push $ECR_REGISTRY/$AWS_ECR_REPO:$IMAGE_TAG
