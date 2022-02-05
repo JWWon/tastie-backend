@@ -49,8 +49,9 @@ jobs:
           git config pull.rebase true
           git config user.name "$ACTOR_NAME"
           git config user.email "$ACTOR_EMAIL"
+          git checkout -b deploy/apprunner/alpha/$VERSION
           cd $PROJECT_PATH
           echo $VERSION > version.txt
           git add .
           git commit -m "ci($ENV/$PROJECT): update version $VERSION"
-          git pull origin main && git push origin main
+          git push origin deploy/apprunner/alpha/$VERSION
