@@ -12,4 +12,9 @@ export class AppController {
   healthy(): string {
     return '';
   }
+
+  @Get('text')
+  text(): string {
+    return 'text';
+  }
 }
