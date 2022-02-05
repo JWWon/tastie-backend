@@ -15,7 +15,7 @@ jobs:
         env:
           SHA: ${{ github.sha }}
         run: |
-          echo "::set-output name=version::${SHA}"
+          echo "::set-output name=version::${SHA:0:9}"
 
       - name: Build docker image
         env:
