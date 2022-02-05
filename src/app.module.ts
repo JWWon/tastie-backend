@@ -10,9 +10,13 @@ import {
   CaseModule,
   AuthModule,
   UserModule,
-  RestaurantModule,
+  /**
+   *  TODO: 몽고디비 의존성을 제거하기 위해 몽고디비를 사용하는 레스토랑 모듈을 비활성화합니다.
+   *  이후에 몽고디비 대신 RDS를 사용하도록 변경해야 합니다.
+   *  */
+  // RestaurantModule,
 } from './module';
-import { Restaurant } from './infrastructure/typeorm/document/restaurant';
+// import { Restaurant } from './infrastructure/typeorm/document/restaurant';
 
 @Module({
   imports: [
@@ -21,7 +25,7 @@ import { Restaurant } from './infrastructure/typeorm/document/restaurant';
     CaseModule,
     AuthModule,
     UserModule,
-    RestaurantModule,
+    // RestaurantModule,
     ConfigModule.forRoot({
       load: [config],
       isGlobal: true,
@@ -29,8 +33,8 @@ import { Restaurant } from './infrastructure/typeorm/document/restaurant';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        type: 'postgres' as 'postgres',
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
         host: configService.get('db.host'),
         port: configService.get('db.port'),
         username: configService.get('db.username'),
@@ -40,17 +44,17 @@ import { Restaurant } from './infrastructure/typeorm/document/restaurant';
         synchronize: configService.get('db.synchronize'),
       }),
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      name: 'restaurantConnection',
-      useFactory: async (configService: ConfigService) => ({
-        type: 'mongodb' as 'mongodb',
-        url: configService.get('mongo.url'),
-        entities: [Restaurant],
-        ssl: true,
-      }),
-    }),
+    // TypeOrmModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   name: 'restaurantConnection',
+    //   useFactory: async (configService: ConfigService) => ({
+    //     type: 'mongodb' as 'mongodb',
+    //     url: configService.get('mongo.url'),
+    //     entities: [Restaurant],
+    //     ssl: true,
+    //   }),
+    // }),
   ],
   controllers: [AppController],
   providers: [AppService],
